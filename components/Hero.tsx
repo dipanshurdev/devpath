@@ -8,58 +8,52 @@ import {
 
 const Hero = () => {
   return (
-    <div
-    // className=""
-    >
-      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
-          <div className="flex flex-col justify-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-              Your Developer Roadmap to Success
-            </h1>
-            <p className="mt-4 max-w-3xl text-xl text-gray-500 dark:text-gray-300">
-              Navigate your tech career with confidence. Our curated learning
-              paths guide you through the skills you need to become a proficient
-              developer.
-            </p>
-            <div className="mt-8">
-              <a
-                href="#get-started"
-                className="inline-flex items-center rounded-md border border-transparent bg-primary-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-              >
-                Get Started
-                <BsArrowRight
-                  className="ml-3 -mr-1 h-5 w-5"
+    <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
+        <div className="flex flex-col justify-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            Your Developer Roadmap to Success
+          </h1>
+          <p className="mt-4 max-w-3xl text-xl text-gray-500 dark:text-gray-300">
+            Navigate your tech career with confidence. Our curated learning
+            paths guide you through the skills you need to become a proficient
+            developer.
+          </p>
+          <div className="mt-8">
+            <a
+              href="#get-started"
+              className="inline-flex items-center rounded-lg bg-blue-800  px-6 py-3 text-base text-white  "
+            >
+              Get Started
+              <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
+            </a>
+          </div>
+          <div className="mt-12 grid grid-cols-3 gap-6 sm:gap-8">
+            {[
+              { icon: BsCode, label: "Technologies", value: "50+" },
+              { icon: BsBook, label: "Learning Paths", value: "20+" },
+              {
+                icon: BsLightningCharge,
+                label: "Active Learners",
+                value: "100K+",
+              },
+            ].map((stat, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <dt className="order-2 mt-2 text-lg font-medium text-gray-500 dark:text-gray-400">
+                  {stat.label}
+                </dt>
+                <dd className="order-1 text-3xl font-extrabold text-primary-600 dark:text-primary-400">
+                  {stat.value}
+                </dd>
+                <stat.icon
+                  className="order-0 mb-2 h-8 w-8 text-primary-400"
                   aria-hidden="true"
                 />
-              </a>
-            </div>
-            <div className="mt-12 grid grid-cols-3 gap-6 sm:gap-8">
-              {[
-                { icon: BsCode, label: "Technologies", value: "50+" },
-                { icon: BsBook, label: "Learning Paths", value: "20+" },
-                {
-                  icon: BsLightningCharge,
-                  label: "Active Learners",
-                  value: "100K+",
-                },
-              ].map((stat, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <dt className="order-2 mt-2 text-lg font-medium text-gray-500 dark:text-gray-400">
-                    {stat.label}
-                  </dt>
-                  <dd className="order-1 text-3xl font-extrabold text-primary-600 dark:text-primary-400">
-                    {stat.value}
-                  </dd>
-                  <stat.icon
-                    className="order-0 mb-2 h-8 w-8 text-primary-400"
-                    aria-hidden="true"
-                  />
-                </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          {/* <div className="flex items-center justify-center">
+        </div>
+        {/* <div className="flex items-center justify-center">
             <div className="relative w-full max-w-lg">
               <div className="absolute top-0 -left-4 h-72 w-72 animate-blob rounded-full bg-purple-300 opacity-70 mix-blend-multiply blur-xl filter"></div>
               <div className="animation-delay-2000 absolute top-0 -right-4 h-72 w-72 animate-blob rounded-full bg-yellow-300 opacity-70 mix-blend-multiply blur-xl filter"></div>
@@ -89,7 +83,7 @@ const Hero = () => {
             </div>
           </div> */}
 
-          {/* 
+        {/* 
           import React, { useState } from 'react'
 import { ChevronRight, Code, Database, Server, Smartphone, Cpu } from 'lucide-react'
 
@@ -182,8 +176,7 @@ export default function RoadmapVisualization() {
       </div>
     </div>
 //   ) */}
-          {/* } */}
-        </div>
+        {/* } */}
       </div>
     </div>
   );

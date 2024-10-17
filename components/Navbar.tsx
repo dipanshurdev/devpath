@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <nav className="w-full flex items-center justify-between">
       <div className="flex items-center justify-start gap-4">
-        <span>LOGO</span>
+        <span className="font-bold text-blue-800 text-xl">DevPath</span>
 
         <span>
           <Link href="/roadmaps">Roadmaps</Link>
