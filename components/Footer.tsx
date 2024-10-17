@@ -118,10 +118,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-700 text-sm text-center">
-          <p>
-            &copy; {new Date().getFullYear()} Your Company Name. All rights
-            reserved.
-          </p>
+          <p>&copy; {new Date().getFullYear()} DevPath. All rights reserved.</p>
         </div>
       </div>
     </footer>

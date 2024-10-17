@@ -16,7 +16,7 @@ const RoadmapContent = ({ content, title }: Props) => {
 
       <div className="grid grid-cols-4 w-full gap-4 items-center justify-center">
         {content?.map((s: any) => {
-          return <RoadmapDiv name={s.name} id={s.id} />;
+          return <RoadmapDiv key={s.id} name={s.name} id={s.id} />;
         })}
       </div>
     </div>
