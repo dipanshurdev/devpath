@@ -5,13 +5,14 @@ import {
   BsBook,
   BsLightningCharge,
 } from "react-icons/bs";
+import { PiPath } from "react-icons/pi";
 
 const Hero = () => {
   return (
     <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
         <div className="flex flex-col justify-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-primaryDark dark:text-primaryWhite sm:text-5xl md:text-6xl">
             Your Developer Roadmap to Success
           </h1>
           <p className="mt-4 max-w-3xl text-xl text-gray-500 dark:text-gray-300">
@@ -22,7 +23,7 @@ const Hero = () => {
           <div className="mt-8">
             <a
               href="#get-started"
-              className="inline-flex items-center rounded-lg bg-blue-800  px-6 py-3 text-base text-white  "
+              className="inline-flex items-center rounded-lg bg-primaryBlue  px-6 py-3 text-base text-white  "
             >
               Get Started
               <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
@@ -31,7 +32,7 @@ const Hero = () => {
           <div className="mt-12 grid grid-cols-3 gap-6 sm:gap-8">
             {[
               { icon: BsCode, label: "Technologies", value: "50+" },
-              { icon: BsBook, label: "Learning Paths", value: "20+" },
+              { icon: PiPath, label: "Learning Paths", value: "20+" },
               {
                 icon: BsLightningCharge,
                 label: "Active Learners",
