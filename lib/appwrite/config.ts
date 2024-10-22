@@ -5,6 +5,7 @@ export const appwriteIds = {
   projectId: process.env.NEXT_APP_APPWRITE_PROJECT_ID as string,
   databaseId: process.env.NEXT_APP_APPWRITE_DATABASE_ID as string,
   projectUrl: process.env.NEXT_APP_APPWRITE_URL as string,
+  userCollectionId: process.env.NEXT_APP_APPWRITE_USERS_COLLECTION_ID as string,
 };
 
 client.setEndpoint(appwriteIds.projectUrl);
