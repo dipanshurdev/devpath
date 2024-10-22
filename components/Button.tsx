@@ -34,14 +34,14 @@ export const Button: React.FC<ButtonProps> = ({
               transition
               border-2
               ${fullWidth ? "w-full" : "w-fit"}
-              ${secondary ? "bg-primary" : "bg-secondary"}
-              ${secondary ? "text-slate-800" : "text-primary"}
-              ${secondary ? "border-slate-800" : "border-blue-300"}
+              ${secondary ? "bg-primaryDark" : "bg-primaryBlue"}
+              ${secondary ? "text-primaryWhite" : "text-primaryWhite"}
+              ${secondary ? "border-primaryDark" : "border-primaryBlue"}
               ${large ? "text-xl" : "text-base"}
               ${large ? "px-5" : "px-4"}
               ${large ? "py-3" : "px-2"}
               ${outline ? "bg-transparent" : ""}
-              ${outline ? "border-blue-50" : ""}
+              ${outline ? "border-primaryWhite" : ""}
               ${outline ? "text-primary" : ""}
               `}
     >
