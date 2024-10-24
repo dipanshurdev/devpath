@@ -3,29 +3,30 @@ import React, { useCallback } from "react";
 import { AiOutlineClose, AiOutlineCloseCircle } from "react-icons/ai";
 import { Button } from "../Button";
 import roadmapState from "@/lib/state";
+import { INewUser } from "@/types";
 
 interface ModalProps {
   isOpen?: boolean;
   authType: string;
   setAuthType: (type: "login" | "register") => void;
   onClose: () => void;
-  onSubmit: () => void;
   title?: string;
   body?: React.ReactElement;
   footer?: React.ReactElement;
-  actionLabel: string;
+  // actionLabel: string;
   disabled?: boolean;
+  // onSubmit: (user: INewUser) => void;
 }
 
 const AuthModal: React.FC<ModalProps> = ({
-  actionLabel,
+  // actionLabel,
   onClose,
-  onSubmit,
   body,
   disabled,
   footer,
   isOpen,
   title,
+  // onSubmit,
 }) => {
   // const { isModalOpen, onModalClose } = roadmapState();
 
@@ -34,12 +35,12 @@ const AuthModal: React.FC<ModalProps> = ({
   }
 
   const handleSubmit = () => {
-    // if (disabled) {
-    //   return;
-    // }
-    // console.log("Suxxy baka");
+    if (disabled) {
+      return;
+    }
+    console.log("Submitting function...");
 
-    onSubmit();
+    // onSubmit();
   };
 
   return (
@@ -76,14 +77,7 @@ h-full lg:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-
           </div>
           {/* Footer */}
           <div className="flex flex-col gap-2 p-10">
-            <Button
-              disabled={disabled}
-              label={actionLabel}
-              fullWidth
-              large
-              onClick={handleSubmit}
-            />
-            {footer}
+            <div className="text-primary text-center mt-4">{footer}</div>
           </div>
         </div>
       </div>
