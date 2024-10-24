@@ -7,11 +7,9 @@ import Roadmaps from "@/components/roadmaps/Roadmaps";
 export default function Home() {
   return (
     <div className="p-4">
-      <Navbar />
       <Hero />
       <Roadmaps />
       <OpenSourceSection />
-      <Footer />
     </div>
   );
 }
