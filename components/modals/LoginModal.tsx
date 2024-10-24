@@ -4,6 +4,8 @@ import roadmapState from "@/lib/state";
 import React, { useCallback, useState } from "react";
 import { Input } from "../Input";
 import AuthModal from "./AuthModal";
+import { Button } from "../Button";
+import { signInUser } from "@/lib/appwrite/api";
 
 export const LoginModal = () => {
   const { isModalOpen, onModalClose, onModalOpen, authType, setAuthType } =
@@ -20,13 +22,24 @@ export const LoginModal = () => {
 
   // Handle form submission for login
   const onSubmit = useCallback(async () => {
+    setIsLoading(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      console.error("Invalid email format");
+      alert("Please enter a valid email address.");
+      setIsLoading(false);
+      return;
+    }
     try {
-      setIsLoading(true);
+      const session = await signInUser({
+        email: email,
+        password: password,
+      });
 
-      // Example: Perform authentication logic here
-      // await signIn("credentials", { email, password });
-
-      console.log("Logging in with:", email, password);
+      if (!session) {
+        throw new Error("Error session not found!");
+      }
 
       // Close the modal after login
       onModalClose();
@@ -61,19 +74,25 @@ export const LoginModal = () => {
 
   // Modal footer content with a link to switch to sign-up
   const footerContent = (
-    <div className="text-primary text-center mt-4">
-      <p className="">
-        First time here? Go to the
-        <span
-          onClick={handleRegisterClick} // Switch to the Sign-Up modal
-          className="text-secondary cursor-pointer hover:underline text-primaryBlue"
-        >
-          {" "}
-          Sign Up
-        </span>{" "}
-        page.
-      </p>
-    </div>
+    <>
+      {isLoading ? (
+        "Creating account..."
+      ) : (
+        <div className="flex flex-col gap-2 p-10">
+          <Button label="Sign Up" fullWidth large onClick={onSubmit} />
+          <p className="w-full">
+            Already have an account? then
+            <span
+              onClick={handleRegisterClick}
+              className="text-secondary cursor-pointer hover:underline text-primaryBlue"
+            >
+              {" "}
+              Log In
+            </span>
+          </p>
+        </div>
+      )}
+    </>
   );
 
   // Conditionally render based on authType but still return a consistent structure
@@ -84,9 +103,8 @@ export const LoginModal = () => {
       authType={authType}
       setAuthType={setAuthType}
       title="Login to your account"
-      actionLabel="Sign In"
       onClose={onModalClose}
-      onSubmit={onSubmit} // Handle form submission
+      // onSubmit={onSubmit} // Handle form submission
       body={bodyContent}
       footer={footerContent}
     />
