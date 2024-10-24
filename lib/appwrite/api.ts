@@ -1,3 +1,5 @@
+"use client";
+
 // /my-nextjs-app
 // ├── /public                 # Static files like images and fonts
 // ├── /src
@@ -21,16 +23,17 @@
 
 import { INewUser } from "@/types";
 import { account, appwriteIds, avatars, databases } from "./config";
-import { ID } from "appwrite";
+import { ID, Query } from "appwrite";
 
 // CREATE THE USER ACCOUNT
 export async function createAccount(user: INewUser) {
+  const { email, name, password, username } = user;
   try {
     const createdAccount = await account.create(
       ID.unique(),
-      user.name,
-      user.email,
-      user.password
+      email,
+      password,
+      name
     );
 
     if (!createdAccount) {
@@ -43,7 +46,7 @@ export async function createAccount(user: INewUser) {
       accountId: createdAccount.$id,
       name: createdAccount.name,
       email: createdAccount.email,
-      username: user.username,
+      username: username,
       imageUrl: avatarUrl,
     });
 
@@ -84,5 +87,40 @@ export async function signInUser(user: { email: string; password: string }) {
     );
 
     return session;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================== GET ACCOUNT
+export async function getAccount() {
+  try {
+    const currentAccount = await account.get();
+
+    return currentAccount;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================== GET USER
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await getAccount();
+
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteIds.databaseId,
+      appwriteIds.userCollectionId,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
