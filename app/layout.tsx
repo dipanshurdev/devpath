@@ -35,8 +35,8 @@ export default function RootLayout({
         <Layout>
           <LoginModal />
           <RegisterModal />
+          {children}
         </Layout>
-        {children}
       </body>
     </html>
   );
