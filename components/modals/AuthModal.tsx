@@ -1,9 +1,9 @@
 "use client";
 import React, { useCallback } from "react";
 import { AiOutlineClose, AiOutlineCloseCircle } from "react-icons/ai";
-import { Button } from "../Button";
-import roadmapState from "@/lib/state";
-import { INewUser } from "@/types";
+// import { Button } from "../Button";
+// import roadmapState from "@/lib/state";
+// import { INewUser } from "@/types";
 
 interface ModalProps {
   isOpen?: boolean;
