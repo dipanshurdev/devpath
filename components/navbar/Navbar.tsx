@@ -2,21 +2,39 @@
 
 import Link from "next/link";
 import React from "react";
-import { LuLogIn, LuUser } from "react-icons/lu";
+// import { LuLogIn, LuUser } from "react-icons/lu";
 import Icon from "./Icon";
-import roadmapState from "@/lib/state";
+// import roadmapState from "@/lib/state";
+// import { getAccount } from "@/lib/appwrite/api";
+// import { useUserContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import Profile from "./Profile";
+import { useUserContext } from "@/context/AuthContext";
 
 const Navbar = () => {
-  const modal = roadmapState();
-
-  const handleOpen = () => {
-    modal.onModalOpen();
-  };
-
+  const { user } = useUserContext();
   return (
     <nav className="w-full flex items-center justify-between">
       <div className="flex items-center justify-start gap-4">
-        <Link href="/">
+        <Link
+          href="/"
+          onClick={() =>
+            toast(
+              "🦄 Wow so easy!"
+              //         {
+              // position: "top-right",
+              // autoClose: 2000,
+              // hideProgressBar: true,
+              // closeOnClick: true,
+              // pauseOnHover: true,
+              // draggable: true,
+              // progress: undefined,
+              // theme: "dark",
+              // transition: Zoom,
+              //         }
+            )
+          }
+        >
           <Icon title="DevPath" />
         </Link>
 
@@ -30,22 +48,7 @@ const Navbar = () => {
           <Link href="/roadmaps">About</Link>
         </span>
       </div>
-      <div className="flex items-center gap-4 ">
-        {/* <span className="bg-darkLight rounded-full w-10 h-10 flex items-center justify-center">
-          <Link href="/users/99">
-            <LuUser width={44} />
-          </Link>
-        </span> */}
-        <button
-          onClick={handleOpen}
-          className="bg-primaryBlue py-2 px-4 rounded-lg flex items-center gap-2"
-        >
-          Login
-          <span>
-            <LuLogIn />
-          </span>
-        </button>
-      </div>
+      <Profile user={user} />
     </nav>
   );
 };
