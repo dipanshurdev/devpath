@@ -6,13 +6,15 @@ import { Input } from "../Input";
 import AuthModal from "./AuthModal";
 import { Button } from "../Button";
 import { signInUser } from "@/lib/appwrite/api";
+import { useUserContext } from "@/context/AuthContext";
 
 export const LoginModal = () => {
   const { isModalOpen, onModalClose, onModalOpen, authType, setAuthType } =
     roadmapState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { isLoading, setIsLoading } = useUserContext();
 
   // Handle switch to the register modal
   const handleRegisterClick = () => {

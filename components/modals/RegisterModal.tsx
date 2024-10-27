@@ -7,6 +7,7 @@ import AuthModal from "./AuthModal";
 import { createAccount, signInUser } from "@/lib/appwrite/api";
 import { useRouter } from "next/navigation";
 import { Button } from "../Button";
+import { useUserContext } from "@/context/AuthContext";
 
 export const RegisterModal = () => {
   const { onModalClose, authType, onModalOpen, isModalOpen, setAuthType } =
@@ -15,8 +16,8 @@ export const RegisterModal = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { isLoading, setIsLoading } = useUserContext();
 
   const handleLoginClick = () => {
     setAuthType("login");
