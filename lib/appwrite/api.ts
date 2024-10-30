@@ -4,6 +4,17 @@ import { INewUser } from "@/types";
 import { account, appwriteIds, avatars, databases } from "./config";
 import { ID, Query } from "appwrite";
 
+const {
+  databaseId,
+  nodeId,
+  nodesId,
+  projectId,
+  projectUrl,
+  resourcesId,
+  roadmapsId,
+  userCollectionId,
+} = appwriteIds;
+
 // CREATE THE USER ACCOUNT
 export async function createAccount(user: INewUser) {
   const { email, name, password, username } = user;
@@ -19,7 +30,7 @@ export async function createAccount(user: INewUser) {
       throw new Error("An Error Occurred while creating an Account!");
     }
 
-    const avatarUrl = avatars.getInitials(user.name);
+    const avatarUrl = avatars.getInitials(name);
 
     const newUser = await saveUserToDB({
       accountId: createdAccount.$id,
@@ -45,8 +56,8 @@ export async function saveUserToDB(user: {
 }) {
   try {
     const newUser = await databases.createDocument(
-      appwriteIds.databaseId,
-      appwriteIds.userCollectionId,
+      databaseId,
+      userCollectionId,
       ID.unique(),
       user
     );
@@ -90,8 +101,8 @@ export async function getCurrentUser() {
     if (!currentAccount) throw Error;
 
     const currentUser = await databases.listDocuments(
-      appwriteIds.databaseId,
-      appwriteIds.userCollectionId,
+      databaseId,
+      userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
     );
 
@@ -113,4 +124,44 @@ export async function signOutAccount() {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getRoadmaps() {
+  try {
+    const roadmaps = await databases.listDocuments(databaseId, roadmapsId);
+
+    return roadmaps;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getRoadmapById(roadmapId: string) {
+  try {
+    const roadmaps = await databases.listDocuments(databaseId, roadmapsId, [
+      `roadmap_id=equal.${roadmapId}`,
+    ]);
+
+    if (roadmaps.total === 0) {
+      throw new Error("Roadmap not found");
+    }
+
+    // Return the first document that matches (assuming roadmapId is unique)
+    return roadmaps.documents[0];
+  } catch (error) {
+    console.error("Error fetching roadmap by ID:", error);
+    return null;
+  }
+}
+
+export async function getNodes(nodeId: string) {
+  return databases.listDocuments(databaseId, nodesId, [
+    `nodeId=equal.${nodeId}`,
+  ]);
+}
+
+export async function getNode(getNodeId: string) {
+  return databases.listDocuments(databaseId, nodeId, [
+    `nodeId=equal.${getNodeId}`,
+  ]);
 }
