@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 // import { LuLogIn, LuUser } from "react-icons/lu";
 import Icon from "./Icon";
 // import roadmapState from "@/lib/state";
 // import { getAccount } from "@/lib/appwrite/api";
 // import { useUserContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
-import Profile from "./Profile";
-import { useUserContext } from "@/context/AuthContext";
+// import Profile from "./Profile";
+// import { useUserContext } from "@/context/AuthContext";
 
 const Navbar = () => {
-  const { user } = useUserContext();
   return (
     <nav className="w-full flex items-center justify-between">
       <div className="flex items-center justify-start gap-4">
@@ -48,7 +47,7 @@ const Navbar = () => {
           <Link href="/roadmaps">About</Link>
         </span>
       </div>
-      <Profile user={user} />
+      {/* <Profile user={user} /> */}
     </nav>
   );
 };
