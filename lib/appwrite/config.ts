@@ -8,6 +8,10 @@ export const appwriteIds = {
   projectUrl: process.env.NEXT_PUBLIC_APPWRITE_URL as string,
   userCollectionId: process.env
     .NEXT_PUBLIC_APPWRITE_USERS_COLLECTION_ID as string,
+  roadmapsId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ROADMAPS as string,
+  nodeId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_NODES as string,
+  nodesId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_NODES as string,
+  resourcesId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_RESOURCES as string,
 };
 
 export const client = new Client();
