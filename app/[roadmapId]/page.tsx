@@ -22,7 +22,7 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const getLayoutedElements = (
   nodes: Models.Document,
-  edges: any[],
+  edges: Models.Document,
   direction = "LR"
 ) => {
   dagreGraph.setGraph({ rankdir: direction });
