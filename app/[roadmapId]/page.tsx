@@ -188,6 +188,7 @@ const getLayoutedElements = (nodes = [], edges = [], direction = "LR") => {
   dagreGraph.setGraph({ rankdir: direction });
 
   // Add nodes and edges to Dagre for layout
+
   nodes.forEach((node: any) =>
     dagreGraph.setNode(node.id, { width: 240, height: 100 })
   );
@@ -288,7 +289,16 @@ const Page = () => {
     return <Loader loading={loading} />;
   }
 
-  if (!roadmapData) return <p>{`Roadmap not found for ID: ${roadmapId}`}</p>;
+  if (!roadmapData)
+    return (
+      <div className="w-full h-[50vh] text-center mt-12">
+        <h4>
+          Roadmap for <span className="text-primaryBlue">{roadmapId} </span>
+          is under construction!🚧
+        </h4>
+        <span>We are working on it.🙂</span>
+      </div>
+    );
 
   return (
     <div
