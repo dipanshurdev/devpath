@@ -3,7 +3,7 @@ import Image from "next/image";
 import DevPath from "../../assets/icons/path.svg";
 
 type Props = {
-  title: String;
+  title: string;
 };
 
 const Icon = ({ title }: Props) => {

@@ -34,14 +34,14 @@ const AuthModal: React.FC<ModalProps> = ({
     return false;
   }
 
-  const handleSubmit = () => {
-    if (disabled) {
-      return;
-    }
-    console.log("Submitting function...");
+  // const handleSubmit = () => {
+  //   if (disabled) {
+  //     return;
+  //   }
+  //   console.log("Submitting function...");
 
-    // onSubmit();
-  };
+  //   // onSubmit();
+  // };
 
   return (
     <div className="justify-center items-center  flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-800 bg-opacity-80">
