@@ -8,9 +8,9 @@ const {
   databaseId,
   nodeId,
   nodesId,
-  projectId,
-  projectUrl,
-  resourcesId,
+  // projectId,
+  // projectUrl,
+  // resourcesId,
   roadmapsId,
   userCollectionId,
 } = appwriteIds;
@@ -139,7 +139,9 @@ export async function getRoadmaps() {
 export async function getRoadmapById(roadmapId: string) {
   try {
     const roadmaps = await databases.listDocuments(databaseId, roadmapsId, [
-      `roadmap_id=equal.${roadmapId}`,
+      Query.equal("roadmap_id", roadmapId),
+
+      // `roadmap_id=equal.${roadmapId}`,
     ]);
 
     if (roadmaps.total === 0) {

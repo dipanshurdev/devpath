@@ -2,7 +2,7 @@ import React from "react";
 import {
   BsArrowRight,
   BsCode,
-  BsBook,
+  // BsBook,
   BsLightningCharge,
 } from "react-icons/bs";
 import { PiPath } from "react-icons/pi";

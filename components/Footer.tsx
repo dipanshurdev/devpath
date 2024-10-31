@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {
-  LuFacebook,
+  // LuFacebook,
   LuTwitter,
   LuInstagram,
   LuLinkedin,
-  LuMail,
+  // LuMail,
   LuGithub,
 } from "react-icons/lu";
 

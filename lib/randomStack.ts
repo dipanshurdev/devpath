@@ -1,46 +1,46 @@
-export const skills = [
+export const Roles = [
   {
-    id: 1,
+    id: "frontend",
     name: "frontend",
   },
   {
-    id: 2,
+    id: "backend",
     name: "backend",
   },
   {
-    id: 3,
+    id: "fullstack",
     name: "fullstack",
   },
   {
-    id: 4,
+    id: "devops",
     name: "devops",
   },
   {
-    id: 5,
+    id: "app_development",
     name: "app development",
   },
   {
-    id: 6,
+    id: "data_science",
     name: "data science",
   },
   {
-    id: 7,
+    id: "ai_engineer",
     name: "ai engineer",
   },
   {
-    id: 8,
+    id: "postgresSQl",
     name: "postgresSQl",
   },
   {
-    id: 9,
+    id: "mongodb",
     name: "mongodb",
   },
   {
-    id: 10,
+    id: "sql",
     name: "sql",
   },
   {
-    id: 11,
+    id: "typescript",
     name: "typescript",
   },
 ];

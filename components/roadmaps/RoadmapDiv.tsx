@@ -1,19 +1,23 @@
+import Link from "next/link";
 import React from "react";
 import { CiBookmark } from "react-icons/ci";
 
 type Props = {
-  title: string;
-  // s: object;
+  id: string;
+  name: string;
 };
 
-const RoadmapDiv = ({ title }: Props) => {
+const RoadmapDiv = ({ id, name }: Props) => {
   return (
-    <div className="px-6 py-3 my-2 bg-darkLight rounded-lg flex items-center justify-between ">
-      <span className="text-lg text-primaryWhite capitalize">{title}</span>
+    <Link
+      href={`/${id}`}
+      className="px-6 py-3 my-2 w-full bg-darkLight rounded-lg flex items-center justify-between "
+    >
+      <span className="text-lg text-primaryWhite capitalize">{name}</span>
       <span className="flex-grow justify-end flex">
         <CiBookmark />
       </span>
-    </div>
+    </Link>
   );
 };
 
