@@ -15,7 +15,12 @@ export const Roadmaps = () => {
       </div>
       <div className="grid grid-cols-4 w-full gap-4 items-center justify-center">
         {Roles?.map((roadmap) => (
-          <RoadmapDiv key={roadmap.id} id={roadmap.id} name={roadmap.name} />
+          <RoadmapDiv
+            key={roadmap.id}
+            id={roadmap.id}
+            inConstruction={roadmap.inConstruction}
+            name={roadmap.name}
+          />
         ))}
       </div>
     </section>
