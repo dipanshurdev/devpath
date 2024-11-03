@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { CiBookmark } from "react-icons/ci";
+import { CiLocationArrow1 } from "react-icons/ci";
 import { LuConstruction } from "react-icons/lu";
 
 type Props = {
@@ -19,7 +19,7 @@ const RoadmapDiv = ({ id, name, inConstruction }: Props) => {
     >
       <span className="text-lg text-primaryWhite capitalize">{name}</span>
       <span className="flex-grow justify-end flex">
-        {inConstruction ? <LuConstruction /> : <CiBookmark />}
+        {inConstruction ? <LuConstruction /> : <CiLocationArrow1 />}
       </span>
     </Link>
   );
