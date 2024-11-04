@@ -14,10 +14,10 @@ const Hero = () => {
     <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
         <div className="flex flex-col justify-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-primaryDark dark:text-primaryWhite sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-primaryWhite  sm:text-5xl md:text-6xl">
             Your Developer Roadmap to Success
           </h1>
-          <p className="mt-4 max-w-3xl text-xl text-gray-500 dark:text-gray-300">
+          <p className="mt-4 max-w-3xl text-xl text-primaryWhite">
             Navigate your tech career with confidence. Our curated learning
             paths guide you through the skills you need to become a proficient
             developer.

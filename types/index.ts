@@ -52,3 +52,24 @@ export type AppwriteIds = {
   databaseId: string | undefined;
   projectUrl: string | undefined;
 };
+
+export interface NodeData {
+  title: string;
+  description: string | null;
+  resources: Resource[];
+  related_node: RelatedNode[];
+}
+
+export interface Resource {
+  title: string;
+  description: string | null;
+  type: string;
+  url: string;
+  difficulty: string;
+}
+
+export interface RelatedNode {
+  title: string;
+  description: string;
+  nodeId: string;
+}

@@ -13,9 +13,3 @@ export default function Home() {
     </div>
   );
 }
-
-// TODO  {
-// Ref styles, classes
-// Animations
-// Ref Hero section
-// }
