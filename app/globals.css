@@ -24,6 +24,17 @@ body {
   overflow-x: hidden;
 }
 
+.animated-path {
+  stroke-dasharray: 5, 5;
+  animation: dash 2s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

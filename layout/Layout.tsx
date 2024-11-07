@@ -13,7 +13,7 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       {/* <AuthProvider> */}
-      <div className="p-4">
+      <div className="p-4 scroll-smooth">
         <Navbar />
         {children}
         <Footer />

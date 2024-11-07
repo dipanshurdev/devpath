@@ -1,5 +1,5 @@
 // import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
+import Hero from "@/components/hero/Hero";
 // import Navbar from "@/components/navbar/Navbar";
 import OpenSourceSection from "@/components/OSS";
 import Roadmaps from "@/components/roadmaps/Roadmaps";
