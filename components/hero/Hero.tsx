@@ -1,19 +1,9 @@
-// import Image from "next/image";
 import React from "react";
-import {
-  BsArrowRight,
-  BsCode,
-  // BsBook,
-  BsLightningCharge,
-} from "react-icons/bs";
+import { BsArrowRight, BsCode, BsLightningCharge } from "react-icons/bs";
 import { PiPath } from "react-icons/pi";
 import HeroRoadmap from "./HeroRoadmap";
-// import HeroImg from "@/assets/images/roadmap_icon2.png";
 
 const Hero = () => {
-  // const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  // const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
   return (
     <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
@@ -27,22 +17,30 @@ const Hero = () => {
             developer.
           </p>
           <div className="mt-8">
-            <a
-              href="#roadmaps"
-              className="inline-flex items-center rounded-lg bg-primaryBlue  px-6 py-3 text-base text-white  "
-            >
+            <a className="inline-flex items-center rounded-lg bg-primaryBlue  px-6 py-3 text-base text-white  ">
               Get Started
               <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
             </a>
           </div>
           <div className="mt-12 grid grid-cols-3 gap-6 sm:gap-8">
             {[
-              { icon: BsCode, label: "Technologies", value: "15+" },
-              { icon: PiPath, label: "Learning Paths", value: "10+" },
+              {
+                icon: BsCode,
+                label: "Technologies",
+                value: "15+",
+                color: "#1e40af",
+              },
+              {
+                icon: PiPath,
+                label: "Learning Paths",
+                value: "10+",
+                color: "#1e40af",
+              },
               {
                 icon: BsLightningCharge,
                 label: "Active Learners",
                 value: "05+",
+                color: "#1e40af",
               },
             ].map((stat, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -55,13 +53,14 @@ const Hero = () => {
                 <stat.icon
                   className="order-0 mb-2 h-8 w-8 text-primary-400"
                   aria-hidden="true"
+                  color={stat.color}
                 />
               </div>
             ))}
           </div>
         </div>
-        <div className="flex items-center justify-center">
-          <div className="relative w-full max-w-lg">
+        <div className=" items-center justify-center sm:hidden lg:flex">
+          <div className="relative w-full h-[500px] max-w-lg">
             <HeroRoadmap />
           </div>
         </div>

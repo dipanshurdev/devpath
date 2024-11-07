@@ -16,26 +16,32 @@ import "reactflow/dist/style.css";
 const initialNodes: Node[] = [
   {
     id: "1",
-    data: { label: "Frontend" },
-    position: { x: 0, y: -200 },
+    data: { label: "You" },
+    position: { x: 0, y: -500 },
     type: "default",
   },
   {
     id: "2",
-    data: { label: "Backend" },
-    position: { x: 200, y: 0 },
+    data: { label: "Frontend" },
+    position: { x: 200, y: -200 },
     type: "default",
   },
   {
     id: "3",
-    data: { label: "Fullstack" },
-    position: { x: 400, y: -200 },
+    data: { label: "Backend" },
+    position: { x: 400, y: -400 },
     type: "default",
   },
   {
     id: "4",
-    data: { label: "DevOps" },
+    data: { label: "Fullstack" },
     position: { x: 600, y: 0 },
+    type: "default",
+  },
+  {
+    id: "5",
+    data: { label: "More..." },
+    position: { x: 800, y: -300 },
     type: "default",
   },
 ];
@@ -44,6 +50,7 @@ const initialEdges: Edge[] = [
   { id: "e1-2", source: "1", target: "2", type: "animatedEdge" },
   { id: "e2-3", source: "2", target: "3", type: "animatedEdge" },
   { id: "e3-4", source: "3", target: "4", type: "animatedEdge" },
+  { id: "e4-5", source: "4", target: "5", type: "animatedEdge" },
 ];
 
 const AnimatedEdge = ({
@@ -91,7 +98,7 @@ export default function HeroRoadmap() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   return (
-    <div style={{ width: "100%", height: "300px" }}>
+    <div style={{ width: "100%", maxHeight: "500px", height: "100%" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
