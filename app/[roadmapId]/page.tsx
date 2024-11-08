@@ -1194,7 +1194,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
 import {
   Book,
   Code,
@@ -1211,7 +1211,7 @@ import { Models } from "appwrite";
 // Define Types for TypeScript
 type Resource = {
   title: string;
-  description: string;
+  description?: string;
   url: string;
   type: "article" | "video" | "docs";
   difficulty: "Beginner" | "Intermediate" | "Advanced";
@@ -1220,7 +1220,7 @@ type Resource = {
 type RoadmapNode = Node & {
   data: {
     title: string;
-    description: string;
+    description?: string;
     resources?: Resource[];
     type: string;
   };
@@ -1286,12 +1286,12 @@ const ResourceCard = ({ resource }: { resource: Resource }) => (
 );
 
 // Custom node rendering component
-const CustomNode = ({ data }: { data: any }) => (
+const CustomNode = ({ data }: { data: Models.Document }) => (
   <motion.div
     initial={{ scale: 0.5, opacity: 0 }}
     animate={{ scale: 1, opacity: 1 }}
     transition={{ duration: 0.5, type: "spring" }}
-    className={`p-4 rounded-lg border w-full shadow-lg backdrop-blur-sm ${
+    className={`p-4 rounded-full w-full shadow-lg backdrop-blur-sm ${
       data.type === "group"
         ? "bg-primary/10 border-primary"
         : "bg-card/90 border-border"
@@ -1299,7 +1299,7 @@ const CustomNode = ({ data }: { data: any }) => (
   >
     <div className="flex flex-col gap-1 w-full">
       <h3 className="font-semibold text-sm">{data.title}</h3>
-      <p className="text-xs text-muted-foreground">{data.description}</p>
+      {/* <p className="text-xs text-muted-foreground">{data.description}</p> */}
       {data.type === "required" && (
         <Badge variant="secondary" className="self-start mt-1">
           Required
@@ -1310,9 +1310,9 @@ const CustomNode = ({ data }: { data: any }) => (
 );
 
 // Main page component
-export default function page() {
+function Page() {
   const params = useParams();
-  const roadmapId = params.roadmapId as string;
+  const { roadmapId } = params;
   const [nodes, setNodes, onNodesChange] = useNodesState<RoadmapNode[]>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<RoadmapEdge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -1330,30 +1330,35 @@ export default function page() {
 
   useEffect(() => {
     async function fetchData() {
-      const roadmapData = await getRoadmapById(roadmapId);
-      if (roadmapData) {
-        const newNodes = roadmapData.nodes.map((node: any, index: number) => ({
-          id: node.nodeId,
-          type: node.type || "default",
-          data: { ...node },
-          position: { x: index % 2 === 0 ? 100 : 400, y: index * 200 },
-        }));
+      const roadmapDataResponse = await getRoadmapById(roadmapId as string);
+      if (roadmapDataResponse) {
+        const newNodes = roadmapDataResponse.nodes.map(
+          (node: Models.Document, index: number) => ({
+            id: node.nodeId,
+            type: node.type || "default",
+            data: { ...node },
+            position: { x: index % 2 === 0 ? 100 : 400, y: index * 200 },
+          })
+        );
 
-        const newEdges = roadmapData.nodes.slice(0, -1).map((edge: any) => ({
-          id: `e${edge.source}-${edge.target}`,
-          source: edge.source,
-          target: edge.target,
-          type: "smoothstep",
-          animated: true,
-          style: { stroke: "hsl(var(--primary))", strokeWidth: 2 },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: "hsl(var(--primary))",
-          },
-        }));
+        const newEdges = roadmapDataResponse.nodes
+          .slice(0, -1)
+          .map((edge: any) => ({
+            id: `e${edge.source}-${edge.target}`,
+            source: edge.source,
+            target: edge.target,
+            type: "smoothstep",
+            animated: true,
+            style: { stroke: "hsl(var(--primary))", strokeWidth: 2 },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: "hsl(var(--primary))",
+            },
+          }));
 
         setNodes(newNodes);
         setEdges(newEdges);
+        setRoadmapData(roadmapDataResponse);
       }
     }
     fetchData();
@@ -1453,3 +1458,5 @@ export default function page() {
     </div>
   );
 }
+
+export default Page;
