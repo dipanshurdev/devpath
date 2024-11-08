@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactFlow, {
   //   Background,
   //   Controls,
@@ -96,6 +96,13 @@ const edgeTypes = { animatedEdge: AnimatedEdge };
 export default function HeroRoadmap() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    if (!nodes && !edges) {
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [nodes, edges]);
 
   return (
     <div style={{ width: "100%", maxHeight: "500px", height: "100%" }}>

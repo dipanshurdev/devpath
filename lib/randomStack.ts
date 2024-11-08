@@ -1,4 +1,6 @@
-export const Roles = [
+import { RoleType } from "@/types";
+
+export const Roles: RoleType[] = [
   {
     id: "frontend",
     name: "frontend",

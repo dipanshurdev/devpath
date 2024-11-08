@@ -73,3 +73,9 @@ export interface RelatedNode {
   description: string;
   nodeId: string;
 }
+
+export type RoleType = {
+  id: string;
+  name: string;
+  inConstruction: boolean;
+};

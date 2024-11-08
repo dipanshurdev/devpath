@@ -4,10 +4,11 @@ import React from "react";
 // import { getRoadmaps } from "@/lib/appwrite/api";
 // import { Models } from "appwrite";
 import RoadmapDiv from "./RoadmapDiv";
+import { RoleType } from "@/types";
 
 type Props = {
   title: string;
-  data?: any;
+  data?: RoleType[];
   inBuilding?: boolean;
 };
 
