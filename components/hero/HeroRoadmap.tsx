@@ -102,7 +102,7 @@ export default function HeroRoadmap() {
       setNodes(initialNodes);
       setEdges(initialEdges);
     }
-  }, [nodes, edges]);
+  }, [nodes, edges, setNodes, setEdges]);
 
   return (
     <div style={{ width: "100%", maxHeight: "500px", height: "100%" }}>

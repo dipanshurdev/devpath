@@ -26,7 +26,7 @@ export const Roadmaps = ({ title, data, inBuilding }: Props) => {
           </h4>
         )}
         {!inBuilding &&
-          data?.map((roadmap: any) => (
+          data?.map((roadmap: RoleType) => (
             <RoadmapDiv
               key={roadmap.id}
               id={roadmap.id}

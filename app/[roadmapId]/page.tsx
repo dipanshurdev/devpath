@@ -1343,7 +1343,7 @@ function Page() {
 
         const newEdges = roadmapDataResponse.nodes
           .slice(0, -1)
-          .map((edge: any) => ({
+          .map((edge: Models.Document) => ({
             id: `e${edge.source}-${edge.target}`,
             source: edge.source,
             target: edge.target,
