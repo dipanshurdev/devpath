@@ -44,6 +44,13 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
+    --primary-blue: 220, 56%, 33%; /* HSL for #1e40af */
+    --primary-white: 216, 20%, 91%; /* HSL for #e5e7eb */
+    --primary-dark: 0, 0%, 9%; /* HSL for #171717 */
+
+    --text-primary: hsl(var(--primary-dark));
+    --bg-primary: hsl(var(--primary-white));
+    --bg-secondary: hsl(var(--primary-blue));
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -64,13 +71,17 @@ body {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 226, 71%, 40%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
+    /* --primary: 210, 100%, 50%;  */
+    --primary-blue: 226, 69%, 39%;
+    --primary-white: 216, 15%, 91%;
+    --primary-dark: 0, 0%, 9%;
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -98,4 +109,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.bg-primary {
+  background-color: hsl(var(--bg-primary));
+}
+
+.text-primary {
+  color: hsl(var(--primary-blue));
 }

@@ -254,37 +254,6 @@
 
 // =================================================
 
-// "use client";
-
-// import { useState, useCallback, useMemo } from "react";
-// import { useParams } from "next/navigation";
-// // import useSWR from "swr";
-// import ReactFlow, {
-//   Node,
-//   Edge,
-//   Controls,
-//   Background,
-//   useNodesState,
-//   useEdgesState,
-//   addEdge,
-//   MarkerType,
-// } from "reactflow";
-// import "reactflow/dist/style.css";
-// import { motion, AnimatePresence } from "framer-motion";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import { ScrollArea } from "@/components/ui/scroll-area";
-// import { Book, Code, FileVideo, Folder, LinkIcon, X } from "lucide-react";
-
-// // const fetcher = (url) => fetch(url).then((res) => res.json());
-
 // const exampleRoadmapData = {
 //   roadmap_id: "fullstack",
 //   title: "Fullstack Development",
@@ -1164,7 +1133,346 @@
 //   );
 // }
 
+//   const onConnect = useCallback(
+//     (connection: Connection) => {
+//       setEdges((eds) =>
+//         addEdge(
+//           {
+//             ...connection,
+//             animated: true,
+//             style: { stroke: "#6366f1", strokeWidth: 3 },
+//           },
+//           eds
+//         )
+//       );
+//     },
+//     [setEdges]
+//   );
+
+//   useEffect(() => {
+//     if (exampleRoadmapData) {
+//       const data = exampleRoadmapData;
+//       const newNodes: Node[] = data.nodes.map((node, index) => ({
+//         id: node.nodeId,
+//         data: node,
+//         position: { x: index % 2 === 0 ? 100 : 400, y: index * 200 },
+//         type: "checkpoint",
+//       }));
+
+//       const newEdges: Edge[] = data.nodes.slice(0, -1).map((node, index) => ({
+//         id: `e${node.nodeId}-${data.nodes[index + 1].nodeId}`,
+//         source: node.nodeId,
+//         target: data.nodes[index + 1].nodeId,
+//         animated: true,
+//         style: { stroke: "#6366f1", strokeWidth: 3 },
+//         type: "smoothstep",
+//         markerEnd: {
+//           type: MarkerType.ArrowClosed,
+//           color: "#6366f1",
+//         },
+//       }));
+
+//       setNodes(newNodes);
+//       setEdges(newEdges);
+//     }
+//   }, [setNodes, setEdges]);
+
 // ===============================================================================
+
+// "use client";
+
+// import { useState, useCallback, useMemo, useEffect } from "react";
+// import { useParams } from "next/navigation";
+// import ReactFlow, {
+//   Node,
+//   Edge,
+//   Controls,
+//   Background,
+//   useNodesState,
+//   useEdgesState,
+//   addEdge,
+//   MarkerType,
+//   Panel,
+//   Connection,
+// } from "reactflow";
+// import "reactflow/dist/style.css";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import { Badge } from "@/components/ui/badge";
+// import { ScrollArea } from "@/components/ui/scroll-area";
+// // import { Skeleton } from "@/components/ui/skeleton";
+// import {
+//   Book,
+//   Code,
+//   FileVideo,
+//   Folder,
+//   LinkIcon,
+//   X,
+//   ZoomIn,
+//   ZoomOut,
+// } from "lucide-react";
+// import { getRoadmapById } from "@/lib/appwrite/api"; // Adjust to the correct path of your api file
+// import { Models } from "appwrite";
+
+// // Define Types for TypeScript
+// type Resource = {
+//   title: string;
+//   description?: string;
+//   url: string;
+//   type: "article" | "video" | "docs";
+//   difficulty: "Beginner" | "Intermediate" | "Advanced";
+// };
+
+// type RoadmapNode = Node & {
+//   data: {
+//     title: string;
+//     description?: string;
+//     resources?: Resource[];
+//     type: string;
+//   };
+// };
+
+// type RoadmapEdge = Edge & {
+//   markerEnd: {
+//     type: MarkerType;
+//     color: string;
+//   };
+// };
+
+// // Define icon switcher based on resource type
+// function getResourceIcon(type: string) {
+//   switch (type) {
+//     case "article":
+//       return <Book className="w-4 h-4" />;
+//     case "video":
+//       return <FileVideo className="w-4 h-4" />;
+//     case "docs":
+//       return <Folder className="w-4 h-4" />;
+//     default:
+//       return <Code className="w-4 h-4" />;
+//   }
+// }
+
+// // Resource card for each learning resource
+// const ResourceCard = ({ resource }: { resource: Resource }) => (
+//   <motion.div
+//     initial={{ opacity: 0, y: 20 }}
+//     animate={{ opacity: 1, y: 0 }}
+//     transition={{ duration: 0.3 }}
+//   >
+//     <Card className="mb-4 hover:shadow-lg transition-shadow">
+//       <CardHeader className="p-4">
+//         <CardTitle className="text-sm flex items-center gap-2">
+//           {getResourceIcon(resource.type)}
+//           {resource.title}
+//         </CardTitle>
+//       </CardHeader>
+//       <CardContent className="p-4 pt-0">
+//         <CardDescription className="text-sm mb-3">
+//           {resource.description}
+//         </CardDescription>
+//         <div className="flex justify-between items-center">
+//           <Badge
+//             variant={
+//               resource.difficulty === "Beginner" ? "default" : "secondary"
+//             }
+//           >
+//             {resource.difficulty}
+//           </Badge>
+//           <Button variant="outline" size="sm" asChild>
+//             <a href={resource.url} target="_blank" rel="noopener noreferrer">
+//               <LinkIcon className="w-4 h-4 mr-2" />
+//               Open Resource
+//             </a>
+//           </Button>
+//         </div>
+//       </CardContent>
+//     </Card>
+//   </motion.div>
+// );
+
+// // Custom node rendering component
+// const CustomNode = ({ data }: { data: Models.Document }) => (
+//   <motion.div
+//     initial={{ scale: 0.5, opacity: 0 }}
+//     animate={{ scale: 1, opacity: 1 }}
+//     transition={{ duration: 0.5, type: "spring" }}
+//     className={`p-4 rounded-full w-full shadow-lg backdrop-blur-sm ${
+//       data.type === "group"
+//         ? "bg-primary/10 border-primary"
+//         : "bg-card/90 border-border"
+//     }`}
+//   >
+//     <div className="flex flex-col gap-1 w-full">
+//       <h3 className="font-semibold text-sm">{data.title}</h3>
+//       {/* <p className="text-xs text-muted-foreground">{data.description}</p> */}
+//       {data.type === "required" && (
+//         <Badge variant="secondary" className="self-start mt-1">
+//           Required
+//         </Badge>
+//       )}
+//     </div>
+//   </motion.div>
+// );
+
+// // Main page component
+// function Page() {
+//   const params = useParams();
+//   const { roadmapId } = params;
+//   const [nodes, setNodes, onNodesChange] = useNodesState<RoadmapNode[]>([]);
+//   const [edges, setEdges, onEdgesChange] = useEdgesState<RoadmapEdge[]>([]);
+//   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+//   const [roadmapData, setRoadmapData] = useState<Models.Document | null>();
+
+//   const onConnect = useCallback(
+//     (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+//     [setEdges]
+//   );
+
+//   const nodeTypes = useMemo(
+//     () => ({ default: CustomNode, group: CustomNode, required: CustomNode }),
+//     []
+//   );
+
+//   useEffect(() => {
+//     async function fetchData() {
+//       const roadmapDataResponse = await getRoadmapById(roadmapId as string);
+//       if (roadmapDataResponse) {
+//         const newNodes = roadmapDataResponse.nodes.map(
+//           (node: Models.Document, index: number) => ({
+//             id: node.nodeId,
+//             type: node.type || "default",
+//             data: { ...node },
+//             position: { x: index % 2 === 0 ? 100 : 400, y: index * 200 },
+//           })
+//         );
+
+//         const newEdges = roadmapDataResponse.nodes
+//           .slice(0, -1)
+//           .map((edge: Models.Document) => ({
+//             id: `e${edge.source}-${edge.target}`,
+//             source: edge.source,
+//             target: edge.target,
+//             type: "smoothstep",
+//             animated: true,
+//             style: { stroke: "#1e40af", strokeWidth: 2 },
+//             markerEnd: {
+//               type: MarkerType.ArrowClosed,
+//               color: "#1e40af",
+//             },
+//           }));
+
+//         setNodes(newNodes);
+//         setEdges(newEdges);
+//         setRoadmapData(roadmapDataResponse);
+//       }
+//     }
+//     fetchData();
+//   }, [roadmapId, setNodes, setEdges]);
+
+//   return (
+//     <div className="w-full h-screen flex flex-col md:flex-row mt-12">
+//       <div className="flex-1 h-[70vh] md:h-full relative bg-gradient-to-b from-background to-background/50 rounded-md">
+//         <ReactFlow
+//           nodes={nodes}
+//           edges={edges}
+//           onNodesChange={onNodesChange}
+//           onEdgesChange={onEdgesChange}
+//           onConnect={onConnect}
+//           onNodeClick={(_, node) => setSelectedNode(node)}
+//           nodeTypes={nodeTypes}
+//           draggable={false}
+//           fitView
+//           minZoom={0.5}
+//           maxZoom={1.5}
+//           defaultEdgeOptions={{ type: "smoothstep", animated: true }}
+//         >
+//           <Background color="" gap={16} size={1} />
+//           <Controls showInteractive={false} />
+//           <Panel
+//             position="top-left"
+//             className="bg-background/95 p-4 rounded-lg border shadow-lg backdrop-blur-sm"
+//           >
+//             <h1 className="text-2xl font-bold mb-2 text-primaryBlue capitalize">
+//               {roadmapData?.title}
+//             </h1>
+//             <p className="text-sm text-muted-foreground">
+//               {roadmapData?.description}
+//             </p>
+//           </Panel>
+//           <Panel position="bottom-right" className="flex gap-2">
+//             <Button
+//               variant="outline"
+//               size="icon"
+//               onClick={() => window.location.reload()}
+//             >
+//               <ZoomIn className="h-4 w-4" />
+//             </Button>
+//             <Button
+//               variant="outline"
+//               size="icon"
+//               onClick={() => window.location.reload()}
+//             >
+//               <ZoomOut className="h-4 w-4" />
+//             </Button>
+//           </Panel>
+//         </ReactFlow>
+//       </div>
+
+//       <AnimatePresence mode="wait">
+//         {selectedNode && (
+//           <motion.div
+//             initial={{ x: 300, opacity: 0 }}
+//             animate={{ x: 0, opacity: 1 }}
+//             exit={{ x: 300, opacity: 0 }}
+//             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+//             className="w-full md:w-[400px] bg-background/95 border-t md:border-l p-6 overflow-hidden relative backdrop-blur-sm"
+//           >
+//             <Button
+//               variant="ghost"
+//               size="icon"
+//               className="absolute top-4 right-4"
+//               onClick={() => setSelectedNode(null)}
+//             >
+//               <X className="h-4 w-4" />
+//             </Button>
+
+//             <div className="mb-6">
+//               <h2 className="text-xl font-bold mb-2">
+//                 {selectedNode.data.title}
+//               </h2>
+//               <p className="text-sm text-muted-foreground">
+//                 {selectedNode.data.description}
+//               </p>
+//             </div>
+
+//             <div className="space-y-4">
+//               <h3 className="font-semibold text-lg">Learning Resources</h3>
+//               <ScrollArea className="h-[calc(100vh-250px)]">
+//                 <div className="pr-4 space-y-4">
+//                   {selectedNode.data.resources?.map(
+//                     (resource: Resource, index: number) => (
+//                       <ResourceCard key={index} resource={resource} />
+//                     )
+//                   )}
+//                 </div>
+//               </ScrollArea>
+//             </div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+//     </div>
+//   );
+// }
+
+// export default Page;
 
 "use client";
 
@@ -1173,7 +1481,7 @@ import { useParams } from "next/navigation";
 import ReactFlow, {
   Node,
   Edge,
-  Controls,
+  // Controls,
   Background,
   useNodesState,
   useEdgesState,
@@ -1181,6 +1489,8 @@ import ReactFlow, {
   MarkerType,
   Panel,
   Connection,
+  EdgeProps,
+  getSmoothStepPath,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1205,13 +1515,12 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { getRoadmapById } from "@/lib/appwrite/api"; // Adjust to the correct path of your api file
+import { getRoadmapById } from "@/lib/appwrite/api";
 import { Models } from "appwrite";
 
-// Define Types for TypeScript
 type Resource = {
   title: string;
-  description?: string;
+  description: string;
   url: string;
   type: "article" | "video" | "docs";
   difficulty: "Beginner" | "Intermediate" | "Advanced";
@@ -1220,7 +1529,7 @@ type Resource = {
 type RoadmapNode = Node & {
   data: {
     title: string;
-    description?: string;
+    description: string;
     resources?: Resource[];
     type: string;
   };
@@ -1233,7 +1542,66 @@ type RoadmapEdge = Edge & {
   };
 };
 
-// Define icon switcher based on resource type
+// Define the AnimatedEdge as a custom edge with framer-motion for animation
+const AnimatedEdge = (props: EdgeProps) => {
+  const edgeColor = "#1D4ED8";
+  const [edgePath] = getSmoothStepPath({
+    sourceX: props.sourceX,
+    sourceY: props.sourceY,
+    targetX: props.targetX,
+    targetY: props.targetY,
+    sourcePosition: props.sourcePosition,
+    targetPosition: props.targetPosition,
+  });
+
+  return (
+    <motion.path
+      animate={{ opacity: [0.5, 1, 0.5] }}
+      transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+      fill="none"
+      stroke={edgeColor}
+      strokeWidth={2}
+      d={edgePath}
+      markerEnd={`url(#react-flow__arrowclosed)`}
+    />
+  );
+};
+
+const edgeTypes = {
+  animated: AnimatedEdge,
+};
+
+// CustomNode component for displaying each node's data
+const CustomNode = ({ data }: { data: Models.Document }) => (
+  <motion.div
+    initial={{ scale: 0.5, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 0.5, type: "spring" }}
+    className={`p-4 rounded-lg border w-full shadow-lg backdrop-blur-sm ${
+      data.type === "group"
+        ? "bg-primary/10 border-primary"
+        : "bg-card/90 border-border"
+    }`}
+  >
+    <div className="flex flex-col gap-1 w-full">
+      <h3 className="font-semibold text-sm text-primaryBlue">{data.title}</h3>
+      {data.type === "required" && (
+        <Badge variant="secondary" className="self-start mt-1">
+          Required
+        </Badge>
+      )}
+    </div>
+  </motion.div>
+);
+
+// Define all possible node types
+const nodeTypes = {
+  default: CustomNode,
+  group: CustomNode,
+  required: CustomNode,
+  checkpoint: CustomNode, // Added to prevent the error for "checkpoint" type
+};
+
 function getResourceIcon(type: string) {
   switch (type) {
     case "article":
@@ -1247,7 +1615,6 @@ function getResourceIcon(type: string) {
   }
 }
 
-// Resource card for each learning resource
 const ResourceCard = ({ resource }: { resource: Resource }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -1256,7 +1623,7 @@ const ResourceCard = ({ resource }: { resource: Resource }) => (
   >
     <Card className="mb-4 hover:shadow-lg transition-shadow">
       <CardHeader className="p-4">
-        <CardTitle className="text-sm flex items-center gap-2">
+        <CardTitle className="text-sm flex items-center gap-2 text-primaryDark">
           {getResourceIcon(resource.type)}
           {resource.title}
         </CardTitle>
@@ -1285,87 +1652,57 @@ const ResourceCard = ({ resource }: { resource: Resource }) => (
   </motion.div>
 );
 
-// Custom node rendering component
-const CustomNode = ({ data }: { data: Models.Document }) => (
-  <motion.div
-    initial={{ scale: 0.5, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    transition={{ duration: 0.5, type: "spring" }}
-    className={`p-4 rounded-full w-full shadow-lg backdrop-blur-sm ${
-      data.type === "group"
-        ? "bg-primary/10 border-primary"
-        : "bg-card/90 border-border"
-    }`}
-  >
-    <div className="flex flex-col gap-1 w-full">
-      <h3 className="font-semibold text-sm">{data.title}</h3>
-      {/* <p className="text-xs text-muted-foreground">{data.description}</p> */}
-      {data.type === "required" && (
-        <Badge variant="secondary" className="self-start mt-1">
-          Required
-        </Badge>
-      )}
-    </div>
-  </motion.div>
-);
-
-// Main page component
-function Page() {
+export default function Page() {
   const params = useParams();
-  const { roadmapId } = params;
+  const roadmapId = params.roadmapId as string;
   const [nodes, setNodes, onNodesChange] = useNodesState<RoadmapNode[]>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<RoadmapEdge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [roadmapData, setRoadmapData] = useState<Models.Document | null>();
 
   const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: Connection) =>
+      setEdges((eds) =>
+        addEdge({ ...connection, type: "animated", animated: true }, eds)
+      ),
     [setEdges]
-  );
-
-  const nodeTypes = useMemo(
-    () => ({ default: CustomNode, group: CustomNode, required: CustomNode }),
-    []
   );
 
   useEffect(() => {
     async function fetchData() {
-      const roadmapDataResponse = await getRoadmapById(roadmapId as string);
-      if (roadmapDataResponse) {
-        const newNodes = roadmapDataResponse.nodes.map(
+      const roadmapData = await getRoadmapById(roadmapId);
+      if (roadmapData) {
+        const newNodes = roadmapData.nodes.map(
           (node: Models.Document, index: number) => ({
             id: node.nodeId,
             type: node.type || "default",
-            data: { ...node },
+            data: {
+              ...node,
+            },
             position: { x: index % 2 === 0 ? 100 : 400, y: index * 200 },
           })
         );
 
-        const newEdges = roadmapDataResponse.nodes
-          .slice(0, -1)
-          .map((edge: Models.Document) => ({
-            id: `e${edge.source}-${edge.target}`,
-            source: edge.source,
-            target: edge.target,
-            type: "smoothstep",
+        const newEdges = roadmapData.nodes.flatMap((node: Models.Document) =>
+          node.related_node?.map((relation: Models.Document) => ({
+            id: `e${node.nodeId}-${relation.nodeId}`,
+            source: node.nodeId,
+            target: relation.nodeId,
+            type: "animated",
             animated: true,
-            style: { stroke: "hsl(var(--primary))", strokeWidth: 2 },
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              color: "hsl(var(--primary))",
-            },
-          }));
+          }))
+        );
 
         setNodes(newNodes);
         setEdges(newEdges);
-        setRoadmapData(roadmapDataResponse);
+        setRoadmapData(roadmapData);
       }
     }
     fetchData();
   }, [roadmapId, setNodes, setEdges]);
 
   return (
-    <div className="w-full h-screen flex flex-col md:flex-row bg-gradient-to-b from-background to-background/80">
+    <div className="w-full h-screen flex flex-col md:flex-row bg-transparent">
       <div className="flex-1 h-[70vh] md:h-full relative">
         <ReactFlow
           nodes={nodes}
@@ -1375,14 +1712,15 @@ function Page() {
           onConnect={onConnect}
           onNodeClick={(_, node) => setSelectedNode(node)}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           draggable={false}
           fitView
-          minZoom={0.5}
-          maxZoom={1.5}
-          defaultEdgeOptions={{ type: "smoothstep", animated: true }}
+          // minZoom={0.5}
+          // maxZoom={1.5}
+          defaultEdgeOptions={{ type: "animated" }}
         >
-          <Background color="hsl(var(--primary))" gap={16} size={1} />
-          <Controls showInteractive={false} />
+          <Background color="#1D4ED8" gap={16} size={1} />
+          {/* <Controls showInteractive={false} /> */}
           <Panel
             position="top-left"
             className="bg-background/95 p-4 rounded-lg border shadow-lg backdrop-blur-sm"
@@ -1413,14 +1751,15 @@ function Page() {
         </ReactFlow>
       </div>
 
-      <AnimatePresence mode="wait">
+      {/* Node Detail Sidebar */}
+      <AnimatePresence>
         {selectedNode && (
           <motion.div
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 300, opacity: 0 }}
+            initial={{ x: 300 }}
+            animate={{ x: 0 }}
+            exit={{ x: 300 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="w-full md:w-[400px] bg-background/95 border-t md:border-l p-6 overflow-hidden relative backdrop-blur-sm"
+            className="w-full md:w-[400px] bg-primaryWhite/20 border-t md:border-l p-6 overflow-hidden relative backdrop-blur-sm"
           >
             <Button
               variant="ghost"
@@ -1430,18 +1769,18 @@ function Page() {
             >
               <X className="h-4 w-4" />
             </Button>
-
             <div className="mb-6">
-              <h2 className="text-xl font-bold mb-2">
+              <h2 className="text-xl font-bold mb-2 text-primaryDark">
                 {selectedNode.data.title}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground text-primaryDark">
                 {selectedNode.data.description}
               </p>
             </div>
-
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Learning Resources</h3>
+              <h3 className="font-semibold text-lg text-primaryDarkLight">
+                Learning Resources
+              </h3>
               <ScrollArea className="h-[calc(100vh-250px)]">
                 <div className="pr-4 space-y-4">
                   {selectedNode.data.resources?.map(
@@ -1458,5 +1797,3 @@ function Page() {
     </div>
   );
 }
-
-export default Page;
