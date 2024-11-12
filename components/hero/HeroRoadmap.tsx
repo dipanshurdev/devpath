@@ -81,10 +81,10 @@ const AnimatedEdge = ({
         className="animated-path"
         style={{
           fill: "none",
-          stroke: "#fff",
+          stroke: "#fff", //Later => #1D4ED8
           strokeWidth: 3,
           strokeDasharray: "4,4", // Dotted line
-          animation: "dash 0.4s linear infinite", // Animation for flow effect
+          animation: "dash 0.2s linear infinite", // Animation for flow effect
         }}
       />
     </g>

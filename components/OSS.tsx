@@ -10,7 +10,7 @@ export default function OpenSourceSection() {
           </h2>
           <p className="text-xl">Help us make this project even better!</p>
         </div>
-        <div className="grid grid-cols-1   md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 mx-auto  md:grid-cols-2 gap-8 mb-12">
           <div className="text-center">
             <LuStar className="mx-auto mb-4" size={48} color="#1e40af" />
             <h3 className="text-xl font-semibold mb-2">Star the Project</h3>
@@ -42,7 +42,7 @@ export default function OpenSourceSection() {
               Fork on GitHub
             </a>
           </div>
-          <div className="text-center">
+          {/* <div className="text-center">
             <LuCoffee className="mx-auto mb-4" size={48} color="#1e40af" />
             <h3 className="text-xl font-semibold mb-2">Support Us</h3>
             <p className="mb-4">
@@ -57,9 +57,9 @@ export default function OpenSourceSection() {
             >
               Donate
             </a>
-          </div>
+          </div> */}
         </div>
-        <div className="text-center w-full my-8 ">
+        <div className="text-center w-full mt-8 mb-12 ">
           <h3 className="text-2xl font-semibold">Current Project Stats</h3>
           <div className="items-center  w-full gap-8 my-8  lg:grid-cols-3 grid   sm:grid-row-3 ">
             <div className=" flex flex-row items-center justify-center">
