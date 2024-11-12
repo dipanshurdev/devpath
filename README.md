@@ -20,5 +20,5 @@
 
 ## LICENSE
 
-This [LICENSE.md](license.md) covers the project’s essential aspects, from setup to usage and component descriptions. You can customize sections as needed, such as updating the repository URL or adding more detailed descriptions for each component.
+This [LICENSE](LICENSE) covers the project’s essential aspects, from setup to usage and component descriptions. You can customize sections as needed, such as updating the repository URL or adding more detailed descriptions for each component.
 
