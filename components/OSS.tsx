@@ -1,4 +1,4 @@
-import { LuStar, LuGitFork, LuCoffee, LuGitMerge } from "react-icons/lu";
+import { LuStar, LuGitFork, LuGitMerge } from "react-icons/lu";
 
 export default function OpenSourceSection() {
   return (

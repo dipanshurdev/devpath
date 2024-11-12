@@ -10,9 +10,9 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   MarkerType,
-  // getSmoothStepPath,
-  // EdgeProps,
   Panel,
+  Connection,
+  NodeMouseHandler,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import {
@@ -26,97 +26,48 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Book, Code, FileVideo, Folder, LinkIcon } from "lucide-react";
-// import fullstack from "@/lib/data/fullstack.json";
 import { Models } from "appwrite";
-import { useParams } from "next/navigation";
 import { getRoadmapById } from "@/lib/appwrite/api";
+import { useParams } from "next/navigation";
 import Loader from "@/components/Loader";
-// import { motion } from "framer-motion";
 
-// type Resource = {
+type Resource = {
+  title: string;
+  description: string;
+  url: string;
+  type: "article" | "video" | "docs";
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
+};
+
+type RoadmapNodeData = {
+  title: string;
+  description: string;
+  resources?: Resource[];
+  type: string;
+};
+
+type RoadmapNode = Node<RoadmapNodeData>;
+
+type RoadmapEdge = Edge & {
+  markerEnd: {
+    type: MarkerType;
+    color: string;
+  };
+};
+
+// type RoadmapData = {
 //   title: string;
 //   description: string;
-//   url: string;
-//   type: "article" | "video" | "docs";
-//   difficulty: "Beginner" | "Intermediate" | "Advanced";
-// };
-
-// type RoadmapNode = Node & {
-//   data: {
+//   nodes: Array<{
+//     nodeId: string;
 //     title: string;
 //     description: string;
 //     resources?: Resource[];
 //     type: string;
-//   };
+//   }>;
 // };
 
-// type RoadmapEdge = Edge & {
-//   markerEnd: {
-//     type: MarkerType;
-//     color: string;
-//   };
-// };
-
-// const AnimatedEdge = (props: EdgeProps) => {
-//   const edgeColor = "#1D4ED8";
-//   const [edgePath] = getSmoothStepPath({
-//     sourceX: props.sourceX,
-//     sourceY: props.sourceY,
-//     targetX: props.targetX,
-//     targetY: props.targetY,
-//     sourcePosition: props.sourcePosition,
-//     targetPosition: props.targetPosition,
-//   });
-
-//   return (
-//     <motion.path
-//       animate={{ opacity: [0.5, 1, 0.5] }}
-//       transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
-//       fill="none"
-//       stroke={edgeColor}
-//       strokeWidth={2}
-//       d={edgePath}
-//       markerEnd={`url(#react-flow__arrowclosed)`}
-//     />
-//   );
-// };
-
-// const edgeTypes = {
-//   default: AnimatedEdge,
-// };
-
-// CustomNode component for displaying each node's data
-// const CustomNode = ({ data }: { data: Models.Document }) => (
-//   <motion.div
-//     initial={{ scale: 0.5, opacity: 0 }}
-//     animate={{ scale: 1, opacity: 1 }}
-//     transition={{ duration: 0.5, type: "spring" }}
-//     className={`p-4 rounded-lg border w-full shadow-lg backdrop-blur-sm ${
-//       data.type === "group"
-//         ? "bg-primary/10 border-primary"
-//         : "bg-card/90 border-border"
-//     }`}
-//   >
-//     <div className="flex flex-col gap-1 w-full">
-//       <h3 className="font-semibold text-sm text-primaryBlue">{data.title}</h3>
-//       {data.type === "required" && (
-//         <Badge variant="secondary" className="self-start mt-1">
-//           Required
-//         </Badge>
-//       )}
-//     </div>
-//   </motion.div>
-// );
-
-// Define all possible node types
-// const nodeTypes = {
-//   default: CustomNode,
-//   group: CustomNode,
-//   required: CustomNode,
-//   checkpoint: CustomNode, // Added to prevent the error for "checkpoint" type
-// };
-
-function getResourceIcon(type: string) {
+const getResourceIcon = (type: string) => {
   switch (type) {
     case "article":
       return <Book className="w-4 h-4" />;
@@ -127,9 +78,10 @@ function getResourceIcon(type: string) {
     default:
       return <Code className="w-4 h-4" />;
   }
-}
+};
 
-const ResourceCard = ({ resource }: any) => (
+// Resource card
+const ResourceCard = ({ resource }: { resource: Resource }) => (
   <Card className="mb-2">
     <CardHeader className="p-4">
       <CardTitle className="text-sm flex items-center gap-2">
@@ -144,15 +96,15 @@ const ResourceCard = ({ resource }: any) => (
       <div className="flex justify-between items-center mt-2 ">
         <Badge
           variant="secondary"
-          className="text-xs text-primaryWhite bg-primaryBlue cursor-cell hover:bg-blue-500"
+          className="text-xs bg-primaryBlue cursor-pointer"
         >
           {resource.difficulty}
         </Badge>
-        <Button variant="outline" size="sm" className="h-8" asChild>
+        <Button variant="outline" size="sm" asChild>
           <a
             href={resource.url}
             target="_blank"
-            rel="noopener noreferrer "
+            rel="noopener noreferrer"
             className="text-primaryBlue"
           >
             <LinkIcon className="w-4 h-4 mr-2" />
@@ -164,30 +116,32 @@ const ResourceCard = ({ resource }: any) => (
   </Card>
 );
 
-export default function Page() {
-  const params = useParams();
-  const roadmapId = params.roadmapId;
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedNode, setSelectedNode] = useState<Models.Document | null>(
-    null
-  );
-  const [roadmapData, setRoadmapData] = useState<Models.Document | null>();
-  const [loading, setLoading] = useState(true);
+const Page = () => {
+  const { roadmapId } = useParams();
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>([]);
+  const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
+  // const [roadmapTitle, setRoadmapTitle] = useState<string>("");
+  // const [roadmapDescription, setRoadmapDescription] = useState<string>("");
+  const [roadmapData, setRoadmapData] = useState<Models.Document | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Fetch roadmap data
   useEffect(() => {
     if (roadmapId) {
       const fetchRoadmapData = async () => {
         try {
-          const response = await getRoadmapById(roadmapId as string); // Fetch data based on roadmapId
+          const response: Models.Document | null = await getRoadmapById(
+            roadmapId as string
+          );
           // setRoadmapTitle(response.title);
           // setRoadmapDescription(response.description);
           setRoadmapData(response);
 
-          // Map fetched data to nodes and edges
           const roadmapNodes: Node[] = response?.nodes.map(
-            (node: any, index: number) => ({
+            (node: Models.Document, index: number) => ({
               id: node.nodeId,
+
               data: { label: node.title, ...node },
               position: { x: index % 2 === 0 ? 100 : 400, y: index * 220 },
               style: {
@@ -206,12 +160,12 @@ export default function Page() {
             })
           );
 
-          const roadmapEdges: Edge[] = response?.nodes
+          const roadmapEdges: RoadmapEdge[] = response?.nodes
             .slice(0, -1)
-            .map((node: any, index: number) => ({
-              id: `e${node.nodeId}-${response?.nodes[index + 1].nodeId}`,
+            .map((node: Models.Document, index: number) => ({
+              id: `e${node.nodeId}-${response.nodes[index + 1].nodeId}`,
               source: node.nodeId,
-              target: response?.nodes[index + 1].nodeId,
+              target: response.nodes[index + 1].nodeId,
               animated: true,
               style: { stroke: "#1D4ED8" },
               markerEnd: { type: MarkerType.ArrowClosed, color: "#1D4ED8" },
@@ -231,22 +185,13 @@ export default function Page() {
   }, [roadmapId, setNodes, setEdges]);
 
   const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
-  const onNodeClick = useCallback((_: any, node: any) => {
+  const onNodeClick: NodeMouseHandler = useCallback((_, node) => {
     setSelectedNode(node);
   }, []);
-
-  // const nodeTypes = {
-  //   default: ({ data }: any) => (
-  //     <div className="bg-card text-card-foreground rounded-md border shadow-sm p-4 flex flex-col justify-center items-center text-center">
-  //       <h3 className="font-semibold">{data.title}</h3>
-  //       <p className="text-xs text-muted-foreground mt-1">{data.description}</p>
-  //     </div>
-  //   ),
-  // };
 
   if (loading) {
     return <Loader loading={loading} />;
@@ -262,8 +207,6 @@ export default function Page() {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeClick={onNodeClick}
-          // nodeTypes={nodeTypes}
-          // edgeTypes={edgeTypes}
           fitView
           draggable={false}
         >
@@ -282,11 +225,11 @@ export default function Page() {
           <Controls />
         </ReactFlow>
       </div>
-      <div className="w-80 bg-background border-l p-4">
+      <div className="w-80 bg-background border-l p-4 overflow-y-scroll ">
         <h2 className="text-2xl font-bold mb-4 text-primaryDark capitalize text-center">
           {roadmapData?.title}
         </h2>
-        <p className="text-sm text-muted-foreground mb-4 text-primaryDark">
+        <p className="text-sm text-muted-foreground mb-4 text-primaryDark text-center">
           {roadmapData?.description}
         </p>
         {selectedNode ? (
@@ -301,11 +244,9 @@ export default function Page() {
               Resources:
             </h4>
             <ScrollArea className="h-[calc(100vh-280px)]">
-              {selectedNode.data.resources.map(
-                (resource: any, index: number) => (
-                  <ResourceCard key={index} resource={resource} />
-                )
-              )}
+              {selectedNode.data.resources?.map((resource, index) => (
+                <ResourceCard key={index} resource={resource} />
+              ))}
             </ScrollArea>
           </div>
         ) : (
@@ -318,4 +259,6 @@ export default function Page() {
       </div>
     </div>
   );
-}
+};
+
+export default Page;
