@@ -1,5 +1,8 @@
 # [ DevPath 🗺️](https://devpath.netlify.app)
 
+![Screenshot 2024-11-12 202656](https://github.com/user-attachments/assets/caff4ef2-d3a5-429b-8577-391b6002f7a9)
+![Screenshot 2024-11-12 202734](https://github.com/user-attachments/assets/ab8f0621-f63f-48ee-bd32-8ee7716e9ce1)
+
 **DevPath** is an interactive, visually-driven platform that allows users to explore educational or skill-development roadmaps. Through connected nodes and edges, users can navigate different stages of a roadmap, each packed with resources like articles, videos, and documents. This project is built with [React Flow](https://reactflow.dev/) for visualizing node-based roadmaps and [Appwrite](https://appwrite.io/) for managing and fetching data.
 
 ## 🚀 Features
@@ -15,12 +18,7 @@
 - **Backend**: Appwrite (for data management and API)
 - **Icons**: Lucide Icons
 
-## Screenshots
-
-![Screenshot 2024-11-12 202656](https://github.com/user-attachments/assets/caff4ef2-d3a5-429b-8577-391b6002f7a9)
-![Screenshot 2024-11-12 202734](https://github.com/user-attachments/assets/ab8f0621-f63f-48ee-bd32-8ee7716e9ce1)
-
 ## LICENSE
 
-This `LICENSE.md` covers the project’s essential aspects, from setup to usage and component descriptions. You can customize sections as needed, such as updating the repository URL or adding more detailed descriptions for each component.
+This [LICENSE.md](license.md) covers the project’s essential aspects, from setup to usage and component descriptions. You can customize sections as needed, such as updating the repository URL or adding more detailed descriptions for each component.
 
