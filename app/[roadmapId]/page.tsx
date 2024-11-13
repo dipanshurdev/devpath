@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Code, FileVideo, Folder, LinkIcon } from "lucide-react";
+import { Book, Code, FileVideo, Folder, Gamepad, LinkIcon } from "lucide-react";
 import { Models } from "appwrite";
 import { getRoadmapById } from "@/lib/appwrite/api";
 import { useParams } from "next/navigation";
@@ -75,6 +75,8 @@ const getResourceIcon = (type: string) => {
       return <FileVideo className="w-4 h-4" />;
     case "docs":
       return <Folder className="w-4 h-4" />;
+    case "game":
+      return <Gamepad className="w-4 h-4" />;
     default:
       return <Code className="w-4 h-4" />;
   }
@@ -96,7 +98,7 @@ const ResourceCard = ({ resource }: { resource: Resource }) => (
       <div className="flex justify-between items-center mt-2 ">
         <Badge
           variant="secondary"
-          className="text-xs bg-primaryBlue cursor-pointer"
+          className="text-xs bg-primaryBlue text-primaryWhite cursor-pointer"
         >
           {resource.difficulty}
         </Badge>

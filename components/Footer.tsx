@@ -16,8 +16,9 @@ export default function Footer() {
           <div>
             <h3 className="text-white text-lg font-semibold mb-4">About Us</h3>
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Error,
-              quo?
+              DevPath is an interactive roadmap platform for developers,
+              offering structured learning paths, resources, and guides to
+              master technical skills.
             </p>
           </div>
           <div>
