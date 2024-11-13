@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [ DevPath 🗺️](https://devpath.netlify.app)
 
-## Getting Started
+![Screenshot 2024-11-12 202656](https://github.com/user-attachments/assets/caff4ef2-d3a5-429b-8577-391b6002f7a9)
+![Screenshot 2024-11-12 202734](https://github.com/user-attachments/assets/ab8f0621-f63f-48ee-bd32-8ee7716e9ce1)
 
-First, run the development server:
+**DevPath** is an interactive, visually-driven platform that allows users to explore educational or skill-development roadmaps. Through connected nodes and edges, users can navigate different stages of a roadmap, each packed with resources like articles, videos, and documents. This project is built with [React Flow](https://reactflow.dev/) for visualizing node-based roadmaps and [Appwrite](https://appwrite.io/) for managing and fetching data.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Interactive Roadmap Display**: Visualize roadmap structures as connected nodes and edges.
+- **Resource Integration**: Access resources (articles, videos, documents) associated with each roadmap node.
+- **Dynamic Fetching**: Fetch and display roadmaps dynamically based on user selection.
+- **Resource Accessibility**: Seamlessly link to resources for further learning.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technologies
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**: React, React Flow, TypeScript, TailwindCSS
+- **Backend**: Appwrite (for data management and API)
+- **Icons**: Lucide Icons
 
-## Learn More
+## LICENSE
 
-To learn more about Next.js, take a look at the following resources:
+This [LICENSE](LICENSE) covers the project’s essential aspects, from setup to usage and component descriptions. You can customize sections as needed, such as updating the repository URL or adding more detailed descriptions for each component.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
