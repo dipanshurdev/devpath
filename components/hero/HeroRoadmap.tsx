@@ -72,7 +72,7 @@ const AnimatedEdge = ({
       <path
         id={id}
         d={edgePath}
-        style={style}
+        style={{ ...style, stroke: "#1D4ED8", strokeWidth: 2 }}
         markerEnd={markerEnd}
         className="react-flow__edge-path"
       />
@@ -81,7 +81,7 @@ const AnimatedEdge = ({
         className="animated-path"
         style={{
           fill: "none",
-          stroke: "#fff", //Later => #1D4ED8
+          stroke: "#e5e7eb", //Later => #1D4ED8
           strokeWidth: 3,
           strokeDasharray: "4,4", // Dotted line
           animation: "dash 0.2s linear infinite", // Animation for flow effect
@@ -107,7 +107,20 @@ export default function HeroRoadmap() {
   return (
     <div style={{ width: "100%", maxHeight: "500px", height: "100%" }}>
       <ReactFlow
-        nodes={nodes}
+        nodes={nodes.map((n) => ({
+          ...n,
+          style: {
+            padding: "16px",
+            borderRadius: "10px",
+            background: "linear-gradient(135deg, #3b82f6, #1D4ED8)",
+            color: "#fff",
+            fontSize: "18px",
+            fontWeight: "500",
+            textAlign: "center",
+            border: "none",
+            boxShadow: "4px 4px 4px rgba(250, 250, 250, 0.9)",
+          },
+        }))}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}

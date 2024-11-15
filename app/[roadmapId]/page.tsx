@@ -200,7 +200,7 @@ const Page = () => {
   }
 
   return (
-    <div className="w-full h-screen flex mt-16 mb-20 border-primaryWhite border border-dashed rounded-lg">
+    <div className="w-full h-screen flex mt-16 mb-20 rounded-lg">
       <div className="flex-1 h-full">
         <ReactFlow
           nodes={nodes}
@@ -227,7 +227,7 @@ const Page = () => {
           <Controls />
         </ReactFlow>
       </div>
-      <div className="w-80 bg-background border-l p-4 overflow-y-scroll ">
+      <div className="w-80 bg-background border-l p-4 overflow-y-scroll rounded-lg">
         <h2 className="text-2xl font-bold mb-4 text-primaryDark capitalize text-center">
           {roadmapData?.title}
         </h2>

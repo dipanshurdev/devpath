@@ -17,7 +17,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "DevPath",
+  title: "DevPath | Developer Roadmaps",
   description:
     "DevPath helps you in your tech career with confidence and curated learning paths that guides you through the skills you need to become a proficient developer",
 };
