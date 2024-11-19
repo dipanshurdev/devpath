@@ -5,7 +5,7 @@ import HeroRoadmap from "./HeroRoadmap";
 
 const Hero = () => {
   return (
-    <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div className="lg:container mx-auto px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
         <div className="flex flex-col justify-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-primaryWhite  sm:text-5xl md:text-6xl">

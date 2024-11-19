@@ -98,7 +98,7 @@ const ResourceCard = ({ resource }: { resource: Resource }) => (
       <div className="flex justify-between items-center mt-2 ">
         <Badge
           variant="secondary"
-          className="text-xs bg-primaryBlue text-primaryWhite cursor-pointer"
+          className="text-xs hover:bg-blue-500 bg-primaryBlue text-primaryWhite cursor-pointer"
         >
           {resource.difficulty}
         </Badge>
@@ -152,8 +152,8 @@ const Page = () => {
                 maxWidth: 180,
                 height: 100,
                 borderRadius: "0.5rem",
-                background: "#e5e7eb",
-                color: "#1D4ED8",
+                background: "#1D4ED8",
+                color: "#e5e7eb",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -169,7 +169,7 @@ const Page = () => {
               source: node.nodeId,
               target: response.nodes[index + 1].nodeId,
               animated: true,
-              style: { stroke: "#1D4ED8" },
+              style: { stroke: "#e5e7eb" },
               markerEnd: { type: MarkerType.ArrowClosed, color: "#1D4ED8" },
             }));
 
@@ -200,8 +200,8 @@ const Page = () => {
   }
 
   return (
-    <div className="w-full h-screen flex mt-16 mb-20 rounded-lg">
-      <div className="flex-1 h-full">
+    <div className="w-full h-screen flex mt-16 mb-20 rounded-lg max-lg:flex-col ">
+      <div className="lg:flex-1 h-full max-lg:h-screen max-lg:mb-8">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -213,7 +213,7 @@ const Page = () => {
           draggable={false}
         >
           <Background color="#1D4ED8" gap={16} size={1} />
-          <Panel
+          {/* <Panel
             position="top-left"
             className="bg-background/95 p-4 rounded-lg border shadow-lg backdrop-blur-sm"
           >
@@ -223,7 +223,7 @@ const Page = () => {
             <p className="text-sm text-muted-foreground">
               {roadmapData?.description}
             </p>
-          </Panel>
+          </Panel> */}
           <Controls />
         </ReactFlow>
       </div>

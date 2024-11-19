@@ -24,6 +24,14 @@ body {
   overflow-x: hidden;
 }
 
+@media (max-width: 768px) {
+  body {
+  max-width: 90vw;
+  width: 100%;
+  height: 100%;
+  }
+}
+
 .animated-path {
   stroke-dasharray: 5, 5;
   animation: dash 2s linear infinite;

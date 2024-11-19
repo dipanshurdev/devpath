@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactFlow, {
   //   Background,
   //   Controls,
@@ -96,16 +96,37 @@ const edgeTypes = { animatedEdge: AnimatedEdge };
 export default function HeroRoadmap() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [isVertical, setIsVertical] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!nodes && !edges) {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
+    const handleResize = () => {
+      setIsVertical(window.innerWidth < 666);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isVertical) {
+      setNodes((nodes) =>
+        nodes.map((node, index) => ({
+          ...node,
+          position: { x: index * 100, y: index * 200 },
+        }))
+      );
+    } else {
+      setNodes(nodes);
     }
-  }, [nodes, edges, setNodes, setEdges]);
+    setEdges(edges);
+  }, [isVertical, setNodes, setEdges]);
 
   return (
-    <div style={{ width: "100%", maxHeight: "500px", height: "100%" }}>
+    <div
+      // style={{ width: "100%", maxHeight: "500px", height: "100%" }}
+      className="w-full max-h-[500px] h-full max-lg:w-full"
+    >
       <ReactFlow
         nodes={nodes.map((n) => ({
           ...n,

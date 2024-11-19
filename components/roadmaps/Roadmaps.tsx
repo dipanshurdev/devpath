@@ -19,7 +19,7 @@ export const Roadmaps = ({ title, data, inBuilding }: Props) => {
         <h3 className="text-3xl font-bold ">{title} Roadmaps</h3>
         {/* <div className="h-[0.5px] my-2 w-full bg-primaryWhite" /> */}
       </div>
-      <div className="grid grid-cols-4 max-sm:grid-cols-3   w-full gap-4 items-center justify-center">
+      <div className="grid grid-cols-4 max-lg:grid-cols-2   w-full gap-4 items-center justify-center">
         {inBuilding && (
           <h4 className="text-xl text-center text-primaryWhite">
             Under Development
