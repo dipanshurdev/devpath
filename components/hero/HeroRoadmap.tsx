@@ -120,7 +120,7 @@ export default function HeroRoadmap() {
       setNodes(nodes);
     }
     setEdges(edges);
-  }, [isVertical, setNodes, setEdges]);
+  }, [isVertical, setNodes, setEdges, nodes, edges]);
 
   return (
     <div

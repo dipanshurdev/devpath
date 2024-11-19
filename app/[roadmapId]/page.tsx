@@ -10,7 +10,7 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   MarkerType,
-  Panel,
+  // Panel,
   Connection,
   NodeMouseHandler,
 } from "reactflow";
