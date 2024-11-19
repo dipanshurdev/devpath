@@ -199,6 +199,44 @@ const Page = () => {
     return <Loader loading={loading} />;
   }
 
+  if (!roadmapData) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          // backgroundColor: ,
+          color: "#e5e7eb",
+        }}
+      >
+        <h1
+          style={{ fontSize: "2rem", marginBottom: "1rem", color: "#007BFF" }}
+        >
+          🚧 Roadmap is Under Construction 🚧
+        </h1>
+        <p
+          style={{ fontSize: "1.2rem", textAlign: "center", maxWidth: "600px" }}
+        >
+          This Roadmap is currently being built. We're working hard to complete
+          it, so stay tuned for updates!
+        </p>
+        <p
+          style={{
+            fontSize: "1rem",
+            textAlign: "center",
+            maxWidth: "400px",
+            marginTop: "10px",
+          }}
+        >
+          Try other Roadmaps like: Frontend, Backend....
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-screen flex mt-16 mb-20 rounded-lg max-lg:flex-col ">
       <div className="lg:flex-1 h-full max-lg:h-screen max-lg:mb-8">

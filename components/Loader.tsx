@@ -14,8 +14,8 @@ const override: CSSProperties = {
 const Loader = ({ color = "#1e40af", loading = false }: Props) => {
   return (
     <div
-      className="w-full flex items-center justify-center p-4
-     m-4
+      className="w-full flex items-center justify-center p-4 h-screen flex-col 
+     m-4 gap-2
      "
     >
       <HashLoader
@@ -25,6 +25,7 @@ const Loader = ({ color = "#1e40af", loading = false }: Props) => {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
+      <span className="text-base">Connecting...</span>
     </div>
   );
 };
