@@ -17,7 +17,10 @@ const Hero = () => {
             developer.
           </p>
           <div className="mt-8">
-            <a className="inline-flex items-center rounded-lg bg-primaryBlue  px-6 py-3 text-base text-white  ">
+            <a
+              href="#roadmaps"
+              className="inline-flex items-center rounded-lg bg-primaryBlue  px-6 py-3 text-base text-white  "
+            >
               Get Started
               <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
             </a>
