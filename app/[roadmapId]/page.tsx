@@ -220,8 +220,8 @@ const Page = () => {
         <p
           style={{ fontSize: "1.2rem", textAlign: "center", maxWidth: "600px" }}
         >
-          This Roadmap is currently being built. We're working hard to complete
-          it, so stay tuned for updates!
+          This Roadmap is currently being built. We are working hard to complete
+          it. So stay tuned for updates!🫡🚀
         </p>
         <p
           style={{
