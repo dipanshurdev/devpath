@@ -54,7 +54,7 @@ const Hero = () => {
                   {stat.value}
                 </dd>
                 <stat.icon
-                  className="order-0 mb-2 h-8 w-8 text-primary-400"
+                  className="order-0 mb-2 h-12 w-12 text-primary-400"
                   aria-hidden="true"
                   color={stat.color}
                 />

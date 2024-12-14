@@ -194,7 +194,7 @@
 
 //------------------------------------------------
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -304,6 +304,12 @@ const initialEdges: Edge[] = [
 const StylishRoadmapFlow: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    if (initialNodes) {
+      setNodes(nodes);
+    }
+  }, []);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
