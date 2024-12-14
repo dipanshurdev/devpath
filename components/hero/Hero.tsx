@@ -1,7 +1,7 @@
 import React from "react";
 import { BsArrowRight, BsCode, BsLightningCharge } from "react-icons/bs";
 import { PiPath } from "react-icons/pi";
-import HeroRoadmap from "./HeroRoadmap";
+import HeroRoadmap from "./HeroAnimation/HeroRoadmap";
 
 const Hero = () => {
   return (
