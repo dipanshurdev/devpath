@@ -145,7 +145,7 @@ const Page = () => {
               id: node.nodeId,
 
               data: { label: node.title, ...node },
-              position: { x: index % 2 === 0 ? 100 : 400, y: index * 220 },
+              position: { x: index % 2 === 0 ? 400 : 800, y: index * 222 },
               style: {
                 minWidth: 150,
                 width: "auto",
@@ -213,7 +213,12 @@ const Page = () => {
         }}
       >
         <h1
-          style={{ fontSize: "2rem", marginBottom: "1rem", color: "#007BFF" }}
+          style={{
+            fontSize: "2rem",
+            marginBottom: "1rem",
+            color: "#007BFF",
+            textAlign: "center",
+          }}
         >
           🚧 Roadmap is Under Construction 🚧
         </h1>

@@ -62,7 +62,7 @@ const Hero = () => {
             ))}
           </div>
         </div>
-        <div className=" items-center justify-center sm:hidden lg:flex">
+        <div className=" items-center justify-center max-sm:hidden lg:flex">
           <div className="relative w-full h-[500px] max-w-lg">
             <HeroRoadmap />
           </div>

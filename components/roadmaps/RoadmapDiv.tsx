@@ -14,7 +14,7 @@ const RoadmapDiv = ({ id, name, inConstruction }: Props) => {
     <Link
       href={`/${id}`}
       className={` ${
-        inConstruction ? "cursor-not-allowed" : "cursor-pointer"
+        inConstruction ? "cursor-progress" : "cursor-pointer"
       } px-6 py-3 my-2 w-full bg-darkLight rounded-lg flex items-center justify-between `}
     >
       <span className="text-lg text-primaryWhite capitalize">{name}</span>

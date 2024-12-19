@@ -19,7 +19,7 @@ export const Roles: RoleType[] = [
   {
     id: "devops",
     name: "devops",
-    inConstruction: true,
+    inConstruction: false,
   },
   {
     id: "app_development",

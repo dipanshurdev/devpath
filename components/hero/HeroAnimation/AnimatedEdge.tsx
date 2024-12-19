@@ -28,7 +28,8 @@ const AnimatedEdge = ({
         style={{
           ...style,
           strokeWidth: 3,
-          stroke: "url(#gradient)",
+          stroke: "#1D4ED8",
+          animation: "dash 1s linear infinite",
         }}
       />
       <BaseEdge
@@ -37,10 +38,10 @@ const AnimatedEdge = ({
         style={{
           ...style,
           strokeWidth: 3,
-          stroke: "url(#gradient)",
-          strokeDasharray: 10,
+          stroke: "#3b82f6",
+          strokeDasharray: 5,
           strokeDashoffset: 0,
-          animation: "flow 30s linear infinite",
+          animation: "dash 0.5s linear infinite",
         }}
       />
     </>
