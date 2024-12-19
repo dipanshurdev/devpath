@@ -1,7 +1,7 @@
 # [ DevPath 🗺️](https://devpath.netlify.app)
 
-![Screenshot 2024-11-12 202656](https://github.com/user-attachments/assets/caff4ef2-d3a5-429b-8577-391b6002f7a9)
-![Screenshot 2024-11-12 202734](https://github.com/user-attachments/assets/ab8f0621-f63f-48ee-bd32-8ee7716e9ce1)
+![Screenshot 2024-12-19 212553](https://github.com/user-attachments/assets/b640b400-5c98-46e5-bbb2-b135c2db6edf)
+![Screenshot 2024-12-19 221816](https://github.com/user-attachments/assets/fc41421f-9238-48cc-ab8f-151281e46b1a)
 
 **DevPath** is an interactive, visually-driven platform that allows users to explore educational or skill-development roadmaps. Through connected nodes and edges, users can navigate different stages of a roadmap, each packed with resources like articles, videos, and documents. This project is built with [React Flow](https://reactflow.dev/) for visualizing node-based roadmaps and [Appwrite](https://appwrite.io/) for managing and fetching data.
 
