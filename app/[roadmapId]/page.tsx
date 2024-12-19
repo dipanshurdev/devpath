@@ -25,7 +25,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Book, Code, FileVideo, Folder, Gamepad, LinkIcon } from "lucide-react";
+import {
+  Book,
+  CircleChevronDown,
+  CircleChevronUp,
+  Code,
+  FileVideo,
+  Folder,
+  Gamepad,
+  LinkIcon,
+} from "lucide-react";
 import { Models } from "appwrite";
 import { getRoadmapById } from "@/lib/appwrite/api";
 import { useParams } from "next/navigation";
@@ -127,6 +136,7 @@ const Page = () => {
   // const [roadmapDescription, setRoadmapDescription] = useState<string>("");
   const [roadmapData, setRoadmapData] = useState<Models.Document | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   // Fetch roadmap data
   useEffect(() => {
@@ -272,11 +282,38 @@ const Page = () => {
       </div>
       <div className="w-80 bg-background border-l p-4 overflow-y-scroll rounded-lg">
         <h2 className="text-2xl font-bold mb-4 text-primaryDark capitalize text-center">
-          {roadmapData?.title}
+          {`< ${roadmapData?.title} />`}
         </h2>
-        <p className="text-sm text-muted-foreground mb-4 text-primaryDark text-center">
+
+        {/* <p className="text-sm text-muted-foreground mb-4 text-primaryDark text-center">
           {roadmapData?.description}
+        </p> */}
+
+        <p className="text-sm text-start text-muted-foreground mb-4 text-primaryDark">
+          {!selectedNode?.data?.title ||
+          isExpanded ||
+          roadmapData?.description.length <= 150
+            ? roadmapData?.description
+            : `${roadmapData?.description.slice(0, 150)}...`}
         </p>
+        {roadmapData?.description.length > 100 && selectedNode?.data?.title && (
+          <Button
+            variant="dropDown"
+            className="px-0  text-sm font-medium text-primaryBlue  hover:text-blue-600 "
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? (
+              <span className="flex w-full items-center justify-between gap-2 text-base">
+                Show Less <CircleChevronUp />
+              </span>
+            ) : (
+              <span className="flex w-full items-center justify-between gap-2 text-base">
+                Show More <CircleChevronDown />
+              </span>
+            )}
+          </Button>
+        )}
+
         {selectedNode ? (
           <div>
             <h3 className="text-lg font-semibold mb-2 text-primaryDark">
@@ -285,8 +322,8 @@ const Page = () => {
             <p className="text-sm text-muted-foreground mb-4 text-primaryDarkLight">
               {selectedNode.data.description}
             </p>
-            <h4 className="text-md font-semibold mb-2 text-primaryDarkLight">
-              Resources:
+            <h4 className="text-md  font-semibold mb-4 text-primaryDarkLight">
+              Learning Resources:-
             </h4>
             <ScrollArea className="h-[calc(100vh-280px)]">
               {selectedNode.data.resources?.map((resource, index) => (
