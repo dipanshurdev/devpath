@@ -282,7 +282,7 @@ const Page = () => {
       </div>
       <div className="w-80 bg-background border-l p-4 overflow-y-scroll rounded-lg">
         <h2 className="text-2xl font-bold mb-4 text-primaryDark capitalize text-center">
-          {`< ${roadmapData?.title} />`}
+          {`<${roadmapData?.title}/>`}
         </h2>
 
         {/* <p className="text-sm text-muted-foreground mb-4 text-primaryDark text-center">
