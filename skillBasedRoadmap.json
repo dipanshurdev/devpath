@@ -1,0 +1,136 @@
+{
+  "roadmaps" : [
+    {
+      "id": "HTML",
+      "title": "HTML Roadmap",
+      "description": "Learn the basics of HTML and build accessible, semantic web pages.",
+      "steps": [
+        { "id": "html-basics", "title": "HTML Basics",  "description": ""},
+        { "id": "semantic-html", "title": "Semantic HTML",   "description": ""},
+        { "id": "forms", "title": "HTML Forms and Inputs",   "description": ""},
+        { "id": "multimedia", "title": "Embedding Multimedia",   "description": ""},
+        { "id": "seo", "title": "SEO Best Practices",  "description": "" }
+      ]
+    },
+    {
+      "id": "css",
+      "title": "CSS Roadmap",
+      "description": "Style your web pages with CSS, learn layouts, animations, and responsive design.",
+      "steps": [
+        { "id": "css-basics", "title": "CSS Basics",  "description": ""},
+        { "id": "selectors", "title": "CSS Selectors and Specificity",  "description": ""},
+        { "id": "box-model", "title": "CSS Box Model",  "description": ""},
+        { "id": "layouts", "title": "Flexbox and Grid Layouts",  "description": ""},
+        { "id": "animations", "title": "CSS Animations and Transitions", "description": "" }
+      ]
+    },
+    {
+      "id": "javascript",
+      "title": "JavaScript Roadmap",
+      "description": "Master JavaScript, the backbone of dynamic web applications.",
+      "steps": [
+        { "id": "js-basics", "title": "JavaScript Basics",  "description": ""},
+        { "id": "dom", "title": "DOM Manipulation",  "description": ""},
+        { "id": "es6", "title": "ES6 and Beyond",  "description": ""},
+        { "id": "async", "title": "Asynchronous JavaScript (Promises, Async/Await)",  "description": ""},
+        { "id": "error-handling", "title": "Error Handling and Debugging", "description": "" }
+      ]
+    },
+    {
+      "id": "typescript",
+      "title": "TypeScript Roadmap",
+      "description": "Build robust applications with TypeScript's static typing.",
+      "steps": [
+        { "id": "ts-basics", "title": "TypeScript Basics",  "description": ""},
+        { "id": "types", "title": "Working with Types and Interfaces",  "description": ""},
+        { "id": "generics", "title": "Generics in TypeScript",  "description": ""},
+        { "id": "modules", "title": "Modules and Namespaces",  "description": ""},
+        { "id": "advanced-types", "title": "Advanced Types", "description": "" }
+      ]
+    },
+    {
+      "id": "tailwindcss",
+      "title": "TailwindCSS Roadmap",
+      "description": "Style your applications efficiently using utility-first CSS.",
+      "steps": [
+        { "id": "tailwind-setup", "title": "Setting Up TailwindCSS", "description": "" },
+        { "id": "utilities", "title": "Core Utility Classes", "description": "" },
+        { "id": "responsive-design", "title": "Responsive Design with Tailwind", "description": "" },
+        { "id": "components", "title": "Custom Components", "description": "" },
+        { "id": "plugins", "title": "Using Plugins and Extending Tailwind","description": ""  }
+      ]
+    },
+    {
+      "id": "sql",
+      "title": "SQL Roadmap",
+      "description": "Learn SQL for querying and managing relational databases.",
+      "steps": [
+        { "id": "sql-basics", "title": "SQL Basics (SELECT, INSERT, UPDATE, DELETE)",  "description": ""},
+        { "id": "joins", "title": "Working with Joins",  "description": ""},
+        { "id": "indexes", "title": "Indexes and Performance Optimization",  "description": ""},
+        { "id": "transactions", "title": "Transactions and ACID Properties",  "description": ""},
+        { "id": "functions", "title": "Stored Procedures and Functions", "description": "" }
+      ]
+    },
+    {
+      "id": "postgresql",
+      "title": "PostgreSQL Roadmap",
+      "description": "Master PostgreSQL for advanced database management and features.",
+      "steps": [
+        { "id": "pg-setup", "title": "Setting Up PostgreSQL",  "description": ""},
+        { "id": "pg-queries", "title": "Writing Queries in PostgreSQL",  "description": ""},
+        { "id": "pg-extensions", "title": "Using Extensions (e.g., PostGIS)",  "description": ""},
+        { "id": "pg-backups", "title": "Backup and Restore",  "description": ""},
+        { "id": "pg-optimization", "title": "Performance Tuning", "description": "" }
+      ]
+    },
+    {
+      "id": "mongodb",
+      "title": "MongoDB Roadmap",
+      "description": "Learn MongoDB for NoSQL database solutions.",
+      "steps": [
+        { "id": "mongodb-basics", "title": "MongoDB Basics",  "description": ""},
+        { "id": "crud", "title": "CRUD Operations in MongoDB",  "description": ""},
+        { "id": "indexes", "title": "Indexes in MongoDB",  "description": ""},
+        { "id": "aggregation", "title": "Aggregation Pipelines",  "description": ""},
+        { "id": "replication", "title": "Replication and Sharding", "description": "" }
+      ]
+    },
+    {
+      "id": "prismadb",
+      "title": "PrismaDB Roadmap",
+      "description": "Use Prisma for modern database management in your applications.",
+      "steps": [
+        { "id": "prisma-setup", "title": "Setting Up Prisma",  "description": ""},
+        { "id": "prisma-queries", "title": "Querying with Prisma",  "description": ""},
+        { "id": "prisma-relations", "title": "Managing Relations in Prisma",  "description": ""},
+        { "id": "prisma-migrations", "title": "Database Migrations",  "description": ""},
+        { "id": "prisma-advanced", "title": "Advanced Prisma Features", "description": "" }
+      ]
+    },
+    {
+      "id": "nextjs",
+      "title": "Next.js Roadmap",
+      "description": "Learn Next.js for building modern server-rendered React applications.",
+      "steps": [
+        { "id": "nextjs-setup", "title": "Setting Up Next.js",  "description": ""},
+        { "id": "pages", "title": "Pages and Routing",  "description": ""},
+        { "id": "api-routes", "title": "API Routes",  "description": ""},
+        { "id": "server-side", "title": "Server-Side Rendering and Static Generation",  "description": ""},
+        { "id": "next-auth", "title": "Authentication in Next.js", "description": "" }
+      ]
+    },
+    {
+      "id": "reactjs",
+      "title": "React.js Roadmap",
+      "description": "Master React.js for building dynamic, reusable components.",
+      "steps": [
+        { "id": "react-basics", "title": "React Basics",  "description": ""},
+        { "id": "state-management", "title": "State Management with Hooks",  "description": ""},
+        { "id": "props", "title": "Props and Component Communication",  "description": ""},
+        { "id": "routing", "title": "Routing with React Router",  "description": ""},
+        { "id": "optimization", "title": "Performance Optimization", "description": "" }
+      ]
+    }
+  ]
+}

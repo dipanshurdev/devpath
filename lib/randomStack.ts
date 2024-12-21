@@ -57,50 +57,61 @@ export const Roles: RoleType[] = [
     inConstruction: true,
   },
 ];
-export const Lang = [
+export const Lang: RoleType[] = [
   {
-    id: 1,
+    id: "HTML",
     name: "HTML",
+    inConstruction: false,
   },
   {
-    id: 2,
+    id: "CSS",
     name: "CSS",
+    inConstruction: false,
   },
   {
-    id: 3,
+    id: "javascript",
     name: "javascript",
+    inConstruction: false,
   },
   {
-    id: 4,
+    id: "typescript",
     name: "typescript",
+    inConstruction: false,
   },
   {
-    id: 5,
+    id: "tailwindcss",
     name: "tailwindcss",
+    inConstruction: false,
   },
   {
-    id: 6,
+    id: "sql",
     name: "sql",
+    inConstruction: false,
   },
   {
-    id: 7,
+    id: "postgressql",
     name: "postgressql",
+    inConstruction: false,
   },
   {
-    id: 8,
+    id: "mongodb",
     name: "mongodb",
+    inConstruction: false,
   },
   {
-    id: 9,
+    id: "prismadb",
     name: "prismadb",
+    inConstruction: false,
   },
   {
-    id: 10,
+    id: "next js",
     name: "next js",
+    inConstruction: false,
   },
   {
-    id: 11,
+    id: "react js",
     name: "react js",
+    inConstruction: false,
   },
 ];
 

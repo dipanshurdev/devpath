@@ -9,27 +9,32 @@ import Icon from "./Icon";
 // import { useUserContext } from "@/context/AuthContext";
 // import { toast } from "react-toastify";
 // import Profile from "./Profile";
+// import SearchBar from "../roadmaps/SearchBar";
 // import { useUserContext } from "@/context/AuthContext";
 
 const Navbar = () => {
+  // const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <nav className="w-full flex items-center justify-between">
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex items-center justify-between gap-4">
         <Link href="/">
           <Icon title="DevPath" />
         </Link>
-
-        {/* <span>
+        <span>
           <Link href="/roadmaps">Roadmaps</Link>
         </span>
-        <span>
+      </div>
+      <div className="flex gap-4 items-center justify-center">
+        {/* <span>
           <Link href="/roadmaps">Resources</Link>
-        </span>
-        <span>
+        </span> */}
+        {/* <span>
           <Link href="/roadmaps">About</Link>
         </span> */}
+        {/* <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+        {/* <Profile /> */}
       </div>
-      {/* <Profile user={user} /> */}
     </nav>
   );
 };
