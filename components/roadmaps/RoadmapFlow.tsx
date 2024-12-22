@@ -33,7 +33,7 @@ function createNodesAndEdges(nodes: Models.Document): {
     (node: Models.Document, index: number) => ({
       id: node.nodeId,
       type: "custom",
-      position: { x: index % 2 === 0 ? 400 : 800, y: index * 222 },
+      position: { x: index % 2 === 0 ? 400 : 800, y: index * 333 },
       data: { ...node },
     })
   );

@@ -528,6 +528,7 @@ export default function RoadmapPage({
           setRoadmapData(response);
         } catch (error) {
           console.log(error);
+
           // notFound()
         } finally {
           setLoading(false);
@@ -537,82 +538,39 @@ export default function RoadmapPage({
     }
   }, [params.roadmapId]);
 
-  if (loading) {
-    <Loader loading={loading} />;
+  if (!roadmapData?.title && loading) {
+    return <Loader loading={loading} />;
   }
 
   return (
     <div className="flex items-center h-screen">
-      {roadmapData ? (
-        <>
-          <div className="flex-1 overflow-hidden">
-            <div className="container mx-auto px-4 py-8">
+      <div className="flex-1 overflow-hidden">
+        <div className="container mx-auto px-4 py-8">
+          {roadmapData && (
+            <>
               <RoadmapInfo roadmap={roadmapData} />
               <RoadmapFlow
                 nodes={roadmapData.nodes as Models.Document}
                 onNodeClick={(node: Models.Document) => setSelectedNode(node)}
               />
-            </div>
-          </div>
-          {/* <AnimatePresence> */}
-          {selectedNode && (
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="w-1/3 bg-white dark:bg-gray-800 p-4 overflow-y-auto border-l border-gray-200 dark:border-gray-700 "
-              style={{ height: "100vh - 200px)" }}
-            >
-              <NodeDetails node={selectedNode} />
-            </motion.div>
+            </>
           )}
-          {/* </AnimatePresence> */}
-        </>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-            // backgroundColor: ,
-            color: "#e5e7eb",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "2rem",
-              marginBottom: "1rem",
-              color: "#007BFF",
-              textAlign: "center",
-            }}
-          >
-            🚧 Roadmap is Under Construction 🚧
-          </h1>
-          <p
-            style={{
-              fontSize: "1.2rem",
-              textAlign: "center",
-              maxWidth: "600px",
-            }}
-          >
-            This Roadmap is currently being built. We are working hard to
-            complete it. So stay tuned for updates!🫡🚀
-          </p>
-          <p
-            style={{
-              fontSize: "1rem",
-              textAlign: "center",
-              maxWidth: "400px",
-              marginTop: "10px",
-            }}
-          >
-            Try other Roadmaps like: Frontend, Backend....
-          </p>
         </div>
+      </div>
+      {/* <AnimatePresence> */}
+      {selectedNode && (
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="w-1/3 bg-white dark:bg-gray-800 p-4 overflow-y-auto border-l border-gray-200 dark:border-gray-700 "
+          style={{ height: "100vh - 200px)" }}
+        >
+          <NodeDetails node={selectedNode} />
+        </motion.div>
       )}
+      {/* </AnimatePresence> */}
     </div>
   );
 }
