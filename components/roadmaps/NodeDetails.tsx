@@ -44,8 +44,8 @@ export default function NodeDetails({ node }: { node: Models.Document }) {
         </h3>
         {node.resources.length > 0 ? (
           <ul className="space-y-2">
-            {node.resources.map((resource: any, index: any) => (
-              <Card className="mb-2">
+            {node.resources.map((resource: Models.Document, index: number) => (
+              <Card className="mb-2" key={index}>
                 <CardHeader className="p-4">
                   <CardTitle className="text-sm flex items-center gap-2">
                     {getResourceIcon(resource.type)}

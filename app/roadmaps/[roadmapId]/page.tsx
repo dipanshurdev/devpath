@@ -550,7 +550,7 @@ export default function RoadmapPage({
               <RoadmapInfo roadmap={roadmapData} />
               <RoadmapFlow
                 nodes={roadmapData.nodes as Models.Document}
-                onNodeClick={(node: any) => setSelectedNode(node)}
+                onNodeClick={(node: Models.Document) => setSelectedNode(node)}
               />
             </div>
           </div>

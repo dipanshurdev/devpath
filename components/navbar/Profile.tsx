@@ -1,10 +1,11 @@
 import roadmapState from "@/lib/state";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
-import { LuLogIn, LuLogOut, LuUser } from "react-icons/lu";
+import { LuLogIn, LuLogOut } from "react-icons/lu";
 import { signOutAccount } from "@/lib/appwrite/api";
 import { IUser } from "@/types";
 import Image from "next/image";
+// import Image from "next/image";
 
 type Props = {
   user?: IUser;
@@ -24,7 +25,7 @@ const Profile = ({ user }: Props) => {
     if (user) {
       setDropdownOpen(!dropdownOpen);
     }
-  }, [dropdownOpen]);
+  }, [dropdownOpen, user]);
 
   const closeDropdown = useCallback(() => {
     signOutAccount();
@@ -39,7 +40,7 @@ const Profile = ({ user }: Props) => {
             className="flex gap-3  cursor-pointer items-center justify-evenly"
           >
             <div className="block w-10 h-10 ">
-              <img
+              <Image
                 src={user.imageUrl}
                 alt={`${user.name}'s Picture`}
                 className=" rounded-full"

@@ -5,8 +5,8 @@ import { Input } from "../Input";
 import roadmapState from "@/lib/state";
 import AuthModal from "./AuthModal";
 import { createAccount, signInUser } from "@/lib/appwrite/api";
-import { useRouter } from "next/navigation";
-import { Button } from "../Button";
+// import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
 
 export const RegisterModal = () => {
@@ -16,7 +16,7 @@ export const RegisterModal = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const router = useRouter();
+  // const router = useRouter();
   const { isLoading, setIsLoading } = useUserContext();
 
   const handleLoginClick = () => {
@@ -112,7 +112,12 @@ export const RegisterModal = () => {
         <div className="flex flex-col gap-2 p-10">
           {/* <button onClick={handleSubmit}>Sign Up</button> */}
 
-          <Button label="Sign Up" fullWidth large onClick={handleSubmit} />
+          <Button
+            children="Sign up"
+            variant="default"
+            size="lg"
+            onClick={handleSubmit}
+          />
           <p className="w-full">
             Already have an account? then
             <span

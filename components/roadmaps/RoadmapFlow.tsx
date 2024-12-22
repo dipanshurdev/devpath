@@ -10,6 +10,7 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   MarkerType,
+  Connection,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
@@ -24,16 +25,18 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-function createNodesAndEdges(nodes: any): {
+function createNodesAndEdges(nodes: Models.Document): {
   nodes: Node[];
   edges: Edge[];
 } {
-  const flowNodes: Node[] = nodes.map((node: any, index: any) => ({
-    id: node.nodeId,
-    type: "custom",
-    position: { x: index % 2 === 0 ? 400 : 800, y: index * 222 },
-    data: { ...node },
-  }));
+  const flowNodes: Node[] = nodes.map(
+    (node: Models.Document, index: number) => ({
+      id: node.nodeId,
+      type: "custom",
+      position: { x: index % 2 === 0 ? 400 : 800, y: index * 222 },
+      data: { ...node },
+    })
+  );
 
   const edges: Edge[] = [];
   for (let i = 0; i < nodes.length - 1; i++) {
@@ -61,13 +64,13 @@ interface RoadmapFlowProps {
 
 export default function RoadmapFlow({ nodes, onNodeClick }: RoadmapFlowProps) {
   const { nodes: initialNodes, edges: initialEdges } = createNodesAndEdges(
-    nodes as any
+    nodes as Models.Document
   );
   const [flowNodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 

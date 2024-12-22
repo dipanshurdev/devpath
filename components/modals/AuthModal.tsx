@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import { Button } from "../ui/button";
 // import { Button } from "../Button";
 // import roadmapState from "@/lib/state";
 // import { INewUser } from "@/types";
@@ -59,13 +60,15 @@ h-full lg:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-
           {/* Header */}
           <div className="flex items-center justify-between p-10 rounded-t">
             <h3 className="text-3xl font-semibold text-primary">{title}</h3>
-            <button
+            <Button
               onClick={onClose}
+              variant="default"
               className="
             p-1 ml-auto border-0 text-primary hover:opacity-70 transition"
+              disabled={disabled}
             >
               <AiOutlineClose size={20} />
-            </button>
+            </Button>
           </div>
           {/* Body */}
           <div
