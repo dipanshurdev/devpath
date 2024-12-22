@@ -4,7 +4,7 @@ import roadmapState from "@/lib/state";
 import React, { useCallback, useState } from "react";
 import { Input } from "../Input";
 import AuthModal from "./AuthModal";
-import { Button } from "../Button";
+import { Button } from "../ui/button";
 import { signInUser } from "@/lib/appwrite/api";
 import { useUserContext } from "@/context/AuthContext";
 
@@ -51,7 +51,7 @@ export const LoginModal = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [email, password, onModalClose]);
+  }, [email, password, onModalClose, setIsLoading]);
 
   // Modal body content for login
   const bodyContent = (
@@ -82,7 +82,9 @@ export const LoginModal = () => {
         "Creating account..."
       ) : (
         <div className="flex flex-col gap-2 p-10">
-          <Button label="Sign Up" fullWidth large onClick={onSubmit} />
+          <Button variant="default" size="lg" onClick={onSubmit}>
+            Log in
+          </Button>
           <p className="w-full">
             Already have an account? then
             <span

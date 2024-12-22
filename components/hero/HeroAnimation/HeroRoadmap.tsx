@@ -304,10 +304,10 @@ const StylishRoadmapFlow: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
-    if (initialNodes) {
+    if (!nodes) {
       setNodes(nodes);
     }
-  }, [initialNodes, setNodes, nodes]);
+  }, [setNodes, nodes]);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),

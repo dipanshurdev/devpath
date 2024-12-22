@@ -112,12 +112,9 @@ export const RegisterModal = () => {
         <div className="flex flex-col gap-2 p-10">
           {/* <button onClick={handleSubmit}>Sign Up</button> */}
 
-          <Button
-            children="Sign up"
-            variant="default"
-            size="lg"
-            onClick={handleSubmit}
-          />
+          <Button variant="default" size="lg" onClick={handleSubmit}>
+            Sign Up
+          </Button>
           <p className="w-full">
             Already have an account? then
             <span

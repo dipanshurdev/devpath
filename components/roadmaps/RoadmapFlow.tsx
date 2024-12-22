@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -77,6 +77,12 @@ export default function RoadmapFlow({ nodes, onNodeClick }: RoadmapFlowProps) {
   const handleNodeClick = (event: React.MouseEvent, node: Node) => {
     onNodeClick(node.data);
   };
+
+  useEffect(() => {
+    if (!nodes) {
+      setNodes(nodes);
+    }
+  }, [nodes, setNodes]);
 
   return (
     <div style={{ height: "calc(100vh - 200px)" }}>

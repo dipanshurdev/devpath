@@ -29,7 +29,7 @@ const Profile = ({ user }: Props) => {
 
   const closeDropdown = useCallback(() => {
     signOutAccount();
-  }, [user]);
+  }, []);
 
   return (
     <div className="relative flex items-center gap-4">
