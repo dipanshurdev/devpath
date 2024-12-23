@@ -4,7 +4,6 @@ import { useCallback, useEffect } from "react";
 import ReactFlow, {
   Node,
   Edge,
-  Controls,
   Background,
   useNodesState,
   useEdgesState,
@@ -18,11 +17,11 @@ import CustomEdge from "./CustomEdge";
 import { Models } from "appwrite";
 
 const nodeTypes = {
-  custom: CustomNode,
+  roadmap: CustomNode,
 };
 
 const edgeTypes = {
-  custom: CustomEdge,
+  animated: CustomEdge,
 };
 
 function createNodesAndEdges(nodes: Models.Document): {
@@ -32,7 +31,7 @@ function createNodesAndEdges(nodes: Models.Document): {
   const flowNodes: Node[] = nodes.map(
     (node: Models.Document, index: number) => ({
       id: node.nodeId,
-      type: "custom",
+      type: "roadmap",
       position: { x: index % 2 === 0 ? 400 : 800, y: index * 333 },
       data: { ...node },
     })
@@ -44,12 +43,12 @@ function createNodesAndEdges(nodes: Models.Document): {
       id: `e${nodes[i].nodeId}-${nodes[i + 1].nodeId}`,
       source: nodes[i].nodeId,
       target: nodes[i + 1].nodeId,
-      type: "custom",
+      type: "animated",
       animated: true,
-      style: { stroke: "#888", strokeWidth: 2 },
+      // style: { stroke: "#e5e7eb", strokeWidth: 2 },
       markerEnd: {
-        type: MarkerType.ArrowClosed,
-        color: "#888",
+        type: MarkerType.Arrow,
+        // color: "#e5e7eb",
       },
     });
   }
@@ -97,8 +96,21 @@ export default function RoadmapFlow({ nodes, onNodeClick }: RoadmapFlowProps) {
         onNodeClick={handleNodeClick}
         fitView
       >
-        <Background color="#e0e0e0" gap={16} />
-        <Controls />
+        <Background
+          className="rounded-3xl"
+          color="#e5e7eb"
+          size={1.2}
+          gap={10}
+        />
+        {/* <Controls /> */}
+        <svg width="0" height="0">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#1D4ED8" />
+            </linearGradient>
+          </defs>
+        </svg>
       </ReactFlow>
     </div>
   );
