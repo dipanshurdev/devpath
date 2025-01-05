@@ -3,15 +3,17 @@ import { ArrowRight, Clock, BarChart2 } from "lucide-react";
 // import { Models } from "appwrite";
 import { RoleType } from "@/types";
 
-export default function RoadmapCard({ name, id, inConstruction }: RoleType) {
-  // These would typically come from the roadmap data
-  const estimatedTime = "4-6 weeks";
-  const difficulty = "Intermediate";
-
+export default function RoadmapCard({
+  name,
+  id,
+  inConstruction,
+  difficulty,
+  estimatedTime,
+}: RoleType) {
   return (
     <div
       className={`${
-        inConstruction ? "cursor-progress" : "cursor-pointer"
+        inConstruction ? "cursor-progress" : "cursor-default"
       } bg-darkLight  rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300`}
     >
       <div className="p-6">
@@ -26,7 +28,17 @@ export default function RoadmapCard({ name, id, inConstruction }: RoleType) {
             <Clock size={16} className="mr-1" />
             <span>{estimatedTime}</span>
           </div>
-          <div className="flex items-center">
+          <div
+            className={`flex items-center ${
+              difficulty === "Advanced"
+                ? "text-yellow-500"
+                : difficulty === "Intermediate"
+                ? "text-green-500"
+                : difficulty === "Expert"
+                ? "text-red-300"
+                : "text-gray-500 "
+            }`}
+          >
             <BarChart2 size={16} className="mr-1" />
             <span>{difficulty}</span>
           </div>
