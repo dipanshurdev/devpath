@@ -27,14 +27,17 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="hover:text-white transition-colors">
+                <Link
+                  href="/"
+                  className="hover:text-primaryBlue  transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   href="/roadmaps"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primaryBlue  transition-colors"
                 >
                   Roadmaps
                 </Link>
@@ -42,7 +45,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primaryBlue  transition-colors"
                 >
                   Resources
                 </Link>
@@ -50,7 +53,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primaryBlue  transition-colors"
                 >
                   About
                 </Link>
@@ -58,7 +61,7 @@ export default function Footer() {
               {/* <li>
                 <Link
                   href="/contact"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primaryBlue  transition-colors"
                 >
                   Contact
                 </Link>
@@ -80,7 +83,7 @@ export default function Footer() {
                 href="https://github.com/dipanshurdev/devpath"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-primaryBlue  transition-colors"
               >
                 <LuGithub size={24} />
                 <span className="sr-only">Gihub</span>
@@ -89,7 +92,7 @@ export default function Footer() {
                 href="https://twitter.com/dipanshurdev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-primaryBlue  transition-colors"
               >
                 <LuTwitter size={24} />
                 <span className="sr-only">Twitter</span>
@@ -98,7 +101,7 @@ export default function Footer() {
                 href="https://instagram.com/dipanshurdev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-primaryBlue  transition-colors"
               >
                 <LuInstagram size={24} />
                 <span className="sr-only">Instagram</span>
@@ -107,7 +110,7 @@ export default function Footer() {
                 href="https://linkedin.com/in/dipanshurdev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-primaryBlue  transition-colors"
               >
                 <LuLinkedin size={24} />
                 <span className="sr-only">LinkedIn</span>
