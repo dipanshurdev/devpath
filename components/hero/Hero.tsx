@@ -39,7 +39,7 @@ const Hero = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              Your Developer Roadmap to Success
+              The Ultimate Guide to Your Developer Success
             </h1>
             <p className="mt-4 max-w-3xl text-xl text-primaryWhite">
               Navigate your tech career with confidence. Our curated learning
