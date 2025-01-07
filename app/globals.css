@@ -4,6 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #171717;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #2752e0;
+    border-radius: 100vh;
+    border: 1px solid #1e40af;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+}
+
 body {
   /* background: #171717; */
   background: linear-gradient(
