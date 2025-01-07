@@ -46,7 +46,7 @@ const Features = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="flow-root bg-darkLight  rounded-lg px-6 pb-8">
-                  <div className="-mt-6">
+                  <div className="-mt-6 text-center">
                     <div>
                       <span
                         className={`inline-flex items-center justify-center p-3 bg-gradient-to-r ${feature.color} rounded-md shadow-lg`}
@@ -57,10 +57,10 @@ const Features = () => {
                         />
                       </span>
                     </div>
-                    <h3 className="mt-8 text-lg font-medium text-primaryWhite tracking-tight">
+                    <h3 className="mt-8 text-2xl font-medium text-primaryWhite tracking-tight">
                       {feature.title}
                     </h3>
-                    <p className="mt-5 text-base text-light dark:text-gray-400">
+                    <p className=" text-base text-light dark:text-gray-400">
                       {feature.description}
                     </p>
                   </div>

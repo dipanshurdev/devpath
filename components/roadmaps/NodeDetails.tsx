@@ -7,11 +7,22 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Book, Code, FileVideo, Folder, Gamepad, LinkIcon } from "lucide-react";
+import {
+  Book,
+  CircleChevronDown,
+  CircleChevronUp,
+  Code,
+  FileVideo,
+  Folder,
+  Gamepad,
+  LinkIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+import { useState } from "react";
 
 export default function NodeDetails({ node }: { node: Models.Document }) {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const getResourceIcon = (type: string) => {
     switch (type) {
       case "article":
@@ -54,8 +65,33 @@ export default function NodeDetails({ node }: { node: Models.Document }) {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <CardDescription className="text-xs">
-                    {resource.description}
+                    {/* {resource.description} */}
+
+                    {/* <p className="text-sm text-start text-muted-foreground mb-4 text-primaryDark"> */}
+                    {!node.title ||
+                    isExpanded ||
+                    resource?.description?.length <= 150
+                      ? resource?.description
+                      : `${resource?.description?.slice(0, 150)}...`}
+                    {/* </p> */}
                   </CardDescription>
+                  {resource?.description?.length > 100 && resource?.title && (
+                    <Button
+                      variant="dropDown"
+                      className="px-0  text-sm font-medium text-primaryBlue  hover:text-blue-600 "
+                      onClick={() => setIsExpanded(!isExpanded)}
+                    >
+                      {isExpanded ? (
+                        <span className="flex w-full items-center justify-between gap-2 text-base">
+                          Show Less <CircleChevronUp />
+                        </span>
+                      ) : (
+                        <span className="flex w-full items-center justify-between gap-2 text-base">
+                          Show More <CircleChevronDown />
+                        </span>
+                      )}
+                    </Button>
+                  )}
                   <div className="flex justify-between items-center mt-2 ">
                     <Badge
                       variant="secondary"

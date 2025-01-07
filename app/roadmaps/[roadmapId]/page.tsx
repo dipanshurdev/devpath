@@ -345,158 +345,12 @@
 
 // export default Page;
 
-// =--------------------------------------------------------------------------------------
-
-// "use client";
-
-// import { useParams } from "next/navigation";
-// import ReactFlow, {
-//   addEdge,
-//   Connection,
-//   Edge,
-//   MarkerType,
-//   NodeMouseHandler,
-//   useEdgesState,
-//   useNodesState,
-// } from "reactflow";
-// import React, { useCallback, useEffect, useState } from "react";
-// import { Models } from "appwrite";
-// import roadmapDataJSON from "@/skillBasedRoadmap.json";
-// import { ScrollArea } from "@radix-ui/react-scroll-area";
-
-// const Page = () => {
-//   const { roadmapId } = useParams(); // Capture the dynamic route parameter
-//   const [nodes, setNodes, onNodesChange] = useNodesState<any[]>([]);
-//   const [edges, setEdges, onEdgesChange] = useEdgesState<any[]>([]);
-//   const [selectedNode, setSelectedNode] = useState<Models.Document | null>(
-//     null
-//   );
-//   const [roadmapData, setRoadmapData] = useState<any | null>(null);
-
-//   useEffect(() => {
-//     // Filter roadmaps based on the route parameter
-//     const filteredRoadmap = roadmapDataJSON.roadmaps.find(
-//       (roadmap) => roadmap.id == roadmapId
-//     );
-
-//     if (filteredRoadmap) {
-//       setRoadmapData(filteredRoadmap);
-
-//       // Create nodes for the filtered roadmap
-//       const roadmapNodes = filteredRoadmap.steps.map((step, index) => ({
-//         id: step.id,
-//         data: {
-//           label: step.title,
-//           ...step,
-//           // resources: step?.resources,
-//         },
-//         position: { x: index % 2 === 0 ? 400 : 800, y: index * 222 },
-//         style: {
-//           minWidth: 150,
-//           width: "auto",
-//           maxWidth: 180,
-//           height: 100,
-//           borderRadius: "0.5rem",
-//           background: "#1D4ED8",
-//           color: "#e5e7eb",
-//           display: "flex",
-//           alignItems: "center",
-//           justifyContent: "center",
-//           fontSize: "1rem",
-//         },
-//       }));
-
-//       // Create edges for the filtered roadmap
-//       const roadmapEdges = filteredRoadmap.steps
-//         .slice(0, -1)
-//         .map((step, index) => ({
-//           id: `e${step.id}-${filteredRoadmap.steps[index + 1].id}`,
-//           source: step.id,
-//           target: filteredRoadmap.steps[index + 1].id,
-//           animated: true,
-//           style: { stroke: "#e5e7eb" },
-//           markerEnd: { type: MarkerType.ArrowClosed, color: "#1D4ED8" },
-//         }));
-
-//       setNodes(roadmapNodes as any);
-//       setEdges(roadmapEdges);
-//     } else {
-//       setRoadmapData(null); // If no matching roadmap, show a fallback message
-//     }
-//   }, [roadmapId]);
-
-//   const onConnect = useCallback(
-//     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-//     [setEdges]
-//   );
-
-//   const onNodeClick: NodeMouseHandler = useCallback((_, node: any) => {
-//     setSelectedNode(node);
-//   }, []);
-
-//   return (
-//     <div className="w-full h-screen flex flex-col">
-//       <div className="flex-1 h-full">
-//         {roadmapData ? (
-//           <ReactFlow
-//             nodes={nodes}
-//             edges={edges}
-//             onNodesChange={onNodesChange}
-//             onEdgesChange={onEdgesChange}
-//             onConnect={onConnect}
-//             onNodeClick={onNodeClick}
-//             fitView
-//           >
-//             {/* <Background color="#1D4ED8" gap={16} size={1} />
-//             <Controls /> */}
-//           </ReactFlow>
-//         ) : (
-//           <div className="flex items-center justify-center h-full">
-//             <p className="text-lg text-muted-foreground">
-//               No roadmap found for "{roadmapId}". Please check the URL or try
-//               another roadmap.
-//             </p>
-//           </div>
-//         )}
-//       </div>
-//       {roadmapData && (
-//         <div className="w-full p-4 bg-gray-100">
-//           {selectedNode ? (
-//             <>
-//               <h3 className="text-lg font-bold">{selectedNode.data.title}</h3>
-//               <p>{selectedNode.data.description}</p>
-//               <ScrollArea>
-//                 {selectedNode.data.resources?.map(
-//                   (resource: any, index: any) => (
-//                     // <ResourceCard key={index} resource={resource} />
-//                     <div
-//                       key={index}
-//                       className="p-4 my-2 bg-white rounded-lg shadow"
-//                     >
-//                       <h4>{resource.title}</h4>
-//                       <p>{resource.description}</p>
-//                     </div>
-//                   )
-//                 )}
-//               </ScrollArea>
-//             </>
-//           ) : (
-//             <p>Select a node to view details.</p>
-//           )}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Page;
-
 // -----------------------------New Code------------------------------
 
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import RoadmapFlow from "@/components/roadmaps/RoadmapFlow";
 import RoadmapInfo from "@/components/roadmaps/RoadmapInfo";
 import NodeDetails from "@/components/roadmaps/NodeDetails";
@@ -543,34 +397,41 @@ export default function RoadmapPage({
   }
 
   return (
-    <div className="flex items-center h-screen">
-      <div className="flex-1 overflow-hidden">
-        <div className="container mx-auto px-4 py-8">
-          {roadmapData && (
-            <>
-              <RoadmapInfo roadmap={roadmapData} />
-              <RoadmapFlow
-                nodes={roadmapData.nodes as Models.Document}
-                onNodeClick={(node: Models.Document) => setSelectedNode(node)}
-              />
-            </>
-          )}
+    <div className="flex items-stretch flex-col h-screen w-full mt-20">
+      {roadmapData && <RoadmapInfo roadmap={roadmapData} />}
+      {/* Main Content Container */}
+      <div className="flex h-screen bg-transparent dark:bg-gray-900">
+        {/* Roadmap Flow Section */}
+        <div className="flex-1 overflow-hidden">
+          <div className="container mx-auto ">
+            {roadmapData && (
+              <>
+                <RoadmapFlow
+                  nodes={roadmapData.nodes as Models.Document}
+                  onNodeClick={(node: Models.Document) => setSelectedNode(node)}
+                />
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Roadmap Resource Section */}
+        <div className="max-w-[450px] overflow-y-scroll bg-primaryWhite dark:bg-gray-800 p-4  border-gray-200 rounded-r-lg dark:border-gray-700">
+          <AnimatePresence>
+            {selectedNode && (
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="h-full"
+              >
+                <NodeDetails node={selectedNode} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-      {/* <AnimatePresence> */}
-      {selectedNode && (
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="w-1/3 bg-white dark:bg-gray-800 p-4 overflow-y-auto border-l border-gray-200 dark:border-gray-700 "
-          style={{ height: "100vh - 200px)" }}
-        >
-          <NodeDetails node={selectedNode} />
-        </motion.div>
-      )}
-      {/* </AnimatePresence> */}
     </div>
   );
 }

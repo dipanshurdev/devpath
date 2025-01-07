@@ -1,6 +1,6 @@
 "use client";
 // import Roadmaps from "@/components/roadmaps/Roadmaps";
-import { Roles } from "@/lib/randomStack";
+import { Roles, Lang } from "@/lib/randomStack";
 import React from "react";
 // import { useState } from "react";
 import { motion } from "framer-motion";
@@ -33,22 +33,37 @@ export default function RoadmapsPage() {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {Roles.map((role) => (
-          <RoadmapCard key={role.id} {...role} />
-        ))}
-
-        {/* {filteredRoadmaps.map((roadmap, index) => (
+      <section className="w-full mt-16">
+        <h1 className="text-4xl font-bold  text-primaryWhite ">
+          Role Based Roadmaps
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 ">
+          {Roles.map((role) => (
+            <RoadmapCard key={role.id} {...role} />
+          ))}
+          {/* {filteredRoadmaps.map((roadmap, index) => (
           <motion.div
-            key={roadmap.roadmap_id}
-            initial={{ opacity: 0, y: 20 }}
+          key={roadmap.roadmap_id}
+          initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
+            >
             <RoadmapCard roadmap={roadmap} />
-          </motion.div>
-        ))} */}
-      </div>
+            </motion.div>
+            ))} */}
+        </div>
+      </section>
+
+      <section className="w-full mt-16">
+        <h1 className="text-4xl font-bold  text-primaryWhite ">
+          Language Based Roadmaps
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 ">
+          {Lang.map((lang) => (
+            <RoadmapCard key={lang.id} {...lang} />
+          ))}
+        </div>
+      </section>
 
       {/* {filteredRoadmaps.length === 0 && (
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">

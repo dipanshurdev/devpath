@@ -84,7 +84,7 @@ export default function RoadmapFlow({ nodes, onNodeClick }: RoadmapFlowProps) {
   }, [nodes, setNodes]);
 
   return (
-    <div style={{ height: "calc(100vh - 200px)" }}>
+    <div style={{ height: "642.14px" }}>
       <ReactFlow
         nodes={flowNodes}
         edges={edges}
@@ -97,7 +97,7 @@ export default function RoadmapFlow({ nodes, onNodeClick }: RoadmapFlowProps) {
         fitView
       >
         <Background
-          className="rounded-3xl"
+          className="rounded-l-lg"
           color="#e5e7eb"
           size={1.2}
           gap={10}
