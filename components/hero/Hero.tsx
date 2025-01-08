@@ -22,7 +22,7 @@ const stats = [
   {
     icon: BsLightningCharge,
     label: "Active Learners",
-    value: "05+",
+    value: "50+",
     color: "#1e40af",
   },
 ];
