@@ -416,9 +416,9 @@ export default function RoadmapPage({
         </div>
 
         {/* Roadmap Resource Section */}
-        <div className="max-w-[450px] overflow-y-scroll bg-primaryWhite dark:bg-gray-800 p-4  border-gray-200 rounded-r-lg dark:border-gray-700">
-          <AnimatePresence>
-            {selectedNode && (
+        {selectedNode && (
+          <div className="max-w-[450px] max-h-[642.14px] overflow-y-scroll bg-primaryWhite dark:bg-gray-800 p-4  border-gray-200 rounded-r-lg dark:border-gray-700 scrollbar">
+            <AnimatePresence>
               <motion.div
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
@@ -428,9 +428,9 @@ export default function RoadmapPage({
               >
                 <NodeDetails node={selectedNode} />
               </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </div>
   );
