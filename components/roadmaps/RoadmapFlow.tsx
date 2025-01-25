@@ -45,7 +45,7 @@ function createNodesAndEdges(nodes: Models.Document): {
       target: nodes[i + 1].nodeId,
       type: "animated",
       animated: true,
-      // style: { stroke: "#e5e7eb", strokeWidth: 2 },
+      style: { stroke: "#e5e7eb", strokeWidth: 2 },
       markerEnd: {
         type: MarkerType.Arrow,
         // color: "#e5e7eb",
