@@ -7,6 +7,7 @@ export const Roles: RoleType[] = [
     inConstruction: false,
     estimatedTime: "3-6 months",
     difficulty: "Intermediate",
+    topics: "10+",
   },
   {
     id: "backend",
@@ -14,6 +15,7 @@ export const Roles: RoleType[] = [
     inConstruction: false,
     estimatedTime: "4-8 months",
     difficulty: "Intermediate",
+    topics: "14+",
   },
   {
     id: "fullstack",
@@ -21,6 +23,7 @@ export const Roles: RoleType[] = [
     inConstruction: false,
     estimatedTime: "6-12 months",
     difficulty: "Advanced",
+    topics: "20+",
   },
   {
     id: "devops",
@@ -28,6 +31,7 @@ export const Roles: RoleType[] = [
     inConstruction: false,
     estimatedTime: "4-8 months",
     difficulty: "Advanced",
+    topics: "12+",
   },
   {
     id: "app_development",
@@ -35,6 +39,7 @@ export const Roles: RoleType[] = [
     inConstruction: true,
     estimatedTime: "3-6 months",
     difficulty: "Intermediate",
+    topics: "8+",
   },
   {
     id: "data_science",
@@ -42,6 +47,7 @@ export const Roles: RoleType[] = [
     inConstruction: true,
     estimatedTime: "6-12 months",
     difficulty: "Advanced",
+    topics: "15+",
   },
   {
     id: "ai_engineer",
@@ -49,6 +55,7 @@ export const Roles: RoleType[] = [
     inConstruction: true,
     estimatedTime: "12-18 months",
     difficulty: "Expert",
+    topics: "18+",
   },
 ];
 
@@ -59,6 +66,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 weeks",
     difficulty: "Intermediate",
+    topics: "5+",
   },
   {
     id: "CSS",
@@ -66,6 +74,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "2-4 weeks",
     difficulty: "Intermediate",
+    topics: "7+",
   },
   {
     id: "javascript",
@@ -73,6 +82,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "2-3 months",
     difficulty: "Intermediate",
+    topics: "12+",
   },
   {
     id: "typescript",
@@ -80,6 +90,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 months",
     difficulty: "Intermediate",
+    topics: "8+",
   },
   {
     id: "tailwindcss",
@@ -87,6 +98,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "2-4 weeks",
     difficulty: "Intermediate",
+    topics: "6+",
   },
   {
     id: "sql",
@@ -94,6 +106,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 months",
     difficulty: "Intermediate",
+    topics: "10+",
   },
   {
     id: "postgressql",
@@ -101,6 +114,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 months",
     difficulty: "Intermediate",
+    topics: "9+",
   },
   {
     id: "mongodb",
@@ -108,6 +122,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 months",
     difficulty: "Intermediate",
+    topics: "8+",
   },
   {
     id: "prismadb",
@@ -115,6 +130,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "1-2 months",
     difficulty: "Intermediate",
+    topics: "7+",
   },
   {
     id: "next js",
@@ -122,6 +138,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "2-4 months",
     difficulty: "Advanced",
+    topics: "15+",
   },
   {
     id: "react js",
@@ -129,6 +146,7 @@ export const Lang: RoleType[] = [
     inConstruction: true,
     estimatedTime: "2-4 months",
     difficulty: "Advanced",
+    topics: "15+",
   },
 ];
 
@@ -136,9 +154,16 @@ export const projects = [
   {
     id: 1,
     name: "frontend",
+    topics: "3+",
   },
   {
     id: 2,
     name: "backend",
+    topics: "4+",
+  },
+  {
+    id: 3,
+    name: "fullstack",
+    topics: "5+",
   },
 ];

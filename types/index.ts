@@ -80,4 +80,5 @@ export type RoleType = {
   inConstruction?: boolean;
   estimatedTime?: string;
   difficulty?: "Advanced" | "Intermediate" | "Expert";
+  topics?: string;
 };
