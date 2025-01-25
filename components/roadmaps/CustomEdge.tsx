@@ -27,9 +27,9 @@ export default function CustomEdge({
         id={id}
         style={{
           ...style,
-          strokeDasharray: "2,2",
+          strokeDasharray: "2,8",
           animation: "dashdraw 30s linear infinite",
-          stroke: "#e5e7eb",
+          stroke: "#1D4ED8",
         }}
         className="react-flow__edge-path"
         d={edgePath}
@@ -39,7 +39,7 @@ export default function CustomEdge({
         style={{
           ...style,
           strokeWidth: 6,
-          strokeLinecap: "round",
+          strokeLinecap: "butt",
           fill: "none",
           stroke: "#1D4ED8",
         }}
