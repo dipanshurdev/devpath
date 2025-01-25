@@ -49,9 +49,9 @@ const Hero = () => {
             <div className="mt-8">
               <Link
                 href="/roadmaps"
-                className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-3 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 text-base font-medium text-white hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105 duration-200"
               >
-                Get Started
+                Start Learning
                 <BsArrowRight
                   className="ml-3 -mr-1 h-5 w-5"
                   aria-hidden="true"
