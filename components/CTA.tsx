@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { BsArrowRight } from "react-icons/bs";
 
 const CTA = () => {
   return (
@@ -13,12 +13,14 @@ const CTA = () => {
           developer. Our personalized roadmaps and curated resources are waiting
           for you.
         </p>
-        <Button
-          variant="default"
-          className="font-semibold bg-primaryBlue text-primaryWhite rounded-lg py-4 px-2"
+
+        <Link
+          href="/roadmaps"
+          className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 text-base font-medium text-white hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105 duration-200"
         >
-          <Link href="/roadmaps">Get Started for Free</Link>
-        </Button>
+          Start Learning
+          <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );
