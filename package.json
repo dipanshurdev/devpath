@@ -29,6 +29,7 @@
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.6",
     "reactflow": "^11.11.4",
+    "swr": "^2.3.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
