@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -24,17 +24,28 @@
   .scrollbar::-webkit-scrollbar-thumb:hover {
     background: #64748b;
   }
+
+  .bg-gradient-main {
+    background: linear-gradient(
+      32deg,
+      rgb(23, 23, 23) 20%,
+      #171717 60%,
+      #1e40af 80%,
+      rgba(23, 23, 23, 1) 99%
+    );
+  }
+  .bg-gradient-page {
+    background: linear-gradient(
+      21deg,
+      rgba(23, 23, 23, 1) 42%,
+      rgb(17, 17, 17) 69%,
+      rgba(30, 64, 175, 1) 100%
+    );
+  }
 }
 
 body {
   /* background: #171717; */
-  background: linear-gradient(
-    32deg,
-    rgba(23, 23, 23, 1) 20%,
-    rgba(23, 23, 23, 1) 60%,
-    rgba(30, 64, 175, 1) 80%,
-    rgba(23, 23, 23, 1) 99%
-  );
 
   color: #e5e7eb;
   width: 100%;
@@ -46,14 +57,14 @@ body {
   padding: 0;
   font-size: 18px;
   overflow-x: hidden;
-   font-family: "Quicksand";
+  font-family: "Quicksand";
 }
 
 @media (max-width: 768px) {
   body {
-  max-width: 90vw;
-  width: 100%;
-  height: 100%;
+    max-width: 90vw;
+    width: 100%;
+    height: 100%;
   }
 }
 
