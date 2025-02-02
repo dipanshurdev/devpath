@@ -3,5 +3,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <section>{children}</section>;
+  return (
+    <section className="bg-gradient-page rounded-xl min-h-screen my-8 w-full ">
+      {children}
+    </section>
+  );
 }
