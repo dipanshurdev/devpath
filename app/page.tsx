@@ -1,3 +1,5 @@
+"use client";
+
 import CTA from "@/components/CTA";
 import FAQ from "@/components/FAQs";
 import Features from "@/components/Features";
