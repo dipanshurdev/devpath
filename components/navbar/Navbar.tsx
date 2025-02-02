@@ -61,7 +61,7 @@ const Navbar = () => {
         >
           Roadmaps
         </Link>
-        <Link
+        {/* <Link
           href="/resources"
           className="text-primaryWhite hover:text-primaryBlue transition-colors"
         >
@@ -75,7 +75,7 @@ const Navbar = () => {
         </Link>
         <Link href="/about" className="text-primaryBlue  transition-colors">
           Sign Up
-        </Link>
+        </Link> */}
         {/* Placeholder for future profile component */}
 
         {/* <div className="w-8 h-8 bg-gray-200 rounded-full"></div> */}

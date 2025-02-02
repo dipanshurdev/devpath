@@ -179,6 +179,8 @@ export default function NodeDetails({
   isCompleted: boolean;
   onComplete: () => void;
 }) {
+  console.log({ isCompleted, onComplete });
+
   const [expandedResources, setExpandedResources] = useState<Set<number>>(
     new Set()
   );
