@@ -27,21 +27,30 @@
 
   .bg-gradient-main {
     background: linear-gradient(
-      32deg,
+      21deg,
       rgb(23, 23, 23) 20%,
       #171717 60%,
       #1e40af 80%,
       rgba(23, 23, 23, 1) 99%
     );
   }
+
   .bg-gradient-page {
-    background: linear-gradient(
+    /* background: linear-gradient(
       21deg,
       rgba(23, 23, 23, 1) 42%,
       rgb(17, 17, 17) 69%,
       rgba(30, 64, 175, 1) 100%
+    ); */
+
+    background: linear-gradient(
+      21deg,
+      rgba(0, 0, 0, 1) 26%,
+      rgba(23, 23, 23, 1) 77%,
+      rgba(38, 38, 38, 1) 98%
     );
   }
+
   .btn-gradient {
     background: linear-gradient(180deg, #3b82f6, #1d4ed8);
     color: #e5e7eb;
@@ -53,12 +62,12 @@
 body {
   color: #e5e7eb;
   width: 100%;
-  max-width: 77vw;
-  margin: auto;
+  /* max-width: 77vw; */
+  /* padding: 0rem 10rem; */
   height: 100%;
   /* min-height: 100vw; */
+  margin: auto;
   scroll-behavior: smooth;
-  padding: 0;
   font-size: 18px;
   overflow-x: hidden;
   font-family: "Quicksand";
@@ -80,6 +89,26 @@ body {
 @keyframes dash {
   to {
     stroke-dashoffset: -10;
+  }
+}
+
+.rocket {
+  display: inline-block;
+  animation: flyAcross 2s infinite ease-in;
+}
+
+@keyframes flyAcross {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
   }
 }
 
@@ -150,14 +179,11 @@ body {
   }
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
+} */
 
 .bg-primary {
   background-color: hsl(var(--bg-primary));
