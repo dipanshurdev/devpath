@@ -2,7 +2,6 @@
 
 // import { useNavigate } from "react-router-dom";
 import React, { createContext, useContext, useEffect, useState } from "react";
-
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { toast } from "react-toastify";
@@ -83,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       cookieFallback === undefined
     ) {
       toast.error("You don't have an Account");
-      onModalOpen();
+      // onModalOpen();
       setIsAuthenticated(false);
     }
 

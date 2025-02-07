@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { AuthProvider } from "@/context/AuthContext";
 // import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
 import { ToastContainer } from "react-toastify";
@@ -12,13 +13,13 @@ type Props = {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      {/* <AuthProvider> */}
-      <div className="p-4 scroll-smooth max-lg:px-0 ">
-        <Navbar />
-        {children}
-        <Footer />
-      </div>
-      {/* </AuthProvider> */}
+      <AuthProvider>
+        <div className="scroll-smooth max-lg:px-0 min-h-screen px-40">
+          <Navbar />
+          {children}
+          <Footer />
+        </div>
+      </AuthProvider>
       <ToastContainer
         autoClose={2000}
         position="bottom-right"

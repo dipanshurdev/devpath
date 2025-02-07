@@ -16,7 +16,7 @@ const CTA = () => {
 
         <Link
           href="/roadmaps"
-          className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 text-base font-medium text-white hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105 duration-200"
+          className="inline-flex items-center rounded-lg px-6 py-3 text-base font-medium btn-gradient hover:scale-105 duration-300 ease-out transition-all hover:shadow-md hover:shadow-primaryDarkLight"
         >
           Start Learning
           <BsArrowRight className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />

@@ -22,6 +22,8 @@ export const LoginModal = () => {
     onModalOpen(); // Ensure the modal is open
   };
 
+  console.log(isLoading);
+
   // Handle form submission for login
   const onSubmit = useCallback(async () => {
     setIsLoading(true);

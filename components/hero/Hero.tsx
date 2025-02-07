@@ -39,9 +39,10 @@ const Hero = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              The Ultimate Guide to Your Developer Success
+              The ultimate roadmap to your success as a developer!
+              <span className="rocket">🚀</span>
             </h1>
-            <p className="mt-4 max-w-3xl text-xl text-primaryWhite">
+            <p className="mt-4 max-w-3xl text-xl text-light">
               Navigate your tech career with confidence. Our curated learning
               paths guide you through the skills you need to become a proficient
               developer.
@@ -49,7 +50,7 @@ const Hero = () => {
             <div className="mt-8">
               <Link
                 href="/roadmaps"
-                className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 text-base font-medium text-white hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105 duration-200"
+                className="inline-flex items-center rounded-lg px-6 py-3 text-base font-medium btn-gradient hover:scale-105 duration-300 ease-out transition-all hover:shadow-md hover:shadow-primaryDarkLight "
               >
                 Start Learning
                 <BsArrowRight

@@ -4,7 +4,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="bg-gradient-page rounded-xl min-h-screen my-8 w-full ">
+    <section className="bg-gradient-page rounded-xl min-h-screen  w-full ">
       {children}
     </section>
   );

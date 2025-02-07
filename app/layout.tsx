@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Layout from "@/layout/Layout";
+import { LoginModal } from "@/components/modals/LoginModal";
+import { RegisterModal } from "@/components/modals/RegisterModal";
 // import { LoginModal } from "@/components/modals/LoginModal";
 // import { RegisterModal } from "@/components/modals/RegisterModal";
 
@@ -30,13 +32,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased scrollbar bg-gradient-main`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-main scrollbar`}
       >
+        {/* <div> */}
+
         <Layout>
-          {/* <LoginModal />
-          <RegisterModal /> */}
+          <LoginModal />
+          <RegisterModal />
           {children}
         </Layout>
+        {/* </div> */}
       </body>
     </html>
   );

@@ -9,7 +9,7 @@ interface RoadmapState {
 }
 
 const roadmapState = create<RoadmapState>((set) => ({
-  isModalOpen: true,
+  isModalOpen: false,
   authType: "login",
   onModalOpen: () => set({ isModalOpen: true }),
   onModalClose: () => set({ isModalOpen: false }),
