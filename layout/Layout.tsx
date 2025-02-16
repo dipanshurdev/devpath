@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
-// import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,11 +13,11 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <AuthProvider>
-        <div className="scroll-smooth max-lg:px-0 min-h-screen px-40">
+        <section className="scroll-smooth min-h-screen  w-[85rem] antialiased scrollbar mx-auto text-lg overflow-x-hidden ">
           <Navbar />
           {children}
           <Footer />
-        </div>
+        </section>
       </AuthProvider>
       <ToastContainer
         autoClose={2000}

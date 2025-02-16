@@ -1,6 +1,5 @@
 "use client";
 
-// import { useNavigate } from "react-router-dom";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
@@ -48,6 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const currentAccount = await getCurrentUser();
+      console.log(currentAccount);
+
       if (currentAccount) {
         setUser({
           id: currentAccount.$id,
@@ -61,6 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setIsAuthenticated(true);
         onModalClose();
+        console.log(user);
 
         return true;
       }
