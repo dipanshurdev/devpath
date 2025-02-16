@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import roadmapState from "@/lib/state";
 import { useUserContext } from "@/context/AuthContext";
 import { useState } from "react";
+import Image from "next/image";
 
 const Navbar = () => {
   const { onModalOpen } = roadmapState();
@@ -45,7 +46,7 @@ const Navbar = () => {
               className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold"
             >
               {user?.imageUrl ? (
-                <img
+                <Image
                   src={user.imageUrl}
                   alt="Profile"
                   className="w-8 h-8 rounded-full"

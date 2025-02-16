@@ -50,8 +50,9 @@
 // ---------------------------v0-------------------------------
 import { Handle, Position } from "reactflow";
 import { CheckCircle } from "lucide-react";
+import { Models } from "appwrite";
 
-function CustomNode({ data }: { data: any }) {
+function CustomNode({ data }: { data: Models.Document }) {
   return (
     <div
       className={`custom-node w-64 p-4 text-center rounded-lg shadow-md ${

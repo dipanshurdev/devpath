@@ -73,7 +73,7 @@ export default function RoadmapFlow({
     () => createNodesAndEdges(nodes, completedNodeIds),
     [nodes, completedNodeIds]
   );
-  const [flowNodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [flowNodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(

@@ -180,6 +180,7 @@ function ResourceCard({
       className={`mb-2 ${
         isCompleted ? "bg-darkLight text-primaryWhite" : "bg-primaryWhite "
       }`}
+      key={index}
     >
       <CardHeader className="p-4 flex flex-row justify-between items-start w-full">
         <CardTitle className="text-sm py-2 flex items-center justify-center gap-2">
