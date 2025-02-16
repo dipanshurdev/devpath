@@ -67,6 +67,12 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // backgroundImage: {
+      //   "gradient-main":
+      //     "linear-gradient(21deg, rgb(23, 23, 23) 20%, #171717 60%, #1e40af 80%, rgba(23, 23, 23, 1) 99%)",
+      //   "gradient-page":
+      //     "linear-gradient( 21deg, rgba(0, 0, 0, 1) 26%,rgba(23, 23, 23, 1) 77%,rgba(38, 38, 38, 1) 98%)",
+      // },
     },
   },
   plugins: [require("tailwindcss-animate")],
