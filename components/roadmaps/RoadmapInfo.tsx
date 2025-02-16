@@ -48,7 +48,7 @@ RoadmapInfoProps) {
   // const progress = (completedNodeIds.length / roadmap.nodes.length) * 100;
 
   return (
-    <div className=" rounded-lg p-6 mb-8">
+    <div className="shadow-sm shadow-primaryDark rounded-lg p-6 mb-8">
       <div className="flex justify-between items-start mb-4">
         <h1 className="text-3xl font-bold text-primaryWhite">
           {roadmap.title}

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   // LuFacebook,
   LuTwitter,
@@ -9,8 +12,11 @@ import {
 } from "react-icons/lu";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const backgroundClass =
+    pathname === "/" ? "bg-primaryDark mt-10" : "bg-transparent mt-20";
   return (
-    <footer className="bg-primaryDark text-primaryWhite py-12 mt-10">
+    <footer className={`${backgroundClass} text-primaryWhite py-12 `}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
