@@ -6,7 +6,7 @@ const CTA = () => {
     <section className="py-20 ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-extrabold text-primaryWhite mb-6">
-          Ready to Start Your Journey?
+          Ready to Start Your learning Journey?
         </h2>
         <p className="text-xl text-primaryWhite mb-8 max-w-2xl mx-auto">
           Join DevPath today and take the first step towards becoming a better
