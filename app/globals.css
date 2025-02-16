@@ -25,32 +25,6 @@
     background: #64748b;
   }
 
-  .bg-gradient-main {
-    background: linear-gradient(
-      21deg,
-      rgb(23, 23, 23) 20%,
-      #171717 60%,
-      #1e40af 80%,
-      rgba(23, 23, 23, 1) 99%
-    );
-  }
-
-  .bg-gradient-page {
-    /* background: linear-gradient(
-      21deg,
-      rgba(23, 23, 23, 1) 42%,
-      rgb(17, 17, 17) 69%,
-      rgba(30, 64, 175, 1) 100%
-    ); */
-
-    background: linear-gradient(
-      21deg,
-      rgba(0, 0, 0, 1) 26%,
-      rgba(23, 23, 23, 1) 77%,
-      rgba(38, 38, 38, 1) 98%
-    );
-  }
-
   .btn-gradient {
     background: linear-gradient(180deg, #3b82f6, #1d4ed8);
     color: #e5e7eb;
@@ -59,19 +33,23 @@
   }
 }
 
-body {
-  color: #e5e7eb;
-  width: 100%;
-  /* max-width: 77vw; */
-  /* padding: 0rem 10rem; */
-  height: 100%;
-  /* min-height: 100vw; */
-  margin: auto;
+* {
+  font-family: "Quicksand";
+}
+
+/* body { */
+/* color: #e5e7eb; */
+/* width: 100%; */
+/* max-width: 77vw; */
+/* padding: 0rem 10rem; */
+/* height: 100%; */
+/* min-height: 100vw; */
+/* margin: auto;
   scroll-behavior: smooth;
   font-size: 18px;
   overflow-x: hidden;
-  font-family: "Quicksand";
-}
+  font-family: "Quicksand"; */
+/* } */
 
 @media (max-width: 768px) {
   body {
@@ -191,4 +169,23 @@ body {
 
 .text-primary {
   color: hsl(var(--primary-blue));
+}
+
+.bg-gradient-main {
+  background: linear-gradient(
+    21deg,
+    rgb(23, 23, 23) 20%,
+    #171717 60%,
+    #1e40af 80%,
+    rgba(23, 23, 23, 1) 99%
+  );
+}
+
+.bg-gradient-page {
+  background: linear-gradient(
+    21deg,
+    rgba(0, 0, 0, 1) 26%,
+    rgba(23, 23, 23, 1) 77%,
+    rgba(38, 38, 38, 1) 98%
+  );
 }
