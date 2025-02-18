@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 
 import {
   Card,
@@ -120,12 +120,13 @@ export default function AboutPage() {
                     DevPath is a passion project created by a solo developer
                     with a mission to make the journey into tech more accessible
                     and structured for beginners. I believe that quality
-                    education should be free and available to everyone. That's
-                    why DevPath offers carefully crafted roadmaps filled with
-                    free resources, guiding you step-by-step through your
-                    learning journey. Whether you're starting from scratch or
-                    looking to expand your skills, DevPath is here to light the
-                    way on your path to becoming a proficient developer.
+                    education should be free and available to everyone.
+                    That&apos;s why DevPath offers carefully crafted roadmaps
+                    filled with free resources, guiding you step-by-step through
+                    your learning journey. Whether you&apos;re starting from
+                    scratch or looking to expand your skills, DevPath is here to
+                    light the way on your path to becoming a proficient
+                    developer.
                   </p>
                 </CardContent>
               </Card>
@@ -179,8 +180,8 @@ export default function AboutPage() {
             </h3>
             <p className="text-light dark:text-gray-300 mb-6">
               DevPath is a community-driven project. Your contributions, whether
-              it's suggesting new resources, improving existing roadmaps, or
-              helping with the platform itself, are always welcome. Join our
+              it&apos;s suggesting new resources, improving existing roadmaps,
+              or helping with the platform itself, are always welcome. Join our
               community and help make learning to code more accessible for
               everyone!
             </p>
