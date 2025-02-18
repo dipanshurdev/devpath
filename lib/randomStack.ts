@@ -34,9 +34,9 @@ export const Roles: RoleType[] = [
     topics: "12+",
   },
   {
-    id: "app_development",
+    id: "app_dev",
     name: "app development",
-    inConstruction: true,
+    inConstruction: false,
     estimatedTime: "3-6 months",
     difficulty: "Intermediate",
     topics: "8+",
