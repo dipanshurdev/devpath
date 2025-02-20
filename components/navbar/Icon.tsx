@@ -4,11 +4,14 @@ import DevPath from "../../assets/icons/path.svg";
 
 type Props = {
   title: string;
+  bg?: string;
 };
 
-const Icon = ({ title }: Props) => {
+const Icon = ({ title, bg }: Props) => {
   return (
-    <div className="inline-block border border-dotted px-3 py-2 rounded-lg">
+    <div
+      className={`inline-block border border-dotted px-3 py-2 rounded-lg ${bg}`}
+    >
       <div className="flex flex-row justify-center items-center gap-2">
         <div className="w-full">
           <Image
