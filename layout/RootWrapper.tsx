@@ -13,7 +13,7 @@ export default function BackgroundWrapper({
 
   return (
     <body
-      className={`${backgroundClass} min-h-screen flex justify-center items-center mx-auto text-primaryWhite`}
+      className={`${backgroundClass} min-h-screen flex justify-center items-center mx-auto text-primaryWhite scrollbar`}
     >
       {children}
     </body>
