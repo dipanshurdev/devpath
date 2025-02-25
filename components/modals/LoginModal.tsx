@@ -17,10 +17,10 @@ export const LoginModal = () => {
   const { isLoading, setIsLoading } = useUserContext();
 
   // Handle switch to the register modal
-  const handleRegisterClick = () => {
+  const handleRegisterClick = useCallback(() => {
     setAuthType("register"); // Set the auth type to "register"
     onModalOpen(); // Ensure the modal is open
-  };
+  }, [onModalOpen, setAuthType]);
 
   console.log(isLoading);
 
@@ -87,11 +87,11 @@ export const LoginModal = () => {
           <Button variant="default" size="lg" onClick={onSubmit}>
             Log in
           </Button>
-          <p className="w-full">
-            Already have an account? then
+          <p className="w-full text-center ">
+            Already have an account?
             <span
               onClick={handleRegisterClick}
-              className="text-secondary cursor-pointer hover:underline text-primaryBlue"
+              className=" cursor-pointer hover:underline text-primaryBlue"
             >
               {" "}
               Log In

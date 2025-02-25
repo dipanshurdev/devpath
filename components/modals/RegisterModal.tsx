@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Input } from "../Input";
 import roadmapState from "@/lib/state";
 import AuthModal from "./AuthModal";
@@ -19,10 +19,10 @@ export const RegisterModal = () => {
   // const router = useRouter();
   const { isLoading, setIsLoading } = useUserContext();
 
-  const handleLoginClick = () => {
+  const handleLoginClick = useCallback(() => {
     setAuthType("login");
     onModalOpen();
-  };
+  }, [onModalOpen, setAuthType]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -115,14 +115,14 @@ export const RegisterModal = () => {
           <Button variant="default" size="lg" onClick={handleSubmit}>
             Sign Up
           </Button>
-          <p className="w-full">
-            Already have an account? then
+          <p className="w-full text-center">
+            First time here? then
             <span
               onClick={handleLoginClick}
-              className="text-secondary cursor-pointer hover:underline text-primaryBlue"
+              className=" cursor-pointer hover:underline text-primaryBlue"
             >
               {" "}
-              Log In
+              Sign In
             </span>
           </p>
         </div>
