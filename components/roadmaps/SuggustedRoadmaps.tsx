@@ -1,10 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { Roles } from "@/lib/randomStack"; // Assuming this is the correct path
 import { useParams } from "next/navigation";
 import Loader from "../Loader";
@@ -13,7 +9,6 @@ import RoadmapCard from "./RoadmapCard";
 export default function SimilarRoadmaps() {
   const [similarRoadmaps, setSimilarRoadmaps] = useState(Roles); // Fix: Use correct shape
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { roadmapId } = useParams(); // Fix: Extract directly
 
   useEffect(() => {
@@ -41,7 +36,6 @@ export default function SimilarRoadmaps() {
       setSimilarRoadmaps(roadmaps);
     } catch (err) {
       console.error("Failed to fetch similar roadmaps:", err);
-      setError("Failed to load similar roadmaps");
     } finally {
       setIsLoading(false);
     }

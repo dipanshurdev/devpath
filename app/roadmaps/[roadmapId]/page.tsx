@@ -7,8 +7,6 @@ import RoadmapInfo from "@/components/roadmaps/RoadmapInfo";
 import NodeDetails from "@/components/roadmaps/NodeDetails";
 import { Models } from "appwrite";
 import Loader from "@/components/Loader";
-// import { Button } from "@/components/ui/button";
-// import { Moon, Sun } from "lucide-react";
 import { useRoadmap } from "@/lib/hooks/useRoadmap";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import SimilarRoadmaps from "@/components/roadmaps/SuggustedRoadmaps";
