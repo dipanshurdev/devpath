@@ -11,6 +11,7 @@ import Loader from "@/components/Loader";
 // import { Moon, Sun } from "lucide-react";
 import { useRoadmap } from "@/lib/hooks/useRoadmap";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
+import SimilarRoadmaps from "@/components/roadmaps/SuggustedRoadmaps";
 
 export default function RoadmapPage({
   params,
@@ -100,6 +101,7 @@ export default function RoadmapPage({
             </AnimatePresence>
           </div>
         </div>
+        <SimilarRoadmaps />
       </main>
     </div>
   );
