@@ -190,21 +190,24 @@ export default function AboutPage() {
                 href="https://github.com/dipanshurdev/devpath"
                 className="bg-primaryBlue text-primaryWhite px-4 py-2 rounded-lg flex items-center hover:scale-105 transition-all duration-300"
               >
-                <LuGithub className="mr-2 h-4 w-4" /> Contribute on GitHub
+                <LuGithub className="mr-2 h-4 w-4" />
+                <span className="hidden lg:block">Contribute on GitHub</span>
               </Link>
 
               <Link
                 href="https://x.com/dipanshurdev"
                 className="bg-primaryBlue text-primaryWhite px-4 py-2 rounded-lg flex items-center hover:scale-105 transition-all duration-300"
               >
-                <LuTwitter className="mr-2 h-4 w-4" /> Follow for Updates
+                <LuTwitter className="mr-2 h-4 w-4" />
+                <span className="hidden lg:block">Follow for Updates</span>
               </Link>
 
               <Link
                 href="#"
                 className="bg-primaryBlue text-primaryWhite px-4 py-2 rounded-lg flex items-center hover:scale-105 transition-all duration-300"
               >
-                <LuCoffee className="mr-2 h-4 w-4" /> Buy Me a Coffee
+                <LuCoffee className="mr-2 h-4 w-4" />
+                <span className="hidden lg:block">Buy Me a Coffee</span>
               </Link>
             </div>
           </div>

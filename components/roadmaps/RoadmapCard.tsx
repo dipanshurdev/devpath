@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Construction } from "lucide-react";
+import { ExternalLink, Clock, Construction } from "lucide-react";
 import { RoleType } from "@/types";
 
 export default function RoadmapCard({
@@ -19,26 +19,24 @@ export default function RoadmapCard({
       <div className="p-6">
         <div className="text-2xl font-bold mb-2 text-primaryWhite capitalize flex items-center justify-between">
           <span>{name}</span>
-
           {difficulty === "Advanced" ? (
-            <div className=" bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-md">
-              {difficulty}
+            <div className=" bg-yellow-500 text-white text-xs font-semibold px-2 py-1 max-lg:rounded-full max-lg:p-2 rounded-lg shadow-md">
+              <span className="hidden lg:block">{difficulty}</span>
             </div>
           ) : difficulty === "Intermediate" ? (
-            <div className=" bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-md">
-              {difficulty}
+            <div className=" bg-green-500 text-white text-xs font-semibold px-2 py-1 max-lg:rounded-full max-lg:p-2 rounded-lg shadow-md">
+              <span className="hidden lg:block">{difficulty}</span>
             </div>
           ) : difficulty === "Expert" ? (
-            <div className=" bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-md">
-              {difficulty}
+            <div className=" bg-red-500 text-white text-xs font-semibold px-2 py-1 max-lg:rounded-full max-lg:p-2 rounded-lg shadow-md">
+              <span className="hidden lg:block">{difficulty}</span>
             </div>
           ) : (
-            <div className=" bg-gray-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow-md">
-              {difficulty}
+            <div className=" bg-gray-500 text-white text-xs font-semibold py-1 px-2 max-lg:rounded-full max-lg:p-2 rounded-lg shadow-md">
+              <span className="hidden lg:block">{difficulty}</span>
             </div>
           )}
         </div>
-
         <div className="flex justify-between items-center text-sm text-light mb-4">
           <div className="flex items-center">
             <Clock size={16} className="mr-1" />
@@ -52,7 +50,7 @@ export default function RoadmapCard({
           </span>
           {inConstruction ? (
             <span className="text-sm flex items-center justify-evenly gap-2 font-medium bg-red-100 text-red-800 py-1 px-2 rounded dark:bg-red-900 dark:text-red-200">
-              In Construction
+              <span className="hidden lg:block">In Construction</span>
               <Construction size={16} />
             </span>
           ) : (
@@ -60,8 +58,8 @@ export default function RoadmapCard({
               href={`/roadmaps/${id}`}
               className="text-blue-600 dark:text-blue-400 hover:underline flex items-center"
             >
-              View Roadmap
-              <ArrowRight size={16} className="ml-1" />
+              <span className="hidden lg:block">View Roadmap</span>
+              <ExternalLink size={16} className="ml-1" />
             </Link>
           )}
         </div>

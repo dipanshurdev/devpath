@@ -36,7 +36,8 @@ const Features = () => {
           </p>
         </div>
         <div className="mt-20">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Grid Layout (Column on small screens) */}
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
@@ -45,7 +46,7 @@ const Features = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="flow-root bg-darkLight  rounded-lg px-6 pb-8">
+                <div className="flow-root bg-darkLight rounded-lg px-6 pb-8">
                   <div className="-mt-6 text-center">
                     <div>
                       <span
@@ -60,7 +61,7 @@ const Features = () => {
                     <h3 className="mt-8 text-2xl font-medium text-primaryWhite tracking-tight">
                       {feature.title}
                     </h3>
-                    <p className=" text-base text-light dark:text-gray-400">
+                    <p className="text-base text-light dark:text-gray-400">
                       {feature.description}
                     </p>
                   </div>

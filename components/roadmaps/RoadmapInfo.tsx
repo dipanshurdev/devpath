@@ -48,7 +48,7 @@ RoadmapInfoProps) {
   // const progress = (completedNodeIds.length / roadmap.nodes.length) * 100;
 
   return (
-    <div className="shadow-sm shadow-primaryDark rounded-lg p-6 mb-8">
+    <div className="shadow-sm shadow-primaryDark rounded-lg p-6 mb-8 w-full">
       <div className="flex justify-between items-start mb-4">
         <h1 className="text-3xl font-bold text-primaryWhite">
           {roadmap.title}
@@ -59,8 +59,8 @@ RoadmapInfoProps) {
           size="sm"
           className=" bg-darkLight text-primaryWhite hover:bg-darkLight/80"
         >
-          <Share2 className="w-4 h-4 mr-2" />
-          Share
+          <Share2 className="w-4 h-4 lg:mr-2" />
+          <span className="hidden lg:block">Share</span>
         </Button>
       </div>
       <motion.div
