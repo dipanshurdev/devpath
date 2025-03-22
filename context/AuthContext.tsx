@@ -49,24 +49,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const currentAccount = await getCurrentUser();
       console.log(currentAccount);
 
+      // if (currentAccount) {
+      //   setUser({
+      //     id: currentAccount.$id,
+      //     name: currentAccount.name,
+      //     username: currentAccount.username,
+      //     email: currentAccount.email,
+      //     imageUrl: currentAccount.imageUrl,
+      //     bio: currentAccount.bio,
+      //   });
+      //   // console.log(user);
+
+      //   setIsAuthenticated(true);
+      //   onModalClose();
+      //   console.log(user);
+
+      //   return true;
+      // }
+
       if (currentAccount) {
-        setUser({
+        const userData = {
           id: currentAccount.$id,
           name: currentAccount.name,
           username: currentAccount.username,
           email: currentAccount.email,
           imageUrl: currentAccount.imageUrl,
           bio: currentAccount.bio,
-        });
-        // console.log(user);
+        };
 
+        setUser(userData);
         setIsAuthenticated(true);
         onModalClose();
-        console.log(user);
+        console.log("Current account:", userData); // Log the data directly
 
         return true;
       }
-
       return false;
     } catch (error) {
       console.error(`Account not found, Error: ${error}`);
