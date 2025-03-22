@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthProvider } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
 
 export default function BackgroundWrapper({
@@ -12,10 +13,12 @@ export default function BackgroundWrapper({
     pathname === "/" ? "bg-gradient-main " : "bg-gradient-page";
 
   return (
-    <body
-      className={`${backgroundClass} min-h-screen flex justify-center items-center mx-auto text-primaryWhite scrollbar`}
-    >
-      {children}
-    </body>
+    <AuthProvider>
+      <body
+        className={`${backgroundClass} min-h-screen flex justify-center items-center mx-auto text-primaryWhite scrollbar`}
+      >
+        {children}
+      </body>
+    </AuthProvider>
   );
 }
