@@ -5,7 +5,7 @@ import { Code, BookOpen, Map } from "lucide-react";
 
 const features = [
   {
-    title: "Customized Learning Paths",
+    title: "Customized Roadmaps",
     description:
       "Tailored roadmaps for various developer roles and skill levels.",
     icon: Map,
