@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { toast } from "react-toastify";
@@ -43,55 +49,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const { isModalOpen, onModalOpen, onModalClose } = roadmapState();
 
-  const checkAuthUser = async () => {
+  const checkAuthUser = useCallback(async () => {
     setIsLoading(true);
     try {
       const currentAccount = await getCurrentUser();
       console.log(currentAccount);
 
+      if (!currentAccount) {
+        setIsAuthenticated(false);
+        setUser(INITIAL_USER);
+        return false;
+      }
+
+      const userData: IUser = {
+        id: currentAccount.$id,
+        name: currentAccount.name || "Unknown",
+        username: currentAccount.username || "anonymous",
+        email: currentAccount.email || "",
+        imageUrl: currentAccount.imageUrl || "",
+        bio: currentAccount.bio || "",
+      };
+
       // if (currentAccount) {
-      //   setUser({
+      //   const userData = {
       //     id: currentAccount.$id,
       //     name: currentAccount.name,
       //     username: currentAccount.username,
       //     email: currentAccount.email,
       //     imageUrl: currentAccount.imageUrl,
       //     bio: currentAccount.bio,
-      //   });
-      //   // console.log(user);
+      //   };
 
-      //   setIsAuthenticated(true);
-      //   onModalClose();
-      //   console.log(user);
+      setUser(userData);
+      setIsAuthenticated(true);
+      onModalClose();
+      console.log("Current account:", userData); // Log the data directly
 
-      //   return true;
-      // }
-
-      if (currentAccount) {
-        const userData = {
-          id: currentAccount.$id,
-          name: currentAccount.name,
-          username: currentAccount.username,
-          email: currentAccount.email,
-          imageUrl: currentAccount.imageUrl,
-          bio: currentAccount.bio,
-        };
-
-        setUser(userData);
-        setIsAuthenticated(true);
-        onModalClose();
-        console.log("Current account:", userData); // Log the data directly
-
-        return true;
-      }
-      return false;
+      return true;
     } catch (error) {
       console.error(`Account not found, Error: ${error}`);
+      setIsAuthenticated(false);
+      setUser(INITIAL_USER);
       return false;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const cookieFallback = localStorage.getItem("cookieFallback");
@@ -103,10 +106,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.error("You don't have an Account");
       // onModalOpen();
       setIsAuthenticated(false);
+    } else {
+      checkAuthUser();
     }
-
-    checkAuthUser();
-  }, []);
+  }, [checkAuthUser]);
 
   const value = {
     user,

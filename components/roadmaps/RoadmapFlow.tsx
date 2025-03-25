@@ -11,6 +11,7 @@ import ReactFlow, {
   Connection,
   Controls,
   MarkerType,
+  BezierEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
@@ -18,21 +19,20 @@ import CustomEdge from "./CustomEdge";
 import { Models } from "appwrite";
 import { useKeyboardNavigation } from "@/lib/hooks/useKeyboardNavigation";
 
+// ✅ Define nodeTypes and edgeTypes outside to prevent re-creation
 const nodeTypes = {
   roadmap: CustomNode,
 };
 
 const edgeTypes = {
   custom: CustomEdge,
+  animated: BezierEdge, // Ensure "animated" is properly registered
 };
 
 function createNodesAndEdges(
   nodes: Models.Document[],
   completedNodeIds: string[]
-): {
-  nodes: Node[];
-  edges: Edge[];
-} {
+): { nodes: Node[]; edges: Edge[] } {
   const flowNodes: Node[] = nodes.map(
     (node: Models.Document, index: number) => ({
       id: node.nodeId,
@@ -46,12 +46,12 @@ function createNodesAndEdges(
     id: `e${node.nodeId}-${nodes[index + 1].nodeId}`,
     source: node.nodeId,
     target: nodes[index + 1].nodeId,
-    type: "animated",
+    type: "animated", // Ensure this matches the registered type
     animated: true,
-    style: { stroke: "#3b82f6", strokeWidth: 5 },
+    style: { stroke: "#3b82f6", strokeWidth: 2 }, // Edge color fix
     markerEnd: {
       type: MarkerType.Arrow,
-      color: "#e5e7eb",
+      color: "#3b82f6",
     },
   }));
 
@@ -73,6 +73,7 @@ export default function RoadmapFlow({
     () => createNodesAndEdges(nodes, completedNodeIds),
     [nodes, completedNodeIds]
   );
+
   const [flowNodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -111,8 +112,8 @@ export default function RoadmapFlow({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
+        nodeTypes={nodeTypes} // ✅ Defined outside, now stable
+        edgeTypes={edgeTypes} // ✅ Defined outside, now stable
         onNodeClick={handleNodeClick}
         fitView
         fitViewOptions={{ padding: 0.2 }}
