@@ -90,7 +90,8 @@ export async function getAccount() {
 
     return currentAccount;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching account:", error);
+    return null;
   }
 }
 
@@ -99,7 +100,7 @@ export async function getCurrentUser() {
   try {
     const currentAccount = await getAccount();
 
-    if (!currentAccount) throw Error;
+    if (!currentAccount) throw Error("Account not found");
 
     const currentUser = await databases.listDocuments(
       databaseId,
@@ -107,8 +108,9 @@ export async function getCurrentUser() {
       [Query.equal("accountId", currentAccount.$id)]
     );
 
-    if (!currentUser) throw Error;
-
+    if (!currentUser || currentUser.documents.length === 0) {
+      throw new Error("User data not found in the database");
+    }
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
