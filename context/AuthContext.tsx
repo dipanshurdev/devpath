@@ -53,7 +53,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const currentAccount = await getCurrentUser();
-      console.log(currentAccount);
 
       if (!currentAccount) {
         setIsAuthenticated(false);
@@ -83,7 +82,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(userData);
       setIsAuthenticated(true);
       onModalClose();
-      console.log("Current account:", userData); // Log the data directly
 
       return true;
     } catch (error) {
