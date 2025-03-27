@@ -107,7 +107,11 @@ export const RegisterModal = () => {
   const footerContent = (
     <>
       {isLoading ? (
-        "Logging in..."
+        <div className="w-full items-center flex justify-center flex-row text-center">
+          <span className="text-primaryBlue font-semibold">
+            Creating Account...
+          </span>
+        </div>
       ) : (
         <div className="flex flex-col gap-2 p-10">
           {/* <button onClick={handleSubmit}>Sign Up</button> */}
@@ -122,7 +126,7 @@ export const RegisterModal = () => {
               className=" cursor-pointer hover:underline text-primaryBlue"
             >
               {" "}
-              Sign In
+              Log In
             </span>
           </p>
         </div>
@@ -130,7 +134,7 @@ export const RegisterModal = () => {
     </>
   );
 
-  return authType === "register" ? (
+  return authType === "login" ? (
     <AuthModal
       disabled={isLoading}
       isOpen={isModalOpen}

@@ -7,6 +7,7 @@ import AuthModal from "./AuthModal";
 import { Button } from "../ui/button";
 import { signInUser } from "@/lib/appwrite/api";
 import { useUserContext } from "@/context/AuthContext";
+import Loader from "../Loader";
 
 export const LoginModal = () => {
   const { isModalOpen, onModalClose, onModalOpen, authType, setAuthType } =
@@ -21,8 +22,6 @@ export const LoginModal = () => {
     setAuthType("register"); // Set the auth type to "register"
     onModalOpen(); // Ensure the modal is open
   }, [onModalOpen, setAuthType]);
-
-  console.log(isLoading);
 
   // Handle form submission for login
   const onSubmit = useCallback(async () => {
@@ -81,7 +80,11 @@ export const LoginModal = () => {
   const footerContent = (
     <>
       {isLoading ? (
-        "Creating account..."
+        <div className="w-full items-center flex justify-center flex-row text-center">
+          <span className="text-primaryBlue font-semibold">
+            Logging you in...
+          </span>
+        </div>
       ) : (
         <div className="flex flex-col gap-2 p-10">
           <Button variant="default" size="lg" onClick={onSubmit}>
@@ -94,7 +97,7 @@ export const LoginModal = () => {
               className=" cursor-pointer hover:underline text-primaryBlue"
             >
               {" "}
-              Log In
+              Sign Up
             </span>
           </p>
         </div>
