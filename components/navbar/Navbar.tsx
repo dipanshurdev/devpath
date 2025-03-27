@@ -8,6 +8,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { signOutAccount } from "@/lib/appwrite/api";
 
 const Navbar = () => {
   const { onModalOpen } = roadmapState();
@@ -15,8 +16,15 @@ const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    setDropdownOpen(false);
+  const handleLogout = async () => {
+    try {
+      setDropdownOpen(false);
+      await signOutAccount(); // Call the sign-out function
+      // Optionally, redirect the user to the home page or login page
+      // window.location.href = "/"; // Redirect to the home page after logout
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
