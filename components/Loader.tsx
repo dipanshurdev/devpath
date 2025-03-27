@@ -4,6 +4,7 @@ import { HashLoader } from "react-spinners";
 type Props = {
   color?: string;
   loading?: boolean;
+  text?: boolean;
 };
 
 const override: CSSProperties = {
@@ -11,7 +12,7 @@ const override: CSSProperties = {
   margin: "0 auto",
 };
 
-const Loader = ({ color = "#1e40af", loading = false }: Props) => {
+const Loader = ({ color = "#1e40af", loading = false, text = true }: Props) => {
   return (
     <div
       className="w-full flex items-center justify-center p-4 h-screen flex-col 
@@ -25,7 +26,7 @@ const Loader = ({ color = "#1e40af", loading = false }: Props) => {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-      <span className="text-base">Connecting...</span>
+      {text && <span className="text-base">Connecting Nodes...</span>}
     </div>
   );
 };
