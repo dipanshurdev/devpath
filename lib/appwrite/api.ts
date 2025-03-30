@@ -13,7 +13,7 @@ const {
   // resourcesId,
   roadmapsId,
   userCollectionId,
-  savedRoadmapsId
+  savedRoadmapsId,
 } = appwriteIds;
 
 // CREATE THE USER ACCOUNT
@@ -137,6 +137,19 @@ export async function getRoadmaps() {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getMinimalRoadmaps() {
+  return databases.listDocuments(databaseId, roadmapsId, [
+    Query.select([
+      "roadmap_id",
+      "title",
+      "description",
+      "difficulty",
+      "estimated_time_to_finish",
+      "type",
+    ]),
+  ]);
 }
 
 export async function getRoadmapById(roadmapId: string) {
