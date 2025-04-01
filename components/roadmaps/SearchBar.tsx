@@ -16,7 +16,7 @@ export default function SearchBar({
         placeholder="Search roadmaps..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full px-4 py-2 pl-10 text-gray-900 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none"
+        className="w-full px-4 py-2 pl-10 text-primaryDark bg-primaryWhite border  rounded-md dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none"
       />
       <Search
         className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
