@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import RoadmapFlow from "@/components/roadmaps/RoadmapFlow";
 import RoadmapInfo from "@/components/roadmaps/RoadmapInfo";
@@ -19,9 +19,16 @@ export default function RoadmapPage({
   const [selectedNode, setSelectedNode] = useState<Models.Document | null>(
     null
   );
+  const [demoRoadmap, setDemoRoadmap] = useState([]);
   const { roadmap, isLoading, isError } = useRoadmap(params.roadmapId);
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
   const { trackEvent } = useAnalytics();
+
+  useEffect(() => {
+    if (roadmap) {
+      setDemoRoadmap(roadmap as any);
+    }
+  }, [roadmap]);
 
   if (isLoading) {
     return <Loader loading={isLoading} />;
