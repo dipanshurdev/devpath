@@ -139,19 +139,6 @@ export async function getRoadmaps() {
   }
 }
 
-export async function getMinimalRoadmaps() {
-  return databases.listDocuments(databaseId, roadmapsId, [
-    Query.select([
-      "roadmap_id",
-      "title",
-      "description",
-      "difficulty",
-      "estimated_time_to_finish",
-      "type",
-    ]),
-  ]);
-}
-
 export async function getRoadmapById(roadmapId: string) {
   try {
     const roadmaps = await databases.listDocuments(databaseId, roadmapsId, [
@@ -185,7 +172,7 @@ export async function getNode(getNodeId: string) {
 }
 
 // ============================== LIKE / UNLIKE POST
-export async function likePost(roadmapId: string, likesArray: string[]) {
+export async function likeRoadmap(roadmapId: string, likesArray: string[]) {
   try {
     const updatedPost = await databases.updateDocument(
       databaseId,
@@ -205,7 +192,7 @@ export async function likePost(roadmapId: string, likesArray: string[]) {
 }
 
 // ============================== SAVE POST
-export async function savePost(roadmapId: string, userId: string) {
+export async function saveRoadmap(roadmapId: string, userId: string) {
   try {
     const saveRoadmap = await databases.createDocument(
       databaseId,
