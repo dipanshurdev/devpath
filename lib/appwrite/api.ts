@@ -179,7 +179,7 @@ export async function likeRoadmap(roadmapId: string, likesArray: string[]) {
       roadmapsId,
       roadmapId,
       {
-        likes: likesArray,
+        liked_roadmap: likesArray,
       }
     );
 
@@ -194,6 +194,10 @@ export async function likeRoadmap(roadmapId: string, likesArray: string[]) {
 // ============================== SAVE POST
 export async function saveRoadmap(roadmapId: string, userId: string) {
   try {
+    if (!databaseId || !savedRoadmapsId) {
+      throw new Error("Database ID or Collection ID is missing.");
+    }
+
     const saveRoadmap = await databases.createDocument(
       databaseId,
       savedRoadmapsId,
@@ -204,11 +208,10 @@ export async function saveRoadmap(roadmapId: string, userId: string) {
       }
     );
 
-    if (!saveRoadmap) throw Error;
-
     return saveRoadmap;
   } catch (error) {
-    console.log(error);
+    console.error("Error saving roadmap:", error);
+    throw error;
   }
 }
 

@@ -81,4 +81,5 @@ export type RoleType = {
   estimatedTime?: string;
   difficulty?: "Advanced" | "Intermediate" | "Expert";
   topics?: string;
+  likes?: string[];
 };

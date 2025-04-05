@@ -30,7 +30,10 @@ export function useNodes(nodeId: string) {
 export function useLikeRoadmap() {
   return useSWRMutation(
     "roadmaps", // Key for SWR to trigger revalidation
-    async (_, { arg }) => {
+    async (
+      _,
+      { arg }: { arg: { roadmapId: string; updatedLikes: string[] } }
+    ) => {
       const { roadmapId, updatedLikes } = arg;
       return await likeRoadmap(roadmapId, updatedLikes);
     }
@@ -41,7 +44,7 @@ export function useLikeRoadmap() {
 export function useSaveRoadmap() {
   return useSWRMutation(
     "saved-roadmaps", // Key for SWR to trigger revalidation
-    async (_, { arg }) => {
+    async (_, { arg }: { arg: { roadmapId: string; userId: string } }) => {
       const { roadmapId, userId } = arg;
       return await saveRoadmap(roadmapId, userId);
     }
