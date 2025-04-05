@@ -1,29 +1,25 @@
 "use client";
-// import Roadmaps from "@/components/roadmaps/Roadmaps";
-// import { Roles, Lang } from "@/lib/randomStack";
-import React, { useEffect, useState } from "react";
-// import { useState } from "react";
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import RoadmapCard from "@/components/roadmaps/RoadmapCard";
-import { getMinimalRoadmaps } from "@/lib/appwrite/api";
 import { Models } from "appwrite";
-import { Loader } from "lucide-react";
 import SearchBar from "@/components/roadmaps/SearchBar";
+import { useGetRoadmaps } from "@/lib/hooks/swr-hooks";
+import Loader from "@/components/Loader";
 
 export default function RoadmapsPage() {
-  const roadmaps = getMinimalRoadmaps();
-  const [allRoadmaps, setAllRoadmaps] = useState<
-    Models.Document[] | undefined
-  >();
+  const { data: roadmaps, error, isLoading } = useGetRoadmaps();
+  const allRoadmaps: Models.Document[] | undefined = roadmaps?.documents;
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  useEffect(() => {
-    const fetchRoadmaps = async () => {
-      const data = await roadmaps;
-      setAllRoadmaps(data?.documents);
-    };
-    fetchRoadmaps();
-  }, []);
+  // useEffect(() => {
+  //   const fetchRoadmaps = async () => {
+  //     const data = await roadmaps;
+  //     setAllRoadmaps(data?.documents);
+  //   };
+  //   fetchRoadmaps();
+  // }, []);
 
   const filteredRoadmaps = searchTerm
     ? allRoadmaps?.filter(
@@ -33,11 +29,10 @@ export default function RoadmapsPage() {
       )
     : allRoadmaps;
 
-  if (!allRoadmaps) {
+  if (isLoading) {
     return (
       <div className="w-full flex items-center justify-center p-4 h-screen flex-col m-4 gap-2">
-        <Loader className="animate-spin" size={32} color="#1e40af" />
-        <span className="text-base">Loading Roadmaps...</span>
+        <Loader loading={isLoading} />
       </div>
     );
   }
@@ -67,7 +62,7 @@ export default function RoadmapsPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-8">
           {filteredRoadmaps && filteredRoadmaps.length > 0 ? (
             filteredRoadmaps.map((role) => (
-              <RoadmapCard key={role.id} {...role} />
+              <RoadmapCard key={role.roadmap_id} {...role} />
             ))
           ) : (
             <p className="text-center text-gray-500 dark:text-gray-400 mt-8 col-span-3">
