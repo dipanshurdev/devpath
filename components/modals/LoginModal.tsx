@@ -7,7 +7,7 @@ import AuthModal from "./AuthModal";
 import { Button } from "../ui/button";
 import { signInUser } from "@/lib/appwrite/api";
 import { useUserContext } from "@/context/AuthContext";
-import Loader from "../Loader";
+// import Loader from "../Loader";
 
 export const LoginModal = () => {
   const { isModalOpen, onModalClose, onModalOpen, authType, setAuthType } =

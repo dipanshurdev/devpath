@@ -1,13 +1,13 @@
 "use client";
 
 import { useUserContext } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
+// import { useState } from "react";
 
 import Image from "next/image";
 
 const Profile = () => {
   const { user } = useUserContext();
-  const [savedRoadmaps, setSavedRoadmaps] = useState([]);
+  // const [savedRoadmaps, setSavedRoadmaps] = useState([]);
 
   // useEffect(() => {
   //   if (user?.id) {

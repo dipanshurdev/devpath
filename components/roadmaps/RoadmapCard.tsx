@@ -47,6 +47,7 @@ export default function RoadmapCard({
       updatedLikes = likesArray.filter((uid: string) => uid !== id);
     } else {
       updatedLikes = [...likesArray, id];
+      setIsLiked(true);
     }
 
     setLikesArray(updatedLikes);

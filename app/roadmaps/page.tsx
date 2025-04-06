@@ -9,7 +9,7 @@ import { useGetRoadmaps } from "@/lib/hooks/swr-hooks";
 import Loader from "@/components/Loader";
 
 export default function RoadmapsPage() {
-  const { data: roadmaps, error, isLoading } = useGetRoadmaps();
+  const { data: roadmaps, isLoading } = useGetRoadmaps();
   const allRoadmaps: Models.Document[] | undefined = roadmaps?.documents;
   const [searchTerm, setSearchTerm] = useState<string>("");
 
