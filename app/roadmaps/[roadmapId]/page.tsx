@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import RoadmapFlow from "@/components/roadmaps/RoadmapFlow";
 import RoadmapInfo from "@/components/roadmaps/RoadmapInfo";
 import NodeDetails from "@/components/roadmaps/NodeDetails";
 import { Models } from "appwrite";
 import Loader from "@/components/Loader";
-import { useRoadmap } from "@/lib/hooks/useRoadmap";
+import { useGetRoadmap } from "@/lib/hooks/swr-hooks";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import SimilarRoadmaps from "@/components/roadmaps/SuggustedRoadmaps";
 
@@ -19,23 +19,25 @@ export default function RoadmapPage({
   const [selectedNode, setSelectedNode] = useState<Models.Document | null>(
     null
   );
-  const [demoRoadmap, setDemoRoadmap] = useState([]);
-  const { roadmap, isLoading, isError } = useRoadmap(params.roadmapId);
+  const { data: roadmap, isLoading, error } = useGetRoadmap(params.roadmapId);
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
   const { trackEvent } = useAnalytics();
 
-  useEffect(() => {
-    if (roadmap) {
-      setDemoRoadmap(roadmap as any);
-    }
-  }, [roadmap]);
+  // useEffect(() => {
+  //   if (roadmap) {
+  //     setDemoRoadmap(roadmap as any);
+  //   }
+  // }, [roadmap]);
 
+  // if (isLoading) {
+  //   return <Loader loading={isLoading} />;
+  // }
+
+  if (error) {
+    return <div className="text-center mt-20">Failed to load roadmap</div>;
+  }
   if (isLoading) {
     return <Loader loading={isLoading} />;
-  }
-
-  if (isError || !roadmap) {
-    return <div className="text-center mt-20">Failed to load roadmap</div>;
   }
 
   const handleNodeCompletion = (nodeId: string) => {
@@ -50,7 +52,10 @@ export default function RoadmapPage({
   return (
     <div className="flex flex-col ">
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <RoadmapInfo roadmap={roadmap} completedNodeIds={completedNodeIds} />
+        <RoadmapInfo
+          roadmap={roadmap as Models.Document | undefined}
+          completedNodeIds={completedNodeIds}
+        />
         <div className="mt-8 rounded-lg  overflow-hidden">
           <div className="flex flex-col lg:flex-row">
             <div
@@ -58,7 +63,7 @@ export default function RoadmapPage({
               style={{ height: "calc(100vh - 300px)" }}
             >
               <RoadmapFlow
-                nodes={roadmap.nodes as Models.Document[]}
+                nodes={roadmap?.nodes as Models.Document[]}
                 completedNodeIds={completedNodeIds}
                 onNodeClick={setSelectedNode}
               />

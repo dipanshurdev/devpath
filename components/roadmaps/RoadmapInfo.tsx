@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 // import { Progress } from "../ui/progress";
 
 interface RoadmapInfoProps {
-  roadmap: Models.Document;
+  roadmap: Models.Document | undefined;
   completedNodeIds: string[];
 }
 
@@ -30,8 +30,8 @@ RoadmapInfoProps) {
     if (navigator.share) {
       navigator
         .share({
-          title: roadmap.title,
-          text: roadmap.description,
+          title: roadmap?.title,
+          text: roadmap?.description,
           url: window.location.href,
         })
         .catch(console.error);
@@ -51,7 +51,7 @@ RoadmapInfoProps) {
     <div className="shadow-sm shadow-primaryDark rounded-lg p-6 mb-8 w-full">
       <div className="flex justify-between items-start mb-4">
         <h1 className="text-3xl font-bold text-primaryWhite">
-          {roadmap.title}
+          {roadmap?.title}
         </h1>
         <Button
           onClick={shareRoadmap}
