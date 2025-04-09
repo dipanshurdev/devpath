@@ -7,28 +7,26 @@ import roadmapState from "@/lib/state";
 import { useUserContext } from "@/context/AuthContext";
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
-import { signOutAccount } from "@/lib/appwrite/api";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 const Navbar = () => {
   const { onModalOpen } = roadmapState();
-  const { isAuthenticated, user } = useUserContext();
+  const { isAuthenticated, user, logout } = useUserContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       setDropdownOpen(false);
-      await signOutAccount(); // Call the sign-out function
-      // Optionally, redirect the user to the home page or login page
-      // window.location.href = "/"; // Redirect to the home page after logout
+      setMobileMenuOpen(false);
+      await logout();
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
 
   return (
-    <nav className="w-full flex items-center justify-between p-4  text-primaryWhite">
+    <nav className="w-full flex items-center justify-between p-4 text-primaryWhite shadow-sm relative z-50">
       {/* Left Side - Logo */}
       <div className="flex items-center space-x-4">
         <Link href="/" className="flex items-center">
@@ -56,32 +54,36 @@ const Navbar = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!isDropdownOpen)}
-              className="w-8 h-8 bg-light rounded-full flex items-center justify-center text-sm font-bold"
+              className="flex items-center gap-1 bg-light px-2 py-1 rounded-full text-sm font-semibold hover:opacity-90"
             >
               {user?.imageUrl ? (
                 <Image
                   src={user.imageUrl}
                   alt="Profile"
-                  width={32}
-                  height={32}
+                  width={28}
+                  height={28}
                   className="rounded-full"
                 />
               ) : (
-                user?.name?.charAt(0).toUpperCase() || "U"
+                <span className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center text-black">
+                  {user?.name?.charAt(0).toUpperCase() || "U"}
+                </span>
               )}
+              <ChevronDown size={16} />
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-primaryWhite text-black rounded-lg shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-44 bg-white text-black rounded-md shadow-md z-50 overflow-hidden animate-fadeIn">
                 <Link
                   href="/profile"
-                  className="block px-4 py-2 hover:bg-light"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)}
                 >
                   Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 hover:bg-light"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100"
                 >
                   Logout
                 </button>
@@ -105,17 +107,17 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute top-14 right-[135px] w-[35%] bg-primaryDarkLight rounded-sm text-primaryWhite md:hidden flex flex-col items-center space-y-4 gap-10 py-4 shadow-lg">
+        <div className="absolute top-16 right-4 left-4 bg-primaryDarkLight text-primaryWhite rounded-md shadow-md py-6 px-4 space-y-4 flex flex-col items-center z-40">
           <Link
             href="/roadmaps"
-            className="hover:text-primaryBlue transition-colors border-b-2 hover:border-primaryBlue border-none"
+            className="w-full text-center hover:text-primaryBlue"
             onClick={() => setMobileMenuOpen(false)}
           >
             Roadmaps
           </Link>
           <Link
             href="/about"
-            className="hover:text-primaryBlue transition-colors border-b-2 hover:border-primaryBlue border-none"
+            className="w-full text-center hover:text-primaryBlue"
             onClick={() => setMobileMenuOpen(false)}
           >
             About
@@ -126,14 +128,14 @@ const Navbar = () => {
             <>
               <Link
                 href="/profile"
-                className="hover:text-primaryBlue transition-colors border-b-2 hover:border-primaryBlue border-none"
+                className="w-full text-center hover:text-primaryBlue"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Profile
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-red-500 hover:text-red-400"
+                className="w-full text-center text-red-500 hover:text-red-400"
               >
                 Logout
               </button>

@@ -6,12 +6,13 @@ import {
   Heart,
   Bookmark,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsBookmarkFill } from "react-icons/bs";
 import { Models } from "appwrite";
 import { motion } from "framer-motion";
 import { useLikeRoadmap, useSaveRoadmap } from "@/lib/hooks/swr-hooks";
 import { useUserContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function RoadmapCard({
   inConstruction,
@@ -19,34 +20,41 @@ export default function RoadmapCard({
   title,
   difficulty,
   estimated_time_to_finish,
-  liked_roadmap,
+  liked_users = [],
   $id,
-  savedBy,
+  savedBy = [],
 }: Models.Document) {
-  const { user } = useUserContext(); //TODO chache it
-  const { id } = user;
-  const [isSaved, setIsSaved] = useState(
-    // savedBy.incluedes(user?.id)
-    savedBy?.includes(id) || false
-  );
-  const [isLiked, setIsLiked] = useState(
-    // savedBy.incluedes(user?.id)
-    liked_roadmap?.includes(id) || false
-  );
-  // console.log(savedBy);
+  const { user, isAuthenticated } = useUserContext(); //TODO chache it
+  const userId = user?.id;
 
-  const [likesArray, setLikesArray] = useState<string[]>(liked_roadmap || []);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [likesArray, setLikesArray] = useState<string[]>(liked_users);
 
-  const { trigger: triggerLike } = useLikeRoadmap();
-  const { trigger: triggerSave } = useSaveRoadmap();
+  const { trigger: triggerLike, isMutating: isLiking } = useLikeRoadmap();
+  const { trigger: triggerSave, isMutating: isSaving } = useSaveRoadmap();
+
+  // Initialize like/save states safely when user is available
+  useEffect(() => {
+    if (!userId) return;
+
+    setIsLiked(likesArray.includes(userId));
+    setIsSaved(savedBy.includes(userId));
+  }, [userId, likesArray, savedBy]);
 
   // Handle Like Roadmaps
   const handleLike = async () => {
-    let updatedLikes;
-    if (likesArray.includes(id)) {
-      updatedLikes = likesArray.filter((uid: string) => uid !== id);
+    if (!isAuthenticated || !userId) {
+      return toast.error("You must be logged in to like!");
+    }
+
+    let updatedLikes: string[];
+
+    if (likesArray.includes(userId)) {
+      updatedLikes = likesArray.filter((uid) => uid !== userId);
+      setIsLiked(false);
     } else {
-      updatedLikes = [...likesArray, id];
+      updatedLikes = [...likesArray, userId];
       setIsLiked(true);
     }
 
@@ -56,10 +64,13 @@ export default function RoadmapCard({
 
   // Handle Save Roadmaps
   const handleSave = async () => {
-    if (!user) return alert("You must be logged in to save!");
+    if (!isAuthenticated || !userId) {
+      return toast.error("You must be logged in to save!");
+    }
 
-    await triggerSave({ roadmapId: $id, userId: id });
-    setIsSaved(true);
+    await triggerSave({ roadmapId: $id, userId });
+
+    setIsSaved((prev) => !prev); // toggle saved state
   };
 
   return (
@@ -68,7 +79,7 @@ export default function RoadmapCard({
       whileTap={{ scale: 0.98 }}
       className={`relative bg-darkLight rounded-2xl shadow-md overflow-hidden 
       transition-all duration-300 ${
-        inConstruction ? "opacity-80 cursor-not-allowed" : "cursor-pointer"
+        inConstruction ? "opacity-80 cursor-not-allowed" : "cursor-default"
       }`}
     >
       {/* Card Content */}
@@ -121,8 +132,9 @@ export default function RoadmapCard({
         {/* Like & Save Buttons */}
         <div className="flex justify-between items-center mt-2">
           <button
-            className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition"
+            className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition disabled:opacity-50"
             onClick={handleLike}
+            disabled={inConstruction || isLiking}
           >
             {isLiked ? (
               <Heart size={20} className="text-red-500" />
@@ -130,23 +142,23 @@ export default function RoadmapCard({
               <Heart size={20} />
             )}
             <span>{likesArray?.length}</span>
-
-            {/* Likes count here if needed */}
           </button>
 
           <button
-            className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition"
+            className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition disabled:opacity-50"
             onClick={handleSave}
+            disabled={inConstruction || isSaving}
           >
             {isSaved ? (
               <BsBookmarkFill size={20} className="text-blue-500" />
             ) : (
               <Bookmark size={20} />
             )}
-            <span>{savedBy?.length}</span>
+            <span>{savedBy?.length ?? 0}</span>
             <span>{isSaved ? "Saved" : "Save"}</span>
           </button>
         </div>
+
         {!inConstruction && (
           <div className="bg-gray-700 h-2 rounded-b-lg overflow-hidden">
             <div

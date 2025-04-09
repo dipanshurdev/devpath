@@ -33,7 +33,7 @@ function createNodesAndEdges(
   nodes: Models.Document[],
   completedNodeIds: string[]
 ): { nodes: Node[]; edges: Edge[] } {
-  const flowNodes: Node[] = nodes.map(
+  const flowNodes: Node[] = nodes?.map(
     (node: Models.Document, index: number) => ({
       id: node.nodeId,
       type: "roadmap",
@@ -42,7 +42,7 @@ function createNodesAndEdges(
     })
   );
 
-  const edges: Edge[] = nodes.slice(0, -1).map((node, index) => ({
+  const edges: Edge[] = nodes?.slice(0, -1)?.map((node, index) => ({
     id: `e${node.nodeId}-${nodes[index + 1].nodeId}`,
     source: node.nodeId,
     target: nodes[index + 1].nodeId,
