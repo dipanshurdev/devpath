@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import RoadmapFlow from "@/components/roadmaps/RoadmapFlow";
 import RoadmapInfo from "@/components/roadmaps/RoadmapInfo";
@@ -10,28 +10,37 @@ import Loader from "@/components/Loader";
 import { useGetRoadmap } from "@/lib/hooks/swr-hooks";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import SimilarRoadmaps from "@/components/roadmaps/SuggustedRoadmaps";
+import roadmapState from "@/lib/state";
+import { useUserContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function RoadmapPage({
   params,
 }: {
   params: { roadmapId: string };
 }) {
+  const router = useRouter();
+  const { isAuthenticated } = useUserContext();
   const [selectedNode, setSelectedNode] = useState<Models.Document | null>(
     null
   );
+
   const { data: roadmap, isLoading, error } = useGetRoadmap(params.roadmapId);
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
   const { trackEvent } = useAnalytics();
 
-  // useEffect(() => {
-  //   if (roadmap) {
-  //     setDemoRoadmap(roadmap as any);
-  //   }
-  // }, [roadmap]);
+  // const router = useRouter();
+  const { onModalOpen } = roadmapState();
 
-  // if (isLoading) {
-  //   return <Loader loading={isLoading} />;
-  // }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Redirect and trigger login modal
+      router.push("/");
+      onModalOpen();
+    }
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) return null;
 
   if (error) {
     return <div className="text-center mt-20">Failed to load roadmap</div>;

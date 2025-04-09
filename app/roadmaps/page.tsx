@@ -13,14 +13,6 @@ export default function RoadmapsPage() {
   const allRoadmaps: Models.Document[] | undefined = roadmaps?.documents;
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // useEffect(() => {
-  //   const fetchRoadmaps = async () => {
-  //     const data = await roadmaps;
-  //     setAllRoadmaps(data?.documents);
-  //   };
-  //   fetchRoadmaps();
-  // }, []);
-
   const filteredRoadmaps = searchTerm
     ? allRoadmaps?.filter(
         (roadmap) =>
@@ -71,23 +63,6 @@ export default function RoadmapsPage() {
           )}
         </div>
       </section>
-
-      {/* <section className="w-full mt-16"> */}
-      {/* <h1 className="text-4xl font-bold  text-primaryWhite "> */}
-      {/* Language Based Roadmaps */}
-      {/* </h1> */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 "> */}
-      {/* {Lang.map((lang) => (
-            <RoadmapCard key={lang.id} {...lang} />
-          ))} */}
-      {/* </div> */}
-      {/* </section> */}
-
-      {/* {filteredRoadmaps.length === 0 && (
-        <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
-          No roadmaps found. Try adjusting your search.
-        </p>
-      )} */}
     </section>
   );
 }
