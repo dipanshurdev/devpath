@@ -7,6 +7,7 @@ import AuthModal from "./AuthModal";
 import { Button } from "../ui/button";
 import { signInUser } from "@/lib/appwrite/api";
 import { useUserContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 // import Loader from "../Loader";
 
 export const LoginModal = () => {
@@ -15,7 +16,7 @@ export const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { isLoading, setIsLoading } = useUserContext();
+  const { isLoading, setIsLoading, login, register } = useUserContext();
 
   // Handle switch to the register modal
   const handleRegisterClick = useCallback(() => {
@@ -25,34 +26,21 @@ export const LoginModal = () => {
 
   // Handle form submission for login
   const onSubmit = useCallback(async () => {
-    setIsLoading(true);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      console.error("Invalid email format");
-      alert("Please enter a valid email address.");
+      toast.error("Sir, Please enter a valid email address🐱.");
       setIsLoading(false);
       return;
     }
+
     try {
-      const session = await signInUser({
-        email: email,
-        password: password,
-      });
-
-      if (!session) {
-        throw new Error("Error session not found!");
-      }
-
-      // Close the modal after login
-      onModalClose();
-      window.location.reload();
+      await login(email, password);
+      toast.success("Welcome back! You are logged in successfully.🐱");
     } catch (error) {
       console.error("Login error:", error);
-    } finally {
-      setIsLoading(false);
     }
-  }, [email, password, onModalClose, setIsLoading]);
+  }, [email, password]);
 
   // Modal body content for login
   const bodyContent = (
@@ -105,7 +93,7 @@ export const LoginModal = () => {
     </>
   );
 
-  return authType === "login" ? (
+  return authType === "login" && isModalOpen ? (
     <AuthModal
       disabled={isLoading}
       isOpen={isModalOpen}

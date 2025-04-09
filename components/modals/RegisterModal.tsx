@@ -5,9 +5,9 @@ import { Input } from "../Input";
 import roadmapState from "@/lib/state";
 import AuthModal from "./AuthModal";
 import { createAccount, signInUser } from "@/lib/appwrite/api";
-// import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 export const RegisterModal = () => {
   const { onModalClose, authType, onModalOpen, isModalOpen, setAuthType } =
@@ -17,7 +17,7 @@ export const RegisterModal = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   // const router = useRouter();
-  const { isLoading, setIsLoading } = useUserContext();
+  const { isLoading, setIsLoading, register } = useUserContext();
 
   const handleLoginClick = useCallback(() => {
     setAuthType("login");
@@ -25,42 +25,26 @@ export const RegisterModal = () => {
   }, [onModalOpen, setAuthType]);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-
     // Basic email validation (regex for email format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      console.error("Invalid email format");
-      alert("Please enter a valid email address.");
+      toast.error("Please enter a valid Email Address.");
       setIsLoading(false);
       return;
     }
 
     try {
-      const newUser = await createAccount({ email, password, name, username });
+      const registerdUser = await register(email, password, name, username);
 
-      if (!newUser) {
+      if (!registerdUser) {
+        toast.error("Ohh No! Something went wrong. Please try again.");
         throw new Error("Sign up failed. Please try again.");
       }
-
-      const session = await signInUser({
-        email: email,
-        password: password,
-      });
-
-      if (!session) {
-        throw new Error("Sign up failed. Please try again.");
-      }
+      toast.success("Welcome! You are signed up successfully.🐱");
       // console.log(newUser, session);
-
-      onModalClose();
-
-      return newUser;
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
 
     // console.log({ email, password, name, username });
@@ -134,7 +118,7 @@ export const RegisterModal = () => {
     </>
   );
 
-  return authType === "login" ? (
+  return authType === "register" && isModalOpen ? (
     <AuthModal
       disabled={isLoading}
       isOpen={isModalOpen}
