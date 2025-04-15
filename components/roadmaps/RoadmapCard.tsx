@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { useLikeRoadmap, useSaveRoadmap } from "@/lib/hooks/swr-hooks";
 import { useUserContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
+import { Stats } from "./Stats";
 
 export default function RoadmapCard({
   inConstruction,
@@ -24,54 +25,10 @@ export default function RoadmapCard({
   $id,
   savedBy = [],
 }: Models.Document) {
-  const { user, isAuthenticated } = useUserContext(); //TODO chache it
-  const userId = user?.id;
+  const savedUserIds = savedBy.map((item: Models.Document) => item.user?.$id);
+  const likedUserIds = liked_users.map((item: Models.Document) => item.$id);
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [likesArray, setLikesArray] = useState<string[]>(liked_users);
-
-  const { trigger: triggerLike, isMutating: isLiking } = useLikeRoadmap();
-  const { trigger: triggerSave, isMutating: isSaving } = useSaveRoadmap();
-
-  // Initialize like/save states safely when user is available
-  useEffect(() => {
-    if (!userId) return;
-
-    setIsLiked(likesArray.includes(userId));
-    setIsSaved(savedBy.includes(userId));
-  }, [userId, likesArray, savedBy]);
-
-  // Handle Like Roadmaps
-  const handleLike = async () => {
-    if (!isAuthenticated || !userId) {
-      return toast.error("You must be logged in to like!");
-    }
-
-    let updatedLikes: string[];
-
-    if (likesArray.includes(userId)) {
-      updatedLikes = likesArray.filter((uid) => uid !== userId);
-      setIsLiked(false);
-    } else {
-      updatedLikes = [...likesArray, userId];
-      setIsLiked(true);
-    }
-
-    setLikesArray(updatedLikes);
-    await triggerLike({ roadmapId: $id, updatedLikes });
-  };
-
-  // Handle Save Roadmaps
-  const handleSave = async () => {
-    if (!isAuthenticated || !userId) {
-      return toast.error("You must be logged in to save!");
-    }
-
-    await triggerSave({ roadmapId: $id, userId });
-
-    setIsSaved((prev) => !prev); // toggle saved state
-  };
+  console.log({ savedBy, liked_users });
 
   return (
     <motion.div
@@ -128,46 +85,15 @@ export default function RoadmapCard({
             </Link>
           )}
         </div>
-
+        <Stats
+          inConstruction={inConstruction}
+          savedUserIds={savedUserIds}
+          likedUserIds={likedUserIds}
+          liked_users={liked_users}
+          savedBy={savedBy}
+          $id={$id}
+        />
         {/* Like & Save Buttons */}
-        <div className="flex justify-between items-center mt-2">
-          <button
-            className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition disabled:opacity-50"
-            onClick={handleLike}
-            disabled={inConstruction || isLiking}
-          >
-            {isLiked ? (
-              <Heart size={20} className="text-red-500" />
-            ) : (
-              <Heart size={20} />
-            )}
-            <span>{likesArray?.length}</span>
-          </button>
-
-          <button
-            className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition disabled:opacity-50"
-            onClick={handleSave}
-            disabled={inConstruction || isSaving}
-          >
-            {isSaved ? (
-              <BsBookmarkFill size={20} className="text-blue-500" />
-            ) : (
-              <Bookmark size={20} />
-            )}
-            <span>{savedBy?.length ?? 0}</span>
-            <span>{isSaved ? "Saved" : "Save"}</span>
-          </button>
-        </div>
-
-        {!inConstruction && (
-          <div className="bg-gray-700 h-2 rounded-b-lg overflow-hidden">
-            <div
-              className="bg-green-500 h-full"
-              style={{ width: "50%" }}
-              title="Progress: 50%"
-            ></div>
-          </div>
-        )}
       </div>
     </motion.div>
   );
