@@ -179,7 +179,7 @@ export async function likeRoadmap(roadmapId: string, likesArray: string[]) {
       roadmapsId,
       roadmapId,
       {
-        liked_roadmap: likesArray,
+        liked_users: likesArray,
       }
     );
 
@@ -215,6 +215,23 @@ export async function saveRoadmap(roadmapId: string, userId: string) {
   }
 }
 
+// ============================== DELETE SAVED POST
+export async function deleteSavedRoadmap(savedRecordId: string) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      databaseId,
+      savedRoadmapsId,
+      savedRecordId
+    );
+
+    if (!statusCode) throw Error;
+
+    return { status: "Ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // export async function commentPost(postId: string, comment: string[]) {
 //   try {
 //     // const post = await getPostById(postId);
@@ -237,23 +254,6 @@ export async function saveRoadmap(roadmapId: string, userId: string) {
 //     console.log(error);
 //   }
 // }
-
-// ============================== DELETE SAVED POST
-export async function deleteSavedPost(savedRecordId: string) {
-  try {
-    const statusCode = await databases.deleteDocument(
-      databaseId,
-      savedRoadmapsId,
-      savedRecordId
-    );
-
-    if (!statusCode) throw Error;
-
-    return { status: "Ok" };
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 // ============================== GET USER BY ID
 // export async function getUserById(userId: string) {

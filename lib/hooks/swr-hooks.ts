@@ -7,6 +7,7 @@ import {
   getNodes,
   likeRoadmap,
   saveRoadmap,
+  deleteSavedRoadmap,
 } from "../appwrite/api";
 
 export function useGetRoadmaps() {
@@ -47,6 +48,16 @@ export function useSaveRoadmap() {
     async (_, { arg }: { arg: { roadmapId: string; userId: string } }) => {
       const { roadmapId, userId } = arg;
       return await saveRoadmap(roadmapId, userId);
+    }
+  );
+}
+
+export function useDeleteSavedRoadmap() {
+  return useSWRMutation(
+    "delete-saved-roadmap", // Key for SWR to trigger revalidation
+    async (_, { arg }: { arg: { savedRecordId: string } }) => {
+      const { savedRecordId } = arg;
+      return await deleteSavedRoadmap(savedRecordId);
     }
   );
 }
