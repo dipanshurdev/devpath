@@ -5,7 +5,6 @@ import React, { useCallback, useState } from "react";
 import { Input } from "../Input";
 import AuthModal from "./AuthModal";
 import { Button } from "../ui/button";
-import { signInUser } from "@/lib/appwrite/api";
 import { useUserContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 // import Loader from "../Loader";

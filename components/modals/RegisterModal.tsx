@@ -4,7 +4,6 @@ import React, { useCallback, useState } from "react";
 import { Input } from "../Input";
 import roadmapState from "@/lib/state";
 import AuthModal from "./AuthModal";
-import { createAccount, signInUser } from "@/lib/appwrite/api";
 import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
