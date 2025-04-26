@@ -14,6 +14,7 @@ const {
   roadmapsId,
   userCollectionId,
   savedRoadmapsId,
+  progressId,
 } = appwriteIds;
 
 // CREATE THE USER ACCOUNT
@@ -230,6 +231,46 @@ export async function deleteSavedRoadmap(savedRecordId: string) {
   } catch (error) {
     console.log(error);
   }
+}
+
+//============================================SAVE  PROGRESS
+export async function saveProgress(
+  userId: string,
+  roadmapId: string,
+  completedNodeIds: string[]
+) {
+  try {
+    const existingProgress = await databases.listDocuments(
+      databaseId,
+      progressId,
+      [Query.equal("user", userId), Query.equal("roadmap", roadmapId)]
+    );
+
+    if (existingProgress.total > 0) {
+      // If progress already exists, update it
+      const docId = existingProgress.documents[0].$id;
+      return databases.updateDocument(databaseId, progressId, docId, {
+        completedNodeIds,
+      });
+    } else {
+      return databases.createDocument(databaseId, progressId, ID.unique(), {
+        user: userId,
+        roadmap: roadmapId,
+        completedNodeIds: completedNodeIds,
+      });
+    }
+  } catch (error) {
+    console.error("Error saving progress:", error);
+  }
+}
+
+export async function getProgress(userId: string, roadmapId: string) {
+  const docs = await databases.listDocuments(databaseId, progressId, [
+    Query.equal("user", userId),
+    Query.equal("roadmap", roadmapId),
+  ]);
+
+  return docs.total > 0 ? docs.documents[0] : [];
 }
 
 // export async function commentPost(postId: string, comment: string[]) {

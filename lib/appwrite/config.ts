@@ -13,6 +13,7 @@ export const appwriteIds = {
   nodesId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_NODES as string,
   resourcesId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_RESOURCES as string,
   savedRoadmapsId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_SAVED as string,
+  progressId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_PROGRESS as string,
 };
 
 export const client = new Client();
