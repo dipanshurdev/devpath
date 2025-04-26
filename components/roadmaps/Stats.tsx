@@ -19,6 +19,7 @@ type StatsProps = {
   savedBy: string[];
   liked_users: Models.Document[];
   $id: string;
+  progressPercent?: number;
 };
 
 export const Stats = ({
@@ -28,6 +29,7 @@ export const Stats = ({
   liked_users,
   savedBy,
   $id,
+  progressPercent,
 }: StatsProps) => {
   const { user, isAuthenticated } = useUserContext();
   const likeList = liked_users?.map((user: Models.Document) => user?.$id);
@@ -44,19 +46,7 @@ export const Stats = ({
   useEffect(() => {
     setIsSaved(hasSaved ? true : false);
     setIsLiked(hasLiked ? true : false);
-
-    console.log({
-      likes,
-      hasLiked,
-      hasSaved,
-      likeList,
-      savePostLength,
-      savedUserIds,
-    });
   }, [user]);
-
-  // const [isLiked, setIsLiked] = useState<boolean | undefined>(false);
-  // const [isSaved, setIsSaved] = useState<boolean | undefined>(false);
 
   const { trigger: triggerLike, isMutating: isLiking } = useLikeRoadmap();
   const { trigger: triggerSave, isMutating: isSaving } = useSaveRoadmap();
@@ -128,7 +118,7 @@ export const Stats = ({
         <div className="bg-gray-700 h-2 rounded-b-lg overflow-hidden">
           <div
             className="bg-green-500 h-full"
-            style={{ width: "50%" }}
+            style={{ width: `${progressPercent}%` }}
             title="Progress: 50%"
           ></div>
         </div>
