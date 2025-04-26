@@ -1,18 +1,8 @@
 import Link from "next/link";
-import {
-  ExternalLink,
-  Clock,
-  Construction,
-  Heart,
-  Bookmark,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import { BsBookmarkFill } from "react-icons/bs";
+import { ExternalLink, Clock, Construction } from "lucide-react";
+
 import { Models } from "appwrite";
 import { motion } from "framer-motion";
-import { useLikeRoadmap, useSaveRoadmap } from "@/lib/hooks/swr-hooks";
-import { useUserContext } from "@/context/AuthContext";
-import { toast } from "react-toastify";
 import { Stats } from "./Stats";
 
 export default function RoadmapCard({
@@ -24,11 +14,24 @@ export default function RoadmapCard({
   liked_users = [],
   $id,
   savedBy = [],
+  nodes = [],
+  completedNodeIds = [],
 }: Models.Document) {
+  const totalNodes = nodes?.length || 0;
+  const completedCount = completedNodeIds.length;
+  const progressPercent =
+    totalNodes > 0 ? Math.round((completedCount / totalNodes) * 100) : 0;
+
   const savedUserIds = savedBy.map((item: Models.Document) => item.user?.$id);
   const likedUserIds = liked_users.map((item: Models.Document) => item.$id);
 
-  console.log({ savedBy, liked_users });
+  console.log({
+    nodes,
+    completedNodeIds,
+    completedCount,
+    totalNodes,
+    progressPercent,
+  });
 
   return (
     <motion.div
@@ -77,7 +80,7 @@ export default function RoadmapCard({
             </span>
           ) : (
             <Link
-              href={`/roadmaps/${roadmap_id}`}
+              href={`/roadmaps/roadmap/${roadmap_id}`}
               className="text-blue-400 hover:text-blue-300 flex items-center gap-2"
             >
               <span>View Roadmap</span>
@@ -92,6 +95,7 @@ export default function RoadmapCard({
           liked_users={liked_users}
           savedBy={savedBy}
           $id={$id}
+          progressPercent={progressPercent}
         />
         {/* Like & Save Buttons */}
       </div>

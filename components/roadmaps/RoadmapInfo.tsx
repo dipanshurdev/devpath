@@ -5,15 +5,17 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
-// import { Progress } from "../ui/progress";
+import { Progress } from "../ui/progress";
 
 interface RoadmapInfoProps {
   roadmap: Models.Document | undefined;
   completedNodeIds: string[];
+  progress: number;
 }
 
 export default function RoadmapInfo({
   roadmap,
+  progress,
 }: // completedNodeIds,
 RoadmapInfoProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -92,12 +94,12 @@ RoadmapInfoProps) {
       )}
 
       {/* TODO */}
-      {/* <div className="mt-4">
+      <div className="mt-4">
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-          Progress: {Math.round(progress)}%
+          Progress: {progress}%
         </p>
         <Progress value={progress} className="w-full bg-primaryWhite" />
-      </div> */}
+      </div>
     </div>
   );
 }
