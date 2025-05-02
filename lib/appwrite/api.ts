@@ -2,15 +2,12 @@
 
 import { INewUser } from "@/types";
 import { account, appwriteIds, avatars, databases } from "./config";
-import { ID, Query } from "appwrite";
+import { ID, Models, Query } from "appwrite";
 
 const {
   databaseId,
   nodeId,
   nodesId,
-  // projectId,
-  // projectUrl,
-  // resourcesId,
   roadmapsId,
   userCollectionId,
   savedRoadmapsId,
@@ -243,7 +240,7 @@ export async function saveProgress(
     const existingProgress = await databases.listDocuments(
       databaseId,
       progressId,
-      [Query.equal("user", userId), Query.equal("roadmap", roadmapId)]
+      [Query.equal("users", userId), Query.equal("roadmaps", roadmapId)]
     );
 
     if (existingProgress.total > 0) {
@@ -266,8 +263,8 @@ export async function saveProgress(
 
 export async function getProgress(userId: string, roadmapId: string) {
   const docs = await databases.listDocuments(databaseId, progressId, [
-    Query.equal("user", userId),
-    Query.equal("roadmap", roadmapId),
+    Query.equal("users", userId),
+    Query.equal("roadmaps", roadmapId),
   ]);
 
   return docs.total > 0 ? docs.documents[0] : [];
