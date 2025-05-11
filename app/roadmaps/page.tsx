@@ -1,17 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import RoadmapCard from "@/components/roadmaps/RoadmapCard";
 import { Models } from "appwrite";
 import SearchBar from "@/components/roadmaps/SearchBar";
-import { useGetRoadmaps } from "@/lib/hooks/swr-hooks";
+import { useGetCurrentUser, useGetRoadmaps } from "@/lib/hooks/swr-hooks";
 import Loader from "@/components/Loader";
+import { useUserContext } from "@/context/AuthContext";
 
 export default function RoadmapsPage() {
   const { data: roadmaps, isLoading } = useGetRoadmaps();
+  const { data: account } = useGetCurrentUser();
   const allRoadmaps: Models.Document[] | undefined = roadmaps?.documents;
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [completedNodes, setCompletedNodes] = useState<
+    Models.Document | never[]
+  >();
+  const { user } = useUserContext();
+
+  console.log(account, roadmaps);
 
   const filteredRoadmaps = searchTerm
     ? allRoadmaps?.filter(
@@ -29,6 +37,8 @@ export default function RoadmapsPage() {
     );
   }
 
+  console.log(allRoadmaps);
+
   return (
     <section className="w-full px-4 py-12 mt-10 mb-16" id="roadmaps">
       <motion.div
@@ -40,7 +50,7 @@ export default function RoadmapsPage() {
         <h1 className="text-4xl font-bold text-primaryWhite mb-4">
           Developer Roadmaps
         </h1>
-        <p className="text-xl text-light dark:text-gray-300 max-w-2xl mx-auto">
+        <p className="text-xl text-light dark:text-gray-300 max-w-2xl mx-auto mb-8">
           Explore our curated learning paths to master various aspects of
           software development.
         </p>
