@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,20 +35,6 @@
 * {
   font-family: "Quicksand";
 }
-
-/* body { */
-/* color: #e5e7eb; */
-/* width: 100%; */
-/* max-width: 77vw; */
-/* padding: 0rem 10rem; */
-/* height: 100%; */
-/* min-height: 100vw; */
-/* margin: auto;
-  scroll-behavior: smooth;
-  font-size: 18px;
-  overflow-x: hidden;
-  font-family: "Quicksand"; */
-/* } */
 
 @media (max-width: 768px) {
   body {
@@ -92,69 +77,145 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 210 20% 98%;
+    --foreground: 210 20% 15%;
+    --foreground-dark: 210 20% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 210 20% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-blue: 220, 56%, 33%; /* HSL for #1e40af */
-    --primary-white: 216, 20%, 91%; /* HSL for #e5e7eb */
-    --primary-dark: 0, 0%, 9%; /* HSL for #171717 */
-
-    --text-primary: hsl(var(--primary-dark));
-    --bg-primary: hsl(var(--primary-white));
-    --bg-secondary: hsl(var(--primary-blue));
+    --popover-foreground: 210 20% 15%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 210 20% 15%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 210 20% 45%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 210 20% 15%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --border: 210 40% 90%;
+    --input: 210 40% 90%;
+    --ring: 217 91% 60%;
     --radius: 0.5rem;
   }
+
   .dark {
-    --background: 226, 71%, 40%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    /* --primary: 210, 100%, 50%;  */
-    --primary-blue: 226, 69%, 39%;
-    --primary-white: 216, 15%, 91%;
-    --primary-dark: 0, 0%, 9%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 210 30% 8%;
+    --foreground: 210 20% 98%;
+    --card: 210 25% 10%;
+    --card-foreground: 210 20% 98%;
+    --popover: 210 25% 10%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 30% 8%;
+    --secondary: 210 25% 15%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 210 25% 15%;
+    --muted-foreground: 210 20% 65%;
+    --accent: 210 25% 15%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 210 25% 20%;
+    --input: 210 25% 20%;
+    --ring: 217 91% 60%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-foreground text-background;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .roadmap-card {
+    @apply relative overflow-hidden rounded-lg border bg-card/95 p-6 transition-all duration-200 hover:border-primary/50 hover:shadow-lg;
+  }
+
+  .roadmap-card::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 transition-opacity duration-200;
+  }
+
+  .roadmap-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .section-header {
+    @apply mb-8 text-center;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold tracking-tight sm:text-4xl;
+  }
+
+  .section-description {
+    @apply mt-4 text-lg text-muted-foreground;
+  }
+
+  .grid-roadmaps {
+    @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--background)) 0%,
+      hsl(var(--muted)) 100%
+    );
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+/* Focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
 }
 
 /* @layer base {
