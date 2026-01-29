@@ -1,0 +1,682 @@
+// ============================================
+// DevPath - Professional Prisma Schema
+// Inspired by roadmap.sh architecture
+// MongoDB + Prisma ORM - Production Ready
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  username      String    @unique
+  name          String
+  password      String?
+  bio           String?
+  avatar        String?
+  role          UserRole  @default(USER)
+  
+  // Profile fields
+  github        String?
+  linkedin      String?
+  twitter       String?
+  website       String?
+  location      String?
+  company       String?
+  
+  // Preferences
+  emailVerified DateTime?
+  isPublic      Boolean   @default(true)
+  newsletter    Boolean   @default(false)
+  
+  // Stats
+  points        Int       @default(0)
+  streak        Int       @default(0)
+  lastActive    DateTime  @default(now())
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  accounts          Account[]
+  sessions          Session[]
+  customRoadmaps    Roadmap[]           @relation("CreatedRoadmaps")
+  progress          Progress[]
+  completedNodes    CompletedNode[]
+  likes             RoadmapLike[]
+  bookmarks         Bookmark[]
+  comments          Comment[]
+  replies           Reply[]
+  achievements      UserAchievement[]
+  teams             TeamMember[]
+  activities        Activity[]
+  
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// ROADMAP SYSTEM
+// ============================================
+
+model Roadmap {
+  id                    String        @id @default(auto()) @map("_id") @db.ObjectId
+  roadmapId             String        @unique
+  slug                  String        @unique
+  
+  // Basic Info
+  title                 String
+  description           String
+  summary               String?
+  
+  // Categorization
+  type                  RoadmapType
+  category              String?
+  difficulty            Difficulty
+  
+  // Metadata
+  estimatedTime         String
+  prerequisites         String[]
+  tags                  String[]
+  
+  // Visual
+  icon                  String?
+  color                 String?
+  coverImage            String?
+  videoUrl              String?
+  
+  // Status
+  status                RoadmapStatus @default(DRAFT)
+  isOfficial            Boolean       @default(true)
+  isFeatured            Boolean       @default(false)
+  isPublished           Boolean       @default(false)
+  inConstruction        Boolean       @default(false)
+  
+  // SEO
+  seoTitle              String?
+  seoDescription        String?
+  keywords              String[]
+  
+  // Stats
+  viewCount             Int           @default(0)
+  likeCount             Int           @default(0)
+  bookmarkCount         Int           @default(0)
+  completionCount       Int           @default(0)
+  averageRating         Float         @default(0)
+  totalRatings          Int           @default(0)
+  
+  // Ordering
+  order                 Int           @default(0)
+  priority              Int           @default(0)
+  
+  // Creator
+  creatorId             String?       @db.ObjectId
+  creator               User?         @relation("CreatedRoadmaps", fields: [creatorId], references: [id])
+  
+  // Timestamps
+  publishedAt           DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  
+  // Relations
+  nodes                 Node[]
+  likes                 RoadmapLike[]
+  bookmarks             Bookmark[]
+  comments              Comment[]
+  progress              Progress[]
+  ratings               Rating[]
+  activities            Activity[]
+  
+  @@map("roadmaps")
+}
+
+// ============================================
+// NODE SYSTEM
+// ============================================
+
+model Node {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  nodeId          String    @unique
+  
+  // Basic Info
+  title           String
+  description     String?
+  content         String?
+  
+  // Categorization
+  type            NodeType
+  category        String?
+  
+  // Visual Properties
+  positionX       Float?
+  positionY       Float?
+  width           Float?
+  height          Float?
+  
+  // Ordering
+  order           Int       @default(0)
+  level           Int       @default(1)
+  
+  // Dependencies
+  prerequisiteIds String[]
+  
+  // Metadata
+  estimatedTime   String?
+  difficulty      Difficulty?
+  isOptional      Boolean   @default(false)
+  isLocked        Boolean   @default(false)
+  
+  // Stats
+  completionCount Int       @default(0)
+  
+  // Roadmap relation
+  roadmapId       String    @db.ObjectId
+  roadmap         Roadmap   @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  resources       Resource[]
+  completedBy     CompletedNode[]
+  progress        Progress[]
+  connections     NodeConnection[] @relation("FromNode")
+  connectedTo     NodeConnection[] @relation("ToNode")
+  
+  @@map("nodes")
+}
+
+model NodeConnection {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  fromNodeId  String   @db.ObjectId
+  fromNode    Node     @relation("FromNode", fields: [fromNodeId], references: [id], onDelete: Cascade)
+  
+  toNodeId    String   @db.ObjectId
+  toNode      Node     @relation("ToNode", fields: [toNodeId], references: [id], onDelete: Cascade)
+  
+  type        ConnectionType @default(NEXT)
+  label       String?
+  
+  createdAt   DateTime @default(now())
+  
+  @@unique([fromNodeId, toNodeId])
+  @@map("node_connections")
+}
+
+// ============================================
+// RESOURCE SYSTEM
+// ============================================
+
+model Resource {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  
+  // Basic Info
+  title           String
+  description     String?
+  url             String
+  
+  // Categorization
+  type            ResourceType
+  format          String?
+  difficulty      Difficulty?
+  
+  // Metadata
+  author          String?
+  publisher       String?
+  duration        String?
+  language        String        @default("en")
+  publishedDate   DateTime?
+  
+  // Quality
+  isPremium       Boolean       @default(false)
+  isVerified      Boolean       @default(false)
+  quality         Int           @default(0)
+  
+  // Stats
+  viewCount       Int           @default(0)
+  clickCount      Int           @default(0)
+  rating          Float         @default(0)
+  
+  // Node relation
+  nodeId          String        @db.ObjectId
+  node            Node          @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  
+  // Ordering
+  order           Int           @default(0)
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Relations
+  progress        Progress[]
+  
+  @@map("resources")
+}
+
+// ============================================
+// PROGRESS TRACKING
+// ============================================
+
+model Progress {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId          String    @db.ObjectId
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  roadmapId       String    @db.ObjectId
+  roadmap         Roadmap   @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  nodeId          String    @db.ObjectId
+  node            Node      @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  
+  resourceId      String?   @db.ObjectId
+  resource        Resource? @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  // Progress status
+  status          ProgressStatus @default(NOT_STARTED)
+  percentage      Int       @default(0)
+  
+  // Time tracking
+  timeSpent       Int       @default(0)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  
+  // Notes
+  notes           String?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@unique([userId, roadmapId, nodeId, resourceId])
+  @@map("progress")
+}
+
+model CompletedNode {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  nodeId      String   @db.ObjectId
+  node        Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  
+  completedAt DateTime @default(now())
+  
+  @@unique([userId, nodeId])
+  @@map("completed_nodes")
+}
+
+// ============================================
+// ENGAGEMENT SYSTEM
+// ============================================
+
+model RoadmapLike {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  roadmapId  String   @db.ObjectId
+  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now())
+  
+  @@unique([userId, roadmapId])
+  @@map("roadmap_likes")
+}
+
+model Bookmark {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  roadmapId   String   @db.ObjectId
+  roadmap     Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  folderId    String?  @db.ObjectId
+  folder      BookmarkFolder? @relation(fields: [folderId], references: [id])
+  
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, roadmapId])
+  @@map("bookmarks")
+}
+
+model BookmarkFolder {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  color       String?
+  icon        String?
+  
+  userId      String     @db.ObjectId
+  
+  bookmarks   Bookmark[]
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  @@map("bookmark_folders")
+}
+
+model Rating {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId     String   @db.ObjectId
+  
+  roadmapId  String   @db.ObjectId
+  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  rating     Int
+  review     String?
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@unique([userId, roadmapId])
+  @@map("ratings")
+}
+
+// ============================================
+// COMMUNITY FEATURES
+// ============================================
+
+model Comment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  roadmapId   String   @db.ObjectId
+  roadmap     Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  parentId    String?  @db.ObjectId
+  
+  likeCount   Int      @default(0)
+  isEdited    Boolean  @default(false)
+  isPinned    Boolean  @default(false)
+  
+  replies     Reply[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("comments")
+}
+
+model Reply {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  commentId   String   @db.ObjectId
+  comment     Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  
+  likeCount   Int      @default(0)
+  isEdited    Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("replies")
+}
+
+// ============================================
+// GAMIFICATION SYSTEM
+// ============================================
+
+model Achievement {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  key         String   @unique
+  name        String
+  description String
+  icon        String
+  category    String
+  
+  points      Int      @default(0)
+  rarity      AchievementRarity @default(COMMON)
+  
+  requirement String
+  
+  users       UserAchievement[]
+  
+  createdAt   DateTime @default(now())
+  
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId        String      @db.ObjectId
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  achievementId String      @db.ObjectId
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  unlockedAt    DateTime    @default(now())
+  
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// ============================================
+// TEAM & COLLABORATION
+// ============================================
+
+model Team {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  avatar      String?
+  
+  isPublic    Boolean      @default(false)
+  inviteCode  String?      @unique
+  
+  members     TeamMember[]
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  teamId    String   @db.ObjectId
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  role      TeamRole @default(MEMBER)
+  
+  joinedAt  DateTime @default(now())
+  
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+// ============================================
+// ACTIVITY FEED
+// ============================================
+
+model Activity {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId      String       @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        ActivityType
+  
+  roadmapId   String?      @db.ObjectId
+  roadmap     Roadmap?     @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  metadata    String?
+  
+  isPublic    Boolean      @default(true)
+  
+  createdAt   DateTime     @default(now())
+  
+  @@map("activities")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum RoadmapType {
+  role
+  skill
+  project
+  language
+  tool
+  career
+}
+
+enum RoadmapStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Difficulty {
+  Beginner
+  Intermediate
+  Advanced
+  Expert
+}
+
+enum NodeType {
+  checkpoint
+  milestone
+  optional
+  project
+  quiz
+  resource
+}
+
+enum ConnectionType {
+  NEXT
+  PREREQUISITE
+  RELATED
+  ALTERNATIVE
+}
+
+enum ResourceType {
+  article
+  video
+  documentation
+  course
+  book
+  podcast
+  tool
+  github
+  interactive
+  tutorial
+  cheatsheet
+  exercise
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+enum AchievementRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum ActivityType {
+  ROADMAP_STARTED
+  ROADMAP_COMPLETED
+  NODE_COMPLETED
+  ACHIEVEMENT_UNLOCKED
+  COMMENT_POSTED
+  ROADMAP_LIKED
+  ROADMAP_BOOKMARKED
+  STREAK_MILESTONE
+}
