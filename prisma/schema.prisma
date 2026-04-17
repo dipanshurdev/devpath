@@ -62,6 +62,7 @@ model User {
   achievements      UserAchievement[]
   teams             TeamMember[]
   activities        Activity[]
+  subscription      Subscription?
   
   @@map("users")
 }
@@ -235,6 +236,7 @@ model Node {
   connections     NodeConnection[] @relation("FromNode")
   connectedTo     NodeConnection[] @relation("ToNode")
   
+  @@index([roadmapId])
   @@map("nodes")
 }
 
@@ -343,6 +345,10 @@ model Progress {
   updatedAt       DateTime  @updatedAt
   
   @@unique([userId, roadmapId, nodeId, resourceId])
+  @@index([userId, roadmapId])
+  @@index([userId])
+  @@index([roadmapId])
+  @@index([nodeId])
   @@map("progress")
 }
 
@@ -377,6 +383,7 @@ model RoadmapLike {
   createdAt  DateTime @default(now())
   
   @@unique([userId, roadmapId])
+  @@index([userId])
   @@map("roadmap_likes")
 }
 
@@ -398,6 +405,7 @@ model Bookmark {
   updatedAt   DateTime @updatedAt
   
   @@unique([userId, roadmapId])
+  @@index([userId])
   @@map("bookmarks")
 }
 
@@ -582,7 +590,34 @@ model Activity {
   
   createdAt   DateTime     @default(now())
   
+  @@index([userId, createdAt])
+  @@index([userId])
   @@map("activities")
+}
+
+// ============================================
+// SUBSCRIPTION SYSTEM
+// ============================================
+
+model Subscription {
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId             String             @unique @db.ObjectId
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tier               SubscriptionTier   @default(FREE)
+  status             SubscriptionStatus @default(ACTIVE)
+
+  currentPeriodStart DateTime           @default(now())
+  currentPeriodEnd   DateTime?
+
+  /// External payment-provider subscription ID (Stripe, etc.)
+  externalId         String?
+
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@map("subscriptions")
 }
 
 // ============================================
@@ -679,4 +714,16 @@ enum ActivityType {
   ROADMAP_LIKED
   ROADMAP_BOOKMARKED
   STREAK_MILESTONE
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+  TEAM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
 }
