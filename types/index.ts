@@ -4,53 +4,19 @@ export type INavLink = {
   label: string;
 };
 
-export type IUpdateUser = {
-  userId: string;
-  name: string;
-  bio: string;
-  imageId: string;
-  imageUrl: URL | string;
-  file: File[];
-};
-
-export type INewPost = {
-  userId: string;
-  caption: string;
-  file: File[];
-  location?: string;
-  tag?: string;
-};
-
-export type IUpdatePost = {
-  postId: string;
-  caption: string;
-  imageId: string;
-  imageUrl: URL;
-  file: File[];
-  location?: string;
-  tag?: string;
-};
-
+/**
+ * Canonical user type aligned with the Prisma User model and NextAuth session.
+ * Use this instead of the Prisma-generated User type for UI/API boundaries.
+ */
 export type IUser = {
   id: string;
   name: string;
   username: string;
   email: string;
-  imageUrl: string;
-  bio: string;
-};
-
-export type INewUser = {
-  name: string;
-  email: string;
-  username: string;
-  password: string;
-};
-
-export type AppwriteIds = {
-  projectId: string | undefined;
-  databaseId: string | undefined;
-  projectUrl: string | undefined;
+  /** Avatar URL — maps to `avatar` in the Prisma User model */
+  avatar?: string;
+  bio?: string;
+  role: string;
 };
 
 export interface NodeData {
