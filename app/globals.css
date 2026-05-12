@@ -81,20 +81,239 @@
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-border/50 shadow-2xl;
+  /* Standardized Spacing System */
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-sm {
+    @apply mx-auto px-4 sm:px-6 max-w-2xl;
+  }
+  
+  .container-md {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl;
+  }
+  
+  .container-lg {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl;
+  }
+  
+  .container-xl {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
 
-  .premium-gradient-bg {
-    @apply bg-gradient-to-tr from-primary/10 via-background to-accent/10;
+  /* Standardized Section Spacing */
+  .section {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+  
+  .section-sm {
+    @apply py-8 sm:py-10 lg:py-12;
+  }
+  
+  .section-lg {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  /* Standardized Card System */
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-border/50 shadow-2xl rounded-2xl;
   }
 
   .glass-card-hover {
-    @apply transition-all duration-300 hover:bg-card/80 hover:border-primary/40 hover:shadow-primary/10 hover:shadow-2xl;
+    @apply transition-all duration-300 hover:bg-card/80 hover:border-primary/40 hover:shadow-primary/10 hover:shadow-2xl hover:scale-[1.02];
   }
 
+  .card {
+    @apply bg-card border border-border rounded-2xl shadow-sm;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:scale-[1.01];
+  }
+
+  /* Standardized Button System */
   .premium-button {
-    @apply relative inline-flex items-center justify-center px-6 py-3 font-semibold text-white transition-all duration-300 bg-primary rounded-xl hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20;
+    @apply relative inline-flex items-center justify-center px-6 py-3 font-semibold text-primary-foreground transition-all duration-300 bg-primary rounded-xl hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-secondary-foreground bg-secondary rounded-lg hover:bg-secondary/80 transition-colors;
+  }
+
+  .button-outline {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent transition-colors;
+  }
+
+  .button-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg transition-colors;
+  }
+
+  /* Standardized Layout Components */
+  .page-header {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .page-content {
+    @apply space-y-8;
+  }
+
+  .card-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+
+  .card-grid-sm {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+
+  .card-grid-lg {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  /* Standardized Typography */
+  .heading-1 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight;
+  }
+
+  .heading-2 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight;
+  }
+
+  .heading-3 {
+    @apply text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight;
+  }
+
+  .heading-4 {
+    @apply text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight;
+  }
+
+  .body-lg {
+    @apply text-lg leading-relaxed;
+  }
+
+  .body {
+    @apply text-base leading-relaxed;
+  }
+
+  .body-sm {
+    @apply text-sm leading-relaxed;
+  }
+
+  .text-muted {
+    @apply text-muted-foreground;
+  }
+
+  /* Standardized Form Components */
+  .form-group {
+    @apply space-y-2;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors;
+  }
+
+  .form-error {
+    @apply text-sm text-destructive;
+  }
+
+  /* Standardized Navigation */
+  .nav-container {
+    @apply container flex items-center justify-between h-20;
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors hover:text-blue-500;
+  }
+
+  .nav-link-active {
+    @apply text-sm font-medium text-primary;
+  }
+
+  /* Standardized Status Components */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary/10 text-primary border border-primary/20;
+  }
+
+  .badge-secondary {
+    @apply badge bg-secondary/50 text-secondary-foreground;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-800 border border-green-200;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800 border border-yellow-200;
+  }
+
+  .badge-error {
+    @apply badge bg-red-100 text-red-800 border border-red-200;
+  }
+
+  /* Standardized Loading States */
+  .skeleton-card {
+    @apply bg-card border border-border rounded-2xl p-6 space-y-4;
+  }
+
+  .skeleton-line {
+    @apply bg-muted rounded;
+  }
+
+  /* Standardized Animations */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  .scale-in {
+    animation: scaleIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Legacy Components (to be phased out) */
+  .premium-gradient-bg {
+    @apply bg-gradient-to-tr from-primary/10 via-background to-accent/10;
   }
 
   .text-gradient {
