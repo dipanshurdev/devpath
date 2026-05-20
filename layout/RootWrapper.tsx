@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthProvider } from "@/context/AuthContext";
+import { Providers } from "@/lib/providers";
 import { usePathname } from "next/navigation";
 
 export default function BackgroundWrapper({
@@ -9,16 +9,15 @@ export default function BackgroundWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const backgroundClass =
-    pathname === "/" ? "bg-gradient-main " : "bg-gradient-page";
+  const backgroundClass = pathname === "/" ? "bg-foreground/80" : "bg-secondry";
 
   return (
-    <AuthProvider>
+    <Providers>
       <body
-        className={`${backgroundClass} min-h-screen flex justify-center items-center mx-auto text-primaryWhite scrollbar`}
+        className={`${backgroundClass}  min-h-screen flex justify-center items-center mx-auto text-primaryWhite scrollbar `}
       >
         {children}
       </body>
-    </AuthProvider>
+    </Providers>
   );
 }

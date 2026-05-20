@@ -1,25 +1,22 @@
-import roadmapState from "@/lib/state";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { LuLogIn, LuLogOut } from "react-icons/lu";
-import { signOutAccount } from "@/lib/appwrite/api";
+import { signOut } from "next-auth/react";
 import { IUser } from "@/types";
 import Image from "next/image";
-// import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
   user?: IUser;
 };
 
 const Profile = ({ user }: Props) => {
-  const modal = roadmapState();
+  const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleOpen = () => {
-    modal.onModalOpen();
+    router.push("/login");
   };
-
-  // console.log(user);
 
   const toggleDropdown = useCallback(() => {
     if (user) {
@@ -27,9 +24,11 @@ const Profile = ({ user }: Props) => {
     }
   }, [dropdownOpen, user]);
 
-  const closeDropdown = useCallback(() => {
-    signOutAccount();
-  }, []);
+  const handleLogout = useCallback(async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+    setDropdownOpen(false);
+  }, [router]);
 
   return (
     <div className="relative flex items-center gap-4">
@@ -41,8 +40,10 @@ const Profile = ({ user }: Props) => {
           >
             <div className="block w-10 h-10 ">
               <Image
-                src={user.imageUrl}
+                src={user.avatar ?? "/default-avatar.png"}
                 alt={`${user.name}'s Picture`}
+                width={40}
+                height={40}
                 className=" rounded-full"
               />
             </div>
@@ -53,26 +54,24 @@ const Profile = ({ user }: Props) => {
           {dropdownOpen && (
             <div
               className="absolute right-0 mt-2 w-48 bg-primaryDark rounded-lg shadow-lg py-4 z-50"
-              onMouseLeave={closeDropdown}
+              onMouseLeave={() => setDropdownOpen(false)}
             >
               <Link
-                href="/profile/user.id"
+                href={`/profile/${user.id}`}
                 className="border-b border-primaryDarkLight"
+                onClick={() => setDropdownOpen(false)}
               >
                 <p className="flex items-center justify-start gap-4 w-full text-left px-4 py-2  text-primaryWhite hover:bg-primaryBlue">
                   Profile
                 </p>
               </Link>
-              <Link href="/saved">
+              <Link href="/saved" onClick={() => setDropdownOpen(false)}>
                 <p className="flex items-center justify-start gap-4 w-full text-left px-4 py-2  text-primaryWhite hover:bg-primaryBlue">
                   Saved
                 </p>
               </Link>
               <button
-                onClick={() => {
-                  // Handle logout functionality here
-                  closeDropdown();
-                }}
+                onClick={handleLogout}
                 className="flex items-center justify-start gap-4 w-full text-left px-4 py-2  text-primaryWhite hover:bg-primaryBlue"
               >
                 Logout

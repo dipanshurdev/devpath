@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Code, BookOpen, Map } from "lucide-react";
+import { BsArrowRight } from "react-icons/bs";
 
 const features = [
   {
@@ -28,49 +29,49 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-primaryWhite sm:text-4xl">
-            Why Choose DevPath?
+    <section className="py-24 relative overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">Features</h2>
+          <p className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
+            Everything you need to <span className="text-gradient">succeed in tech</span>
+          </p>
+          <p className="text-lg text-muted-foreground">
+            We've built the most comprehensive platform for developers to map their career and master new technologies.
           </p>
         </div>
-        <div className="mt-20">
-          {/* Grid Layout (Column on small screens) */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                className="pt-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div className="flow-root bg-darkLight rounded-lg px-6 pb-8">
-                  <div className="-mt-6 text-center">
-                    <div>
-                      <span
-                        className={`inline-flex items-center justify-center p-3 bg-gradient-to-r ${feature.color} rounded-md shadow-lg`}
-                      >
-                        <feature.icon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </div>
-                    <h3 className="mt-8 text-2xl font-medium text-primaryWhite tracking-tight">
-                      {feature.title}
-                    </h3>
-                    <p className="text-base text-light dark:text-gray-400">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              className="glass-card glass-card-hover group p-8 rounded-[2rem] border-border/50"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-inner">
+                <feature.icon className="h-7 w-7" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
+              
+              <div className="mt-8 flex items-center text-primary font-semibold text-sm cursor-pointer group/link">
+                Learn more 
+                <BsArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
+      
+      {/* Decorative background blur */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[120px] rounded-full -z-10" />
     </section>
   );
 };

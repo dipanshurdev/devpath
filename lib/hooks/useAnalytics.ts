@@ -1,14 +1,14 @@
-import { useEffect } from "react";
+// Analytics hook - Placeholder for future implementation
+// This hook can be used to integrate analytics services like Google Analytics, Mixpanel, etc.
+// For now, this is kept as a placeholder for when analytics integration is needed.
 
 export function useAnalytics() {
-  useEffect(() => {
-    // This is where you would initialize your analytics service
-    console.log("Analytics initialized");
-  }, []);
-
-  const trackEvent = (eventName: string, eventData: object) => {
-    // This is where you would send the event to your analytics service
-    console.log("Event tracked:", eventName, eventData);
+  const trackEvent = (eventName: string, eventData?: object) => {
+    // Placeholder for analytics tracking
+    // TODO: Implement actual analytics integration when needed
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Analytics] ${eventName}`, eventData || {});
+    }
   };
 
   return { trackEvent };

@@ -167,3 +167,4 @@ export const projects = [
     topics: "5+",
   },
 ];
+

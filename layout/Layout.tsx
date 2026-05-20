@@ -1,5 +1,6 @@
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,10 +12,12 @@ type Props = {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      <section className="scroll-smooth min-h-screen  w-[85rem] antialiased scrollbar mx-auto text-lg overflow-x-hidden ">
+      <section className="relative flex min-h-screen w-full flex-col overflow-x-hidden antialiased">
         <Navbar />
-        {children}
-        <Footer />
+        <main className="flex-1">
+          {children}
+        </main>
+        {/* <Footer /> */}
       </section>
       <ToastContainer
         autoClose={2000}

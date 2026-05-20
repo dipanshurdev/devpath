@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Loader from "../Loader";
 import RoadmapCard from "./RoadmapCard";
-import { useGetRoadmaps } from "../../lib/hooks/swr-hooks";
-import { Models } from "appwrite";
+import { useRoadmaps } from "@/lib/hooks/use-roadmaps";
 
 export default function SimilarRoadmaps() {
-  const { data: roadmaps, isLoading: roadmapsLoading } = useGetRoadmaps();
-  const [similarRoadmaps, setSimilarRoadmaps] = useState<Models.Document[]>([]);
+  const { data: roadmaps, isLoading: roadmapsLoading } = useRoadmaps();
+  const [similarRoadmaps, setSimilarRoadmaps] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
   const roadmapId = params?.roadmapId as string;
@@ -18,15 +17,15 @@ export default function SimilarRoadmaps() {
     if (!roadmapId || !roadmaps) return;
 
     const getSimilarRoadmaps = (currentId: string) => {
-      const currentRoadmap = roadmaps.documents.find(
-        (r) => r.roadmap_id === currentId
+      const currentRoadmap = roadmaps.find(
+        (r) => r.roadmapId === currentId
       );
       if (!currentRoadmap) return [];
 
-      return roadmaps.documents
+      return roadmaps
         .filter(
           (r) =>
-            r.roadmap_id !== currentId &&
+            r.roadmapId !== currentId &&
             r.difficulty === currentRoadmap.difficulty
         )
         .slice(0, 3);
@@ -60,7 +59,7 @@ export default function SimilarRoadmaps() {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {similarRoadmaps.map((roadmap) => (
-          <RoadmapCard key={roadmap.$id} {...roadmap} />
+          <RoadmapCard key={roadmap.id} {...roadmap} />
         ))}
       </div>
     </div>

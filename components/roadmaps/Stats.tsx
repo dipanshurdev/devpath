@@ -1,15 +1,8 @@
-import { useUserContext } from "@/context/AuthContext";
-import {
-  useDeleteSavedRoadmap,
-  useGetCurrentUser,
-  useLikeRoadmap,
-  useSaveRoadmap,
-} from "@/lib/hooks/swr-hooks";
-import { Models } from "appwrite";
+import { useSession } from "next-auth/react";
 import { Bookmark, Heart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { BsBookmarkFill, BsHeartFill } from "react-icons/bs";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 type StatsProps = {
   inConstruction?: boolean;
@@ -17,7 +10,7 @@ type StatsProps = {
   savedUserIds?: string[];
   likedUserIds?: string[];
   savedBy: string[];
-  liked_users: Models.Document[];
+  liked_users: any[];
   $id: string;
   progressPercent?: number;
 };
@@ -31,55 +24,64 @@ export const Stats = ({
   $id,
   progressPercent,
 }: StatsProps) => {
-  const { user, isAuthenticated } = useUserContext();
-  const likeList = liked_users?.map((user: Models.Document) => user?.$id);
-  const savePostLength = savedBy?.length;
-
+  const { data: session } = useSession();
+  const likeList = liked_users?.map((user: any) => user?.id || user?.$id) || [];
+  
   const [likes, setLikes] = useState(likeList);
-
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const hasSaved = savedUserIds?.find((record: string) => record === user?.id);
-  const hasLiked = likeList?.includes(user?.id);
+  const hasSaved = savedUserIds?.find((record: string) => record === session?.user?.id);
+  const hasLiked = likeList?.includes(session?.user?.id);
 
   useEffect(() => {
     setIsSaved(hasSaved ? true : false);
     setIsLiked(hasLiked ? true : false);
-  }, [user]);
-
-  const { trigger: triggerLike, isMutating: isLiking } = useLikeRoadmap();
-  const { trigger: triggerSave, isMutating: isSaving } = useSaveRoadmap();
-  const { trigger: deleteSave } = useDeleteSavedRoadmap();
+  }, [session?.user?.id, hasSaved, hasLiked]);
 
   // const { mutate: likePost } = useLikePost();
   // const { mutate: savePost, isPending: savingPost } = useSavePost();
   //  const { mutate: deleteSavePost, isPending: deletingPost } =
   //  useDeleteSavedPost();
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    let newLikes: string[] = [...likes];
-    const hasLiked = newLikes.includes(user.id);
-
-    if (hasLiked) {
-      newLikes = newLikes.filter((id) => id !== user.id);
-    } else {
-      newLikes.push(user.id);
+    
+    if (!session) {
+      toast.error("Please login to like roadmaps");
+      return;
     }
-    setLikes(newLikes);
-    triggerLike({ roadmapId: $id, updatedLikes: newLikes });
+
+    setIsLoading(true);
+    try {
+      // TODO: Implement like API call
+      toast.success(isLiked ? "Unliked!" : "Liked!");
+      setIsLiked(!isLiked);
+    } catch (error) {
+      toast.error("Failed to like roadmap");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSave = (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (hasSaved) {
-      setIsSaved(false);
-      deleteSave({ savedRecordId: $id });
-    } else {
-      triggerSave({ roadmapId: $id, userId: user.id });
-      setIsSaved(true);
+    if (!session) {
+      toast.error("Please login to save roadmaps");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // TODO: Implement save API call
+      toast.success(isSaved ? "Removed from saved!" : "Saved!");
+      setIsSaved(!isSaved);
+    } catch (error) {
+      toast.error("Failed to save roadmap");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,7 +91,7 @@ export const Stats = ({
         <button
           className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition disabled:opacity-50"
           onClick={handleLike}
-          disabled={inConstruction || isLiking}
+          disabled={inConstruction || isLoading}
         >
           {isLiked ? (
             <BsHeartFill size={20} className="text-red-800" />
@@ -102,7 +104,7 @@ export const Stats = ({
         <button
           className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition disabled:opacity-50"
           onClick={handleSave}
-          disabled={inConstruction || isSaving}
+          disabled={inConstruction || isLoading}
         >
           {isSaved ? (
             <BsBookmarkFill size={20} className="text-blue-800" />

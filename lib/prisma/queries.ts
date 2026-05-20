@@ -19,8 +19,8 @@ export async function getUserById(userId: string) {
   return await prisma.user.findUnique({
     where: { id: userId },
     include: {
-      createdRoadmaps: true,
-      likedRoadmaps: {
+      customRoadmaps: true,
+      likes: {
         include: {
           roadmap: true,
         },
@@ -158,16 +158,6 @@ export async function getRoadmapById(roadmapId: string) {
       nodes: {
         include: {
           resources: true,
-          relatedFrom: {
-            include: {
-              toNode: true,
-            },
-          },
-          relatedTo: {
-            include: {
-              fromNode: true,
-            },
-          },
         },
         orderBy: {
           order: "asc",
@@ -553,99 +543,119 @@ export async function getUserProgressStats(userId: string) {
 }
 
 /**
- * Get dashboard data for a user: stats, in-progress roadmaps, saved, user info
+ * Get dashboard data for a user: stats, in-progress roadmaps, saved, user info, weekly activity
  */
 export async function getDashboardData(userId: string) {
-  const [user, stats, bookmarks, progressByRoadmap] = await Promise.all([
-    prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        avatar: true,
-        streak: true,
-        points: true,
-        lastActive: true,
-      },
-    }),
-    getUserProgressStats(userId),
-    getUserSavedRoadmaps(userId),
-    prisma.progress.groupBy({
-      by: ["roadmapId"],
+  try {
+    const [user, weeklyActivityResult, bookmarksResult] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          username: true,
+          avatar: true,
+          streak: true,
+          points: true,
+          lastActive: true,
+        },
+      }),
+      getUserWeeklyActivity(userId).catch(() => ({
+        dailyActivity: {},
+        totalActivities: 0,
+        streakDays: 0,
+      })),
+      getUserSavedRoadmaps(userId).catch(() => []),
+    ]);
+
+    if (!user) {
+      console.error(`User not found: ${userId}`);
+      return null;
+    }
+
+    // Get progress data with better error handling
+    const progressData = await prisma.progress.findMany({
       where: {
         userId,
         resourceId: NODE_ONLY_PLACEHOLDER,
       },
-      _count: true,
-    }),
-  ]);
-
-  if (!user) return null;
-
-  const roadmapIds = progressByRoadmap.map((p) => p.roadmapId);
-  const roadmapsWithProgress = roadmapIds.length
-    ? await prisma.roadmap.findMany({
-        where: { id: { in: roadmapIds } },
-        include: {
-          _count: { select: { nodes: true } },
+      include: {
+        roadmap: {
+          include: {
+            _count: { select: { nodes: true } },
+          },
         },
-      })
-    : [];
+      },
+    }).catch(() => []);
 
-  const completedPerRoadmap = await Promise.all(
-    roadmapIds.map(async (rid) => {
-      const count = await prisma.progress.count({
-        where: {
-          userId,
-          roadmapId: rid,
-          status: "COMPLETED",
-          resourceId: NODE_ONLY_PLACEHOLDER,
-        },
-      });
-      return { roadmapId: rid, completed: count };
-    }),
-  );
+  // Group progress by roadmap and calculate completion
+    const progressByRoadmap = progressData.reduce((acc, progress) => {
+      const roadmapId = progress.roadmapId;
+      if (!acc[roadmapId]) {
+        acc[roadmapId] = {
+          roadmap: progress.roadmap,
+          completedNodes: 0,
+          totalNodes: progress.roadmap._count.nodes,
+        };
+      }
+      if (progress.status === "COMPLETED") {
+        acc[roadmapId].completedNodes++;
+      }
+      return acc;
+    }, {} as Record<string, any>);
 
-  const inProgress = roadmapsWithProgress.map((r) => {
-    const completed =
-      completedPerRoadmap.find((c) => c.roadmapId === r.id)?.completed ?? 0;
-    const total = r._count.nodes;
-    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-    return {
-      ...r,
-      roadmapId: r.roadmapId,
-      slug: r.slug,
-      title: r.title,
-      description: r.description,
-      progress: percentage,
-      completedNodes: completed,
-      totalNodes: total,
+    // Transform to in-progress format
+    const inProgress = Object.values(progressByRoadmap).map((data: any) => {
+      const percentage = data.totalNodes > 0 ? Math.round((data.completedNodes / data.totalNodes) * 100) : 0;
+      return {
+        ...data.roadmap,
+        progress: percentage,
+        completedNodes: data.completedNodes,
+        totalNodes: data.totalNodes,
+      };
+    });
+
+    // Calculate completed nodes count
+    const completedNodesCount = progressData.filter(p => p.status === "COMPLETED").length;
+
+    // Ensure we have valid data for all fields
+    const weeklyActivity = weeklyActivityResult || {
+      dailyActivity: {},
+      totalActivities: 0,
+      streakDays: 0,
     };
-  });
+    
+    const bookmarks = bookmarksResult || [];
 
-  return {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-      avatar: user.avatar,
-      streak: user.streak,
-      points: user.points,
-      lastActive: user.lastActive,
-    },
-    stats: {
-      ...stats,
-      savedCount: bookmarks.length,
-    },
-    inProgress,
-    saved: bookmarks.map((b) => ({
-      ...b.roadmap,
-      savedAt: b.createdAt,
-    })),
-  };
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        avatar: user.avatar,
+        streak: user.streak || 0,
+        points: user.points || 0,
+        lastActive: user.lastActive,
+      },
+      stats: {
+        inProgressRoadmaps: inProgress.length,
+        completedNodes: completedNodesCount,
+        savedCount: bookmarks.length,
+        totalActivities: weeklyActivity.totalActivities || 0,
+      },
+      inProgress,
+      saved: bookmarks.map((b) => ({
+        ...b.roadmap,
+        savedAt: b.createdAt,
+      })),
+      weeklyActivity,
+    };
+  } catch (error) {
+    console.error('Error in getDashboardData:', error);
+    throw error;
+  }
 }
 
 // ============================================
@@ -724,6 +734,80 @@ export async function searchRoadmaps(
     take,
     orderBy: {
       viewCount: "desc",
+    },
+  });
+}
+
+// ============================================
+// ACTIVITY QUERIES
+// ============================================
+
+/**
+ * Get user's weekly activity (last 7 days)
+ */
+export async function getUserWeeklyActivity(userId: string) {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const activities = await prisma.activity.findMany({
+    where: {
+      userId,
+      createdAt: {
+        gte: sevenDaysAgo,
+      },
+    },
+    include: {
+      roadmap: {
+        select: {
+          id: true,
+          roadmapId: true,
+          title: true,
+          slug: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  // Group activities by day
+  const dailyActivity = activities.reduce((acc, activity) => {
+    const day = activity.createdAt.toISOString().split('T')[0];
+    if (!acc[day]) {
+      acc[day] = [];
+    }
+    acc[day].push(activity);
+    return acc;
+  }, {} as Record<string, typeof activities>);
+
+  return {
+    activities,
+    dailyActivity,
+    totalActivities: activities.length,
+  };
+}
+
+/**
+ * Create an activity entry
+ */
+export async function createActivity(data: {
+  userId: string;
+  type: any;
+  roadmapId?: string;
+  metadata?: string;
+}) {
+  return await prisma.activity.create({
+    data,
+    include: {
+      roadmap: {
+        select: {
+          id: true,
+          roadmapId: true,
+          title: true,
+          slug: true,
+        },
+      },
     },
   });
 }

@@ -10,58 +10,80 @@ import ReactFlow, {
   addEdge,
   Connection,
   Controls,
-  MarkerType,
-  BezierEdge,
+  BackgroundVariant,
+  Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
 import CustomEdge from "./CustomEdge";
-import { Models } from "appwrite";
-import { useKeyboardNavigation } from "@/lib/hooks/useKeyboardNavigation";
 
-// ✅ Define nodeTypes and edgeTypes outside to prevent re-creation
-const nodeTypes = {
-  roadmap: CustomNode,
-};
+const nodeTypes = { roadmap: CustomNode };
+const edgeTypes = { custom: CustomEdge };
 
-const edgeTypes = {
-  custom: CustomEdge,
-  animated: BezierEdge, // Ensure "animated" is properly registered
-};
+const COL_WIDTH = 280;
+const ROW_HEIGHT = 180;
+const GAP = 80;
+const PADDING_X = 60;
+const PADDING_Y = 40;
 
 function createNodesAndEdges(
-  nodes: Models.Document[],
-  completedNodeIds: string[]
+  nodes: Record<string, unknown>[],
+  completedNodeIds: string[],
 ): { nodes: Node[]; edges: Edge[] } {
-  const flowNodes: Node[] = nodes?.map(
-    (node: Models.Document, index: number) => ({
-      id: node.nodeId,
-      type: "roadmap",
-      position: { x: index % 2 === 0 ? 400 : 800, y: index * 333 },
-      data: { ...node, completed: completedNodeIds.includes(node.nodeId) },
-    })
+  if (!nodes?.length) return { nodes: [], edges: [] };
+
+  const flowNodes: Node[] = nodes.map(
+    (node: Record<string, unknown>, index: number) => {
+      const isLeft = index % 2 === 0;
+      const x = isLeft ? PADDING_X : PADDING_X + COL_WIDTH + GAP;
+      const y = PADDING_Y + index * ROW_HEIGHT;
+
+      return {
+        id: String(node.nodeId ?? node.id),
+        type: "roadmap",
+        position: { x, y },
+        sourcePosition: Position.Bottom,
+        targetPosition: Position.Top,
+        data: {
+          ...node,
+          id: node.id,
+          nodeId: node.nodeId,
+          completed: completedNodeIds.includes(String(node.id ?? node.nodeId)),
+          order: index,
+        },
+      };
+    },
   );
 
-  const edges: Edge[] = nodes?.slice(0, -1)?.map((node, index) => ({
-    id: `e${node.nodeId}-${nodes[index + 1].nodeId}`,
-    source: node.nodeId,
-    target: nodes[index + 1].nodeId,
-    type: "animated", // Ensure this matches the registered type
-    animated: true,
-    style: { stroke: "#3b82f6", strokeWidth: 2 }, // Edge color fix
-    markerEnd: {
-      type: MarkerType.Arrow,
-      color: "#3b82f6",
-    },
-  }));
+  const edges: Edge[] = nodes.slice(0, -1).map((node, index) => {
+    const sourceId = String(node.nodeId ?? node.id);
+    const targetId = String(nodes[index + 1].nodeId ?? nodes[index + 1].id);
+    const sourceInternalId = node.id ?? node.nodeId;
+    const isCompleted = completedNodeIds.includes(String(sourceInternalId));
+
+    return {
+      id: `e${sourceId}-${targetId}`,
+      source: sourceId,
+      target: targetId,
+      type: "custom",
+      animated: !isCompleted,
+      data: { completed: isCompleted },
+      style: {
+        stroke: isCompleted
+          ? "hsl(var(--primary))"
+          : "hsl(var(--muted-foreground) / 0.4)",
+        strokeWidth: isCompleted ? 3 : 2,
+      },
+    };
+  });
 
   return { nodes: flowNodes, edges };
 }
 
 interface RoadmapFlowProps {
-  nodes: Models.Document[];
+  nodes: Record<string, unknown>[];
   completedNodeIds: string[];
-  onNodeClick: (node: Models.Document) => void;
+  onNodeClick: (node: Record<string, unknown>) => void;
 }
 
 export default function RoadmapFlow({
@@ -71,61 +93,65 @@ export default function RoadmapFlow({
 }: RoadmapFlowProps) {
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
     () => createNodesAndEdges(nodes, completedNodeIds),
-    [nodes, completedNodeIds]
+    [nodes, completedNodeIds],
   );
 
-  const [flowNodes, , onNodesChange] = useNodesState(initialNodes);
+  const [flowNodes, setFlowNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    setFlowNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setFlowNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    [setEdges],
   );
 
   const handleNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
-      onNodeClick(node.data);
+    (_: React.MouseEvent, node: Node) => {
+      onNodeClick(node.data as Record<string, unknown>);
     },
-    [onNodeClick]
+    [onNodeClick],
   );
-
-  const { currentNodeIndex, handleKeyDown } = useKeyboardNavigation(
-    flowNodes.length
-  );
-
-  useEffect(() => {
-    if (currentNodeIndex !== null) {
-      const currentNode = flowNodes[currentNodeIndex];
-      onNodeClick(currentNode.data);
-    }
-  }, [currentNodeIndex, flowNodes, onNodeClick]);
 
   return (
-    <div
-      className="h-full min-h-[600px] overflow-y-auto"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
+    <div className="h-full w-full min-h-[720px] rounded-2xl overflow-hidden border border-border/50 bg-gradient-to-b from-card/50 to-background shadow-inner">
       <ReactFlow
         nodes={flowNodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        nodeTypes={nodeTypes} // ✅ Defined outside, now stable
-        edgeTypes={edgeTypes} // ✅ Defined outside, now stable
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodeClick={handleNodeClick}
         fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.5}
-        maxZoom={2}
+        fitViewOptions={{ padding: 0.35, maxZoom: 1.1 }}
+        minZoom={0.25}
+        maxZoom={1.5}
         selectNodesOnDrag={false}
-        nodesFocusable={false}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        nodesFocusable
         edgesFocusable={false}
-        className="w-full"
+        draggable={true}
+        className="roadmap-flow"
+        defaultViewport={{ x: 0, y: 0, zoom: 0.85 }}
+        proOptions={{ hideAttribution: true }}
       >
-        <Background color="#e5e7eb" />
-        <Controls />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={24}
+          size={4.5}
+          color="#1a2bc3"
+          className="opacity-30"
+        />
+        <Controls
+          showInteractive={false}
+          className="!bg-card !border !border-border !rounded-xl !shadow-lg !p-1.5"
+        />
       </ReactFlow>
     </div>
   );

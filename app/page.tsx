@@ -4,14 +4,16 @@ import CTA from "@/components/CTA";
 import FAQ from "@/components/FAQs";
 import Features from "@/components/Features";
 import Hero from "@/components/hero/Hero";
+import LandingFooter from "@/components/landing-footer";
 
 export default function Home() {
   return (
-    <div className="p-4 ">
+    <div className="">
       <Hero />
       <Features />
       <FAQ />
       <CTA />
+      <LandingFooter />
     </div>
   );
 }
