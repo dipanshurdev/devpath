@@ -125,8 +125,9 @@ export default function NewRoadmapPage() {
       } else {
         alert(`Error: ${data.error}`);
       }
-    } catch (err: any) {
-      alert(`Error: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      alert(`Error: ${message}`);
     } finally {
       setLoading(false);
     }

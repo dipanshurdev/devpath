@@ -7,7 +7,7 @@ import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler
 /**
  * GET /api/bookmarks - Get current user's saved/bookmarked roadmaps
  */
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (_request: NextRequest) => {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     throw ApiError.unauthorized();

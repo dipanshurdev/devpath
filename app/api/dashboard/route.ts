@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * GET /api/dashboard
  * Returns dashboard data for the current user: stats, in-progress roadmaps, saved.
  */
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (_request: NextRequest) => {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     throw ApiError.unauthorized();

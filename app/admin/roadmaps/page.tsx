@@ -17,7 +17,6 @@ import {
   Trash2,
   Eye,
   GitBranch,
-  BookOpen,
   Heart,
   Bookmark,
 } from "lucide-react";
@@ -65,8 +64,9 @@ export default function ManageRoadmapsPage() {
       } else {
         setError(data.error);
       }
-    } catch (err: any) {
-      setError(err.message);
+} catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -90,8 +90,9 @@ export default function ManageRoadmapsPage() {
       } else {
         alert(`Error: ${data.error}`);
       }
-    } catch (err: any) {
-      alert(`Error: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      alert(`Error: ${message}`);
     }
   };
 

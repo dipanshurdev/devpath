@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -11,13 +10,12 @@ import {
   Zap, 
   Users, 
   BookOpen, 
-  TrendingUp,
   ArrowRight,
   Sparkles,
   Heart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 const features = [
   {
@@ -54,8 +52,6 @@ const stats = [
 ];
 
 export default function AboutPage() {
-  const [activeSection, setActiveSection] = useState("mission");
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Hero Section */}
@@ -170,8 +166,8 @@ export default function AboutPage() {
               
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Every roadmap is carefully crafted with free, high-quality resources, guiding you step-by-step through your learning journey. 
-                Whether you're starting from scratch or looking to expand your skills, DevPath is here to illuminate your path to becoming 
-                a proficient developer. Together, we're building a future where anyone, anywhere can transform their career through technology.
+                Whether you&apos;re starting from scratch or looking to expand your skills, DevPath is here to illuminate your path to becoming 
+                a proficient developer. Together, we&apos;re building a future where anyone, anywhere can transform their career through technology.
               </p>
             </Card>
           </div>
