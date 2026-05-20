@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withErrorHandler, createApiResponse } from '@/lib/api-handler';
 
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (_request: NextRequest) => {
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ success: false, error: 'Not found' }, { status: 404 });
   }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
@@ -7,7 +7,7 @@ import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler
 /**
  * GET /api/subscriptions/me - Get current user's subscription
  */
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (_request: NextRequest) => {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     throw ApiError.unauthorized();

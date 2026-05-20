@@ -3,9 +3,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
-import { Difficulty, RoadmapType, RoadmapStatus } from '@prisma/client';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+
+type CachedRoadmap = {
+  id: string;
+  [key: string]: unknown;
+};
 
 // GET /api/roadmaps/[roadmapId] - Get single roadmap
 export const GET = withErrorHandler(async (
@@ -17,7 +21,7 @@ export const GET = withErrorHandler(async (
   const cacheKey = cacheKeys.roadmap(params.roadmapId);
 
   // Try to get from cache first (without user-specific data)
-  const cached = await cache.get<any>(cacheKey);
+  const cached = await cache.get<CachedRoadmap>(cacheKey);
   let roadmap = cached;
 
   if (!cached) {

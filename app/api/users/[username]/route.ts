@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
@@ -20,7 +20,7 @@ export const GET = withErrorHandler(async (
   const cacheKey = cacheKeys.userProfile(username);
   
   // Try to get from cache first
-  const cached = await cache.get<any>(cacheKey);
+  const cached = await cache.get<Record<string, unknown>>(cacheKey);
   if (cached) {
     return createApiResponse(cached, undefined, 200);
   }

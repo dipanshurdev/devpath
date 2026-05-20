@@ -5,6 +5,17 @@ import { Difficulty, RoadmapType, RoadmapStatus, Prisma } from '@prisma/client';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
 
+type RoadmapListCache = {
+  data: Array<Record<string, unknown>>;
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    hasMore: boolean;
+    totalPages: number;
+  };
+};
+
 // GET /api/roadmaps - Get all roadmaps with pagination
 export const GET = withErrorHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -28,7 +39,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const cacheKey = cacheKeys.roadmapList(cacheKeyParams);
 
   // Try to get from cache first
-  const cached = await cache.get<{ data: any[], pagination: any }>(cacheKey);
+  const cached = await cache.get<RoadmapListCache>(cacheKey);
   if (cached) {
     return createApiResponse({
       data: cached.data,
@@ -106,7 +117,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
 // POST /api/roadmaps - Create new roadmap (Admin only)
 export const POST = withErrorHandler(async (request: NextRequest) => {
-  const { session, response } = await requireAdmin();
+  const { response } = await requireAdmin();
   if (response) return response;
 
   const body = await request.json();

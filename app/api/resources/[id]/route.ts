@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
-import { ResourceType, Difficulty } from '@prisma/client';
 
 // GET /api/resources/[id] - Get single resource
 export async function GET(
