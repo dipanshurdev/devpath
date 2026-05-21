@@ -35,7 +35,7 @@ interface SavedRoadmap {
 }
 
 export default function SavedRoadmapsPage() {
-  const { data: session, status } = useSession();
+  const { data: _session, status } = useSession();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterType, setFilterType] = React.useState("all");
@@ -99,7 +99,7 @@ export default function SavedRoadmapsPage() {
             <Bookmark className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Error Loading Saved Roadmaps</h2>
             <p className="text-muted-foreground mb-4">
-              We couldn't load your saved roadmaps. Please try again.
+              We couldn&apos;t load your saved roadmaps. Please try again.
             </p>
             <Button onClick={() => window.location.reload()}>
               Try Again

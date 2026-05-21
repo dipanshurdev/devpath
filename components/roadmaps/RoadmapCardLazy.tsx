@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -149,9 +150,11 @@ const RoadmapCardLazy = React.memo<RoadmapCardLazyProps>(({
           {creator && (
             <div className="flex items-center gap-3 pt-4 border-t border-border/40">
               <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-primary/80 p-0.5">
-                <img
-                  src={creator.avatar || ''}
+                <Image
+                  src={creator.avatar || `https://api.dicebear.com/7.x?seed=${creator.username}`}
                   alt={creator.name}
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.src = `https://api.dicebear.com/7.x?seed=${creator.username}`;

@@ -37,7 +37,7 @@ const Features = () => {
             Everything you need to <span className="text-gradient">succeed in tech</span>
           </p>
           <p className="text-lg text-muted-foreground">
-            We've built the most comprehensive platform for developers to map their career and master new technologies.
+            We&apos;ve built the most comprehensive platform for developers to map their career and master new technologies.
           </p>
         </div>
 

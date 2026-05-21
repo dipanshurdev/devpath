@@ -124,7 +124,7 @@ export default function RoadmapPage() {
             Roadmap Not Found
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            The roadmap you're looking for doesn't exist.
+            The roadmap you&apos;re looking for doesn&apos;t exist.
           </p>
           <button
             onClick={() => router.push("/roadmaps")}

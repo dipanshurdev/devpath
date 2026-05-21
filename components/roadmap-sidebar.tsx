@@ -207,7 +207,7 @@ export function RoadmapSidebar({
 
           {selectedNode.nextSteps && selectedNode.nextSteps.length > 0 && (
             <div>
-              <h3 className="font-semibold mb-3">What's Next?</h3>
+              <h3 className="font-semibold mb-3">What&apos;s Next?</h3>
               <div className="space-y-2">
                 {selectedNode.nextSteps.map((step, index) => (
                   <div key={index} className="text-sm text-muted-foreground">

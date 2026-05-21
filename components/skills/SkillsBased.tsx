@@ -185,7 +185,7 @@ export default function SkillBased() {
 
       <div className="mt-12 text-center">
         <p className="text-muted-foreground">
-          Don't see the skill you're looking for?{" "}
+          Don&apos;t see the skill you&apos;re looking for?{" "}
           <Link href="/suggest" className="text-primary hover:underline">
             Suggest a new roadmap
           </Link>
