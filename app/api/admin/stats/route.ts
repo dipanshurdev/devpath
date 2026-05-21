@@ -7,12 +7,14 @@
  * Requirements: 5.4, 13.3
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma/client";
 import { logger } from "@/lib/logger";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(_request: NextRequest) {
   const { session, response } = await requireAdmin();
   if (response) return response;
 
