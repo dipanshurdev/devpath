@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Star, BookmarkIcon, Clock, Users, Heart } from 'lucide-react';
+import {  BookmarkIcon, Clock, Users, Heart } from 'lucide-react';
 import { CompactBookmarkButton } from '@/components/BookmarkButton';
 
 interface RoadmapCardLazyProps {

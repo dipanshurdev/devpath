@@ -64,13 +64,13 @@ export const GET = withErrorHandler(async (
 
   // Get user's like and bookmark status if authenticated (not cached)
   let userStatus = { isLiked: false, isBookmarked: false };
-  if (userId) {
+  if (userId && roadmap) {
     const [like, bookmark] = await Promise.all([
       prisma.roadmapLike.findUnique({
         where: {
           userId_roadmapId: {
             userId,
-            roadmapId: roadmap.id,
+            roadmapId: roadmap!.id,
           },
         },
       }),
@@ -78,7 +78,7 @@ export const GET = withErrorHandler(async (
         where: {
           userId_roadmapId: {
             userId,
-            roadmapId: roadmap.id,
+            roadmapId: roadmap!.id,
           },
         },
       }),
@@ -91,13 +91,15 @@ export const GET = withErrorHandler(async (
   }
 
   // Increment view count (don't cache this part)
-  await prisma.roadmap.update({
-    where: { id: roadmap.id },
-    data: { viewCount: { increment: 1 } },
-  });
+  if (roadmap) {
+    await prisma.roadmap.update({
+      where: { id: roadmap.id },
+      data: { viewCount: { increment: 1 } },
+    });
+  }
 
   return createApiResponse({
-    ...roadmap,
+    ...roadmap!,
     userStatus,
     fromCache: !!cached,
   });
