@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { withErrorHandler, ApiError, createApiResponse, validateRequestBody } from '@/lib/api-handler';
+
+export const dynamic = "force-dynamic";
 import { cache, cacheKeys } from '@/lib/cache';
 
 // Type for profile update data

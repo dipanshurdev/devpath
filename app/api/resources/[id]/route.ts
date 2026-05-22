@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 
+export const dynamic = "force-dynamic";
+
 // GET /api/resources/[id] - Get single resource
 export async function GET(
   request: NextRequest,

@@ -6,6 +6,8 @@ import { requireAdmin } from '@/lib/auth-utils';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
 
+export const dynamic = "force-dynamic";
+
 type CachedRoadmap = {
   id: string;
   [key: string]: unknown;

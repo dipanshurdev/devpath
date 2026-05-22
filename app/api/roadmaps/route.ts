@@ -5,6 +5,8 @@ import { Difficulty, RoadmapType, RoadmapStatus, Prisma } from '@prisma/client';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
 
+export const dynamic = "force-dynamic";
+
 type RoadmapListCache = {
   data: Array<Record<string, unknown>>;
   pagination: {

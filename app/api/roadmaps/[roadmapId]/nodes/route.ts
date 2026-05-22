@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 import { NodeType, Difficulty } from '@prisma/client';
 
+export const dynamic = "force-dynamic";
+
 // GET /api/roadmaps/[roadmapId]/nodes - Get all nodes for a roadmap
 export async function GET(
   request: NextRequest,

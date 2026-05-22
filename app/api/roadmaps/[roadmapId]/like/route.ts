@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { cache, cacheKeys } from '@/lib/cache';
 
+export const dynamic = "force-dynamic";
+
 // POST /api/roadmaps/[roadmapId]/like - Like a roadmap
 export async function POST(
   request: NextRequest,
