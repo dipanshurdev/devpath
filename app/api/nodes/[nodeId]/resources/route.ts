@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 import { ResourceType, Difficulty } from '@prisma/client';
 
+export const dynamic = "force-dynamic";
+
 // GET /api/nodes/[nodeId]/resources - Get all resources for a node
 export async function GET(
   request: NextRequest,
