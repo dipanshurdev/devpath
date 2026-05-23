@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 // GET /api/resources/[id] - Get single resource
 export async function GET(

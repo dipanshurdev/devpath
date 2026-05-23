@@ -5,6 +5,7 @@ import { ResourceType, Difficulty } from '@prisma/client';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 // GET /api/nodes/[nodeId]/resources - Get all resources for a node
 export async function GET(

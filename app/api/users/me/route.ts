@@ -6,6 +6,7 @@ import { withErrorHandler, ApiError, createApiResponse, validateRequestBody } fr
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 import { cache, cacheKeys } from '@/lib/cache';
 
 // Type for profile update data

@@ -6,6 +6,7 @@ import { cache, cacheKeys } from '@/lib/cache';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 // POST /api/roadmaps/[roadmapId]/like - Like a roadmap
 export async function POST(

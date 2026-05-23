@@ -5,6 +5,7 @@ import { NodeType, Difficulty } from '@prisma/client';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 // GET /api/roadmaps/[roadmapId]/nodes - Get all nodes for a roadmap
 export async function GET(

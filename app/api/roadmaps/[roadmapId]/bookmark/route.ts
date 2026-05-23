@@ -6,6 +6,7 @@ import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 // POST /api/roadmaps/[roadmapId]/bookmark - Bookmark a roadmap
 export const POST = withErrorHandler(async (

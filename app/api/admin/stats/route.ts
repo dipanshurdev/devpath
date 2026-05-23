@@ -14,6 +14,7 @@ import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 export async function GET(_request: NextRequest) {
   const { session, response } = await requireAdmin();
