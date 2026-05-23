@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 // GET /api/nodes/[nodeId] - Get single node
 export async function GET(

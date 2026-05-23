@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma/client';
 import { withErrorHandler, ApiError, createApiResponse, validateRequestBody } from '@/lib/api-handler';
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 import { cache, cacheKeys } from '@/lib/cache';
 
 // Type for profile update data

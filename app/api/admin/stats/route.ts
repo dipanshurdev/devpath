@@ -13,6 +13,7 @@ import { prisma } from "@/lib/prisma/client";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET(_request: NextRequest) {
   const { session, response } = await requireAdmin();

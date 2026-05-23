@@ -5,6 +5,7 @@ import { getDashboardData } from "@/lib/prisma/queries";
 import { withErrorHandler, ApiError, createApiResponse } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * GET /api/dashboard

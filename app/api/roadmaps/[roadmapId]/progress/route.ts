@@ -9,6 +9,7 @@ import {
 } from "@/lib/prisma/queries";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * GET /api/roadmaps/[roadmapId]/progress

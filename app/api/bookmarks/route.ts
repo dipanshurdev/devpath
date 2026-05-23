@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma/client';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 /**
  * GET /api/bookmarks - Get current user's saved/bookmarked roadmaps

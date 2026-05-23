@@ -6,6 +6,7 @@ import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 type RoadmapListCache = {
   data: Array<Record<string, unknown>>;
