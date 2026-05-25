@@ -16,7 +16,8 @@
     "db:seed": "tsx scripts/seed-sample-data.ts",
     "db:seed:clean": "tsx scripts/seed-sample-data.ts --clean",
     "db:reset": "npx prisma db push --force-reset && npm run db:seed",
-    "db:import": "tsx scripts/import-roadmaps-from-file.ts"
+    "db:import": "tsx scripts/import-roadmaps-from-file.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
