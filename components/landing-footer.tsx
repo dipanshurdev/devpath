@@ -59,24 +59,6 @@ export default function LandingFooter() {
                   <LuTwitter size={18} className="text-foreground" />
                   <span className="sr-only">Twitter</span>
                 </a>
-                {/* <a
-                  href="https://instagram.com/dipanshurdev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-card dark:bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary/20 border border-border/50 dark:border-neutral-700 transition-all duration-300 hover:scale-110 hover:shadow-lg"
-                >
-                  <LuInstagram size={18} className="text-foreground dark:text-gray-300" />
-                  <span className="sr-only">Instagram</span>
-                </a> */}
-                {/* <a
-                  href="https://linkedin.com/in/dipanshurdev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-card dark:bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-primary dark:hover:bg-primary/20 border border-border/50 dark:border-neutral-700 transition-all duration-300 hover:scale-110 hover:shadow-lg"
-                >
-                  <LuLinkedin size={18} className="text-foreground dark:text-gray-300" />
-                  <span className="sr-only">LinkedIn</span>
-                </a> */}
               </div>
             </div>
           </div>
@@ -96,15 +78,7 @@ export default function LandingFooter() {
                   </a>
                 </div>
               </div>
-              {/* <div className="flex items-start gap-3">
-                <LuPhone className="w-4 h-4 text-primary dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-foreground dark:text-white">Phone</p>
-                  <a href="tel:+919876543210" className="text-sm text-muted-foreground dark:text-blue-100 hover:text-primary dark:hover:text-blue-300 transition-colors">
-                    +91 98765 43210
-                  </a>
-                </div>
-              </div> */}
+
               <div className="flex items-start gap-3">
                 <LuMapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <div>

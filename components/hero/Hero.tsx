@@ -9,85 +9,81 @@ import HeroRoadmap from "./HeroAnimation/HeroRoadmap";
 const stats = [
   {
     icon: BsCode,
-    label: "Technologies",
+    label: "Technologies Covered",
     value: "15+",
-    color: "#1e40af",
   },
   {
     icon: PiPath,
-    label: "Learning Paths",
+    label: "Interactive Paths",
     value: "10+",
-    color: "#1e40af",
   },
   {
     icon: BsLightningCharge,
-    label: "Active Learners",
+    label: "Active Engineers",
     value: "50+",
-    color: "#1e40af",
   },
 ];
 
 const Hero = () => {
   return (
-    <section className="relative w-full overflow-hidden pt-20 pb-16 lg:pt-32 lg:pb-24 bg-gradient-to-br from-background via-background to-background dark:bg-[linear-gradient(21deg,#171717_20%,#171717_60%,#1e40af_80%,#171717_99%)]">
-      {/* Premium Background Elements */}
-      <div className="glow-background bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/20 dark:bg-blue-900/20" />
-      <div className="glow-background bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-500/10 dark:bg-purple-900/10" />
-      
+    <section className="relative w-full overflow-hidden pt-24 pb-20 lg:pt-36 lg:pb-32 bg-background border-b border-border/40">
+      {/* Refined Grid Line Accents (instead of giant blobs) */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-6xl">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center">
           <motion.div
             className="flex flex-col justify-center"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-wider mb-8 w-fit shadow-inner dark:bg-blue-900/30 dark:border-blue-500/40 dark:text-blue-100 dark:shadow-blue-500/20 backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 dark:bg-blue-800"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary dark:bg-blue-500"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-border text-neutral-800 dark:text-neutral-200 text-xs font-semibold uppercase tracking-wider mb-8 w-fit">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
               </span>
-              The Future of Tech Education
+              Engineered Developer Curricula
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black tracking-tight text-foreground mb-8 leading-[0.95] lg:leading-[0.9] dark:text-white dark:drop-shadow-lg">
-              Master Your <br />
-              <span className="text-gradient drop-shadow-sm dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-blue-200 dark:to-white">Tech Journey</span>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-6 leading-[1.05] dark:text-white">
+              Map your engineering <br />
+              <span className="text-gradient">career with precision.</span>
             </h1>
 
-            <p className="max-w-xl text-xl text-muted-foreground/80 mb-12 leading-relaxed font-medium dark:text-blue-100/90 dark:text-gray-200">
-              DevPath provides expert-curated learning paths and interactive roadmaps to help you navigate your career with absolute precision.
+            <p className="max-w-xl text-lg text-muted-foreground mb-10 leading-relaxed font-normal">
+              DevPath structures complex software engineering disciplines into clear, step-by-step interactive roadmaps. Skip the tutorial hell and build real technical expertise.
             </p>
 
-            <div className="flex flex-wrap gap-5">
+            <div className="flex flex-wrap gap-4">
               <Link
                 href="/register"
-                className="premium-button group px-10 py-5 text-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:border-blue-500 dark:shadow-blue-500/20 dark:hover:shadow-blue-500/30"
+                className="premium-button group px-8 py-4 text-sm font-semibold flex items-center gap-2"
               >
                 Get Started Free
-                <BsArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1 dark:text-white" />
+                <BsArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href="/roadmaps"
-                className="px-10 py-5 rounded-xl border border-border bg-card/30 backdrop-blur-sm font-semibold hover:bg-card hover:border-primary/40 transition-all duration-300 shadow-sm dark:bg-neutral-800/50 dark:hover:bg-neutral-700/60 dark:border-blue-500/30 dark:hover:border-blue-500/50 dark:text-white"
+                className="px-8 py-4 rounded-xl border border-border bg-card/50 backdrop-blur-sm font-semibold hover:bg-card/90 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 text-sm"
               >
                 Explore Roadmaps
               </Link>
             </div>
 
-            <div className="mt-16 grid grid-cols-3 gap-8 border-t border-border/50 pt-10 dark:border-blue-500/20">
+            <div className="mt-16 grid grid-cols-3 gap-8 border-t border-border/40 pt-8">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   className="flex flex-col"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 >
-                  <dd className="text-3xl font-bold text-foreground dark:text-white dark:drop-shadow-sm">
+                  <dd className="text-2xl font-bold text-foreground dark:text-white">
                     {stat.value}
                   </dd>
-                  <dt className="text-sm font-medium text-muted-foreground mt-1 dark:text-blue-100/80 dark:text-gray-300">
+                  <dt className="text-xs font-semibold text-muted-foreground mt-1 uppercase tracking-wider">
                     {stat.label}
                   </dt>
                 </motion.div>
@@ -97,17 +93,13 @@ const Hero = () => {
 
           <motion.div
             className="relative hidden lg:block"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative z-20 glass-card p-4 rounded-[2rem] border-primary/20 shadow-[0_0_50px_-12px_rgba(var(--primary),0.3)]  dark:bg-transparent">
+            <div className="relative z-20 glass-card p-2 border border-border/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <HeroRoadmap />
             </div>
-            
-            {/* Decorative Elements */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-pulse dark:bg-blue-500/30" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl animate-pulse dark:bg-blue-600/30" />
           </motion.div>
         </div>
       </div>

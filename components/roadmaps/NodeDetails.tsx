@@ -204,7 +204,7 @@ export default function NodeDetails({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 rounded-[2rem] border-2 border-dashed border-border/50 bg-card/20">
+          <div className="text-center py-16 rounded-xl border border-dashed border-border bg-card/10">
             <Book className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
             <p className="text-sm font-bold text-muted-foreground">
               No specialized resources yet.
@@ -239,10 +239,10 @@ function ResourceCard({
 
   return (
     <div
-      className={`group relative p-6 rounded-[1.5rem] border-2 transition-all duration-300 ${
+      className={`group relative p-6 rounded-lg border transition-all duration-200 ${
         checked
-          ? "bg-primary border-primary shadow-xl shadow-primary/10"
-          : "bg-card border-border/50 hover:border-primary/40 hover:bg-card/70"
+          ? "bg-primary border-primary shadow-md shadow-primary/5"
+          : "bg-card border-border/60 hover:border-neutral-350 hover:bg-card/70 dark:border-zinc-800/80"
       }`}
     >
       <div className="flex items-start justify-between gap-4">

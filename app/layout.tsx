@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 import Layout from "@/layout/Layout";
 import RootWrapper from "@/layout/RootWrapper";
 import { GoogleAnalytics } from "@/components/google-analytics";

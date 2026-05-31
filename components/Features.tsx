@@ -6,38 +6,39 @@ import { BsArrowRight } from "react-icons/bs";
 
 const features = [
   {
-    title: "Customized Roadmaps",
+    title: "Dynamic Learning Trees",
     description:
-      "Tailored roadmaps for various developer roles and skill levels.",
+      "Interactive dependency graphs that illustrate prerequisites and skill progression paths in absolute detail.",
     icon: Map,
-    color: "from-purple-400 to-pink-600",
   },
   {
-    title: "Curated Resources",
+    title: "Production-Ready Materials",
     description:
-      "Hand-picked free learning materials for each step of your journey.",
+      "Carefully validated open-source docs, labs, and interactive environments matching industry demands.",
     icon: BookOpen,
-    color: "from-green-400 to-cyan-500",
   },
   {
-    title: "Interactive Roadmaps",
-    description: "Visualize your progress with our interactive roadmap tool.",
+    title: "Engineering Sandboxes",
+    description:
+      "Step-by-step challenges, quizzes, and code review check-ins built to test practical syntax mastery.",
     icon: Code,
-    color: "from-yellow-400 to-orange-500",
   },
 ];
 
 const Features = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 bg-background border-b border-border/40 relative overflow-hidden">
+      {/* Decorative Grid Mesh */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]" />
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">Features</h2>
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-4">ENGINEERING PLATFORM</h2>
           <p className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
-            Everything you need to <span className="text-gradient">succeed in tech</span>
+            Systematic learning, <span className="text-gradient">engineered for depth.</span>
           </p>
-          <p className="text-lg text-muted-foreground">
-            We&apos;ve built the most comprehensive platform for developers to map their career and master new technologies.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-normal">
+            No simplified overviews. We structure career paths and tech stacks into rigorous, actionable modules designed to turn software builders into domain experts.
           </p>
         </div>
 
@@ -45,33 +46,30 @@ const Features = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="glass-card glass-card-hover group p-8 rounded-[2rem] border-border/50"
-              initial={{ opacity: 0, y: 20 }}
+              className="glass-card glass-card-hover group p-8 border border-border/60 dark:border-zinc-800/80 rounded-xl"
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-inner">
-                <feature.icon className="h-7 w-7" />
+              <div className="mb-6 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 group-hover:bg-neutral-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-neutral-950 transition-all duration-300">
+                <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
+              <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed font-normal">
                 {feature.description}
               </p>
               
-              <div className="mt-8 flex items-center text-primary font-semibold text-sm cursor-pointer group/link">
-                Learn more 
-                <BsArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+              <div className="mt-8 flex items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 cursor-pointer group/link uppercase tracking-wider">
+                Explore Details 
+                <BsArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5" />
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-      
-      {/* Decorative background blur */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[120px] rounded-full -z-10" />
     </section>
   );
 };

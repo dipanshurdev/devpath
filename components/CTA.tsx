@@ -1,37 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import { BsArrowRight } from "react-icons/bs";
 
 const CTA = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="glass-card bg-primary p-12 md:p-20 rounded-[3rem] text-center relative overflow-hidden shadow-2xl shadow-primary/40 border-none">
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2" />
+    <section className="py-24 bg-background border-b border-border/40 relative overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-5xl">
+        <div className="bg-neutral-950 text-white dark:bg-neutral-900/60 p-12 md:p-20 rounded-xl text-center relative overflow-hidden border border-neutral-800 shadow-2xl">
+          {/* Subtle Grid Accent */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:16px_16px]" />
           
-          <div className="relative z-10 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight leading-[1.1]">
-              Ready to <br />
-              <span className="text-white/80">Start Your Journey?</span>
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.15]">
+              Begin crafting your <br />
+              <span className="text-neutral-400">engineering path.</span>
             </h2>
-            <p className="text-xl text-primary-foreground/90 mb-12 leading-relaxed dark:text-foreground">
-              Join thousands of developers using DevPath to navigate their tech careers. Our personalized roadmaps and curated resources are waiting for you.
+            <p className="text-base text-neutral-400 mb-10 leading-relaxed font-normal">
+              Accelerate your progression. DevPath gives you a structured, step-by-step framework to skip the tutorial loop and master software systems in depth.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/register"
-                className="bg-white text-primary hover:bg-white/90 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3"
+                className="bg-white text-neutral-950 hover:bg-neutral-100 px-8 py-4 rounded-lg font-bold text-sm transition-all duration-200 shadow-lg flex items-center gap-2"
               >
                 Get Started Free
-                <BsArrowRight className="w-5 h-5 shadow-sm" />
+                <BsArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/pricing"
-                className="bg-primary-foreground/10 text-white border border-white/20 hover:bg-primary-foreground/20 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm shadow-lg"
+                className="bg-neutral-800 text-white border border-neutral-700 hover:bg-neutral-750 px-8 py-4 rounded-lg font-bold text-sm transition-all duration-200"
               >
-                View Pricing
+                View Plans
               </Link>
             </div>
           </div>

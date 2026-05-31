@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -37,7 +37,7 @@
 
 .dark {
   /* Deep slate canvas + vivid blue primary (readable CTAs, SaaS polish) */
-  --background: 224 71% 4%;
+  --background: 220, 10%, 7%;
   --foreground: 210 40% 98%;
 
   --card: 224 71% 6%;
@@ -72,14 +72,16 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Inter", sans-serif;
+  font-family: "Google Sans", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   .dark body {
     @apply selection:bg-primary/25 selection:text-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Outfit", sans-serif;
+    font-family: "Google Sans", "Inter", sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
   }
 }
 
@@ -118,13 +120,12 @@
     @apply py-16 sm:py-20 lg:py-24;
   }
 
-  /* Standardized Card System */
   .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-border/50 shadow-2xl rounded-2xl;
+    @apply bg-card/75 border border-neutral-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.05)] rounded-xl transition-all duration-300;
   }
 
   .dark .glass-card {
-    @apply bg-card/80 border-border/60 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.55)];
+    @apply bg-zinc-950/70 border-zinc-800/80 shadow-[0_1px_3px_rgba(0,0,0,0.6)];
   }
 
   /* Auth / marketing full-bleed backgrounds */
@@ -158,7 +159,11 @@
   }
 
   .glass-card-hover {
-    @apply transition-all duration-300 hover:bg-card/80 hover:border-primary/40 hover:shadow-primary/10 hover:shadow-2xl hover:scale-[1.02];
+    @apply transition-all duration-300 hover:bg-card hover:border-neutral-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)];
+  }
+
+  .dark .glass-card-hover {
+    @apply hover:bg-zinc-900/60 hover:border-zinc-700/80 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)];
   }
 
   .card {
@@ -171,7 +176,7 @@
 
   /* Standardized Button System */
   .premium-button {
-    @apply relative inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] dark:shadow-primary/20;
+    @apply relative inline-flex items-center justify-center rounded-lg bg-neutral-950 text-white dark:bg-white dark:text-neutral-950 px-6 py-3 font-semibold transition-all duration-200 hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-sm active:scale-[0.98];
   }
 
   .button-primary {
@@ -357,7 +362,7 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400 bg-clip-text text-transparent font-bold;
+    @apply bg-gradient-to-r from-neutral-950 to-neutral-500 dark:from-white dark:to-neutral-400 bg-clip-text text-transparent font-bold tracking-tight;
   }
 
   .nav-blur {

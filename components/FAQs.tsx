@@ -2,28 +2,28 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "What is DevPath?",
+    question: "What makes DevPath different from blog posts or articles?",
     answer:
-      "DevPath is a platform that provides personalized learning paths and curated resources for developers at all levels. It offers interactive roadmaps to guide you through your coding journey.",
+      "Unlike static articles, DevPath provides structured interactive paths that treat skills like architectural dependencies. You see the step-by-step connections, prerequisites, and resource depth in a comprehensive graph.",
   },
   {
-    question: "Is DevPath suitable for beginners?",
+    question: "Is DevPath designed only for senior developers?",
     answer:
-      "DevPath caters to developers of all skill levels, including complete beginners. Our roadmaps start from the basics and progress to advanced topics.",
+      "No. Our curricula start from foundational fundamentals and branch into advanced specialties. Whether you are learning core frontend architecture or senior system design, the paths adjust dynamically to your starting tier.",
   },
   {
-    question: "Are the resources on DevPath free?",
+    question: "Are the study resources curated from premium courses?",
     answer:
-      "Yes, we curate and provide links to free learning resources. However, some external resources may have their own pricing models.",
+      "We prioritize highly vetted, comprehensive open-source documents, standard specifications, and free tutorials. Where necessary, we include direct links to premium documentation if it represents the industry gold standard.",
   },
   {
-    question: "How often are the roadmaps updated?",
+    question: "How frequently are the roadmaps updated?",
     answer:
-      "We regularly update our roadmaps to keep up with the latest trends and technologies in the ever-evolving field of software development.",
+      "Our curriculum engine updates paths regularly to match current production frameworks and standard practices, ensuring you are not study-pathing deprecated libraries.",
   },
 ];
 
@@ -31,31 +31,31 @@ const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 bg-background border-b border-border/40 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">FAQ</h2>
+          <h2 className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-4">INQUIRIES</h2>
           <p className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Got <span className="text-gradient">questions?</span>
+            Frequently asked <span className="text-gradient">questions.</span>
           </p>
         </div>
 
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <div key={index} className="mb-4">
+            <div key={index} className="mb-3">
               <button
                 className={`
-                  flex justify-between items-center w-full p-6 text-lg font-bold text-left transition-all duration-300
-                  ${activeIndex === index ? "glass-card text-primary rounded-t-[1.5rem]" : "glass-card-hover bg-card/40 hover:bg-card/60 rounded-[1.5rem] text-foreground"}
-                  border border-border/50
+                  flex justify-between items-center w-full p-5 text-base font-bold text-left transition-all duration-200
+                  ${activeIndex === index ? "glass-card text-neutral-900 dark:text-white rounded-t-xl" : "glass-card-hover bg-card/45 hover:bg-card/90 rounded-xl text-foreground"}
+                  border border-border/60 dark:border-zinc-800/80
                 `}
                 onClick={() =>
                   setActiveIndex(activeIndex === index ? null : index)
                 }
               >
                 <span>{faq.question}</span>
-                <div className={`p-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? "bg-primary text-white rotate-180" : "bg-primary/10 text-primary"}`}>
-                  <ChevronDown className="w-5 h-5" />
+                <div className={`p-1 rounded-full transition-all duration-200 ${activeIndex === index ? "bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 rotate-180" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200"}`}>
+                  <ChevronDown className="w-4 h-4" />
                 </div>
               </button>
               <AnimatePresence>
@@ -64,10 +64,10 @@ const FAQ = () => {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden glass-card rounded-b-[1.5rem] border-t-0 border-border/50"
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="overflow-hidden glass-card rounded-b-xl border-t-0 border-border/60 dark:border-zinc-800/80"
                   >
-                    <div className="p-6 text-muted-foreground leading-relaxed">
+                    <div className="p-5 text-sm text-muted-foreground leading-relaxed font-normal">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -77,9 +77,6 @@ const FAQ = () => {
           ))}
         </div>
       </div>
-      
-      {/* Decorative background blur */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-[120px] rounded-full -z-10" />
     </section>
   );
 };
