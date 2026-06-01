@@ -178,9 +178,12 @@ export default function ProjectBased() {
       <div className="mt-12 text-center">
         <p className="text-muted-foreground">
           Have an idea for a project roadmap?{" "}
-          <Link href="/suggest" className="text-primary hover:underline">
+          {/* <Link href="/suggest" className="text-primary hover:underline">
             Suggest a new project
-          </Link>
+          </Link> */}
+          <a href="mailto:dipanshurdev@gmail.com" className="text-primary hover:underline">
+            Suggest a new project
+          </a>
         </p>
       </div>
     </div>

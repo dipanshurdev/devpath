@@ -74,15 +74,15 @@ export function DashboardSidebar({ children }: DashboardSidebarProps) {
       <div className="flex min-h-screen w-full bg-muted/25 dark:bg-background">
         <Sidebar variant="inset" className="border-r border-border/50 bg-card/80 backdrop-blur-xl dark:bg-card/60">
           <SidebarHeader className="p-6">
-            <Link href="/" className="flex items-center gap-3 group">
+           { /* <Link href="/" className="flex items-center gap-3 group">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-md shadow-primary/20 transition-transform group-hover:rotate-6">
                 <PiPath className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="text-xl font-black tracking-tighter text-foreground">DevPath</span>
-            </Link>
+            </Link> */ }
           </SidebarHeader>
           
-          <SidebarContent className="px-3 pb-4">
+          <SidebarContent className="mt-10 px-3 pb-4">
             <div className="space-y-1">
               {routes.map((route) => (
                 <Link
@@ -124,8 +124,10 @@ export function DashboardSidebar({ children }: DashboardSidebarProps) {
                     {session?.user?.name?.split(" ")[0] || "Learner"}
                   </span>
                   <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                    Pro Member
+                    {session?.user?.email || "No Email"}
                   </span>
+
+                  {/* Add member tier */}
                 </div>
               </div>
               <Button

@@ -12,7 +12,7 @@ const footerLinks = {
   ],
   company: [
     { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Contact", href: "mailto:dipanshurdev@gmail.com" },
   ],
   legal: [
     { label: "Privacy", href: "/privacy" },
@@ -73,8 +73,8 @@ export default function LandingFooter() {
                 <LuMail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 <div>
                   <p className="text-sm font-medium text-foreground">Email</p>
-                  <a href="mailto:kr7102956@gmail.com" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                    kr7102956@gmail.com
+                  <a href="mailto:dipanshurdev@gmail.com" className="text-sm text-muted-foreground transition-colors hover:text-primary">
+                    dipanshurdev@gmail.com
                   </a>
                 </div>
               </div>

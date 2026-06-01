@@ -106,7 +106,7 @@ export default function RoadmapsPage() {
             Developer <span className="text-gradient">Roadmaps</span>
           </h1>
 
-          <p className="body-lg text-muted max-w-2xl mx-auto mb-10">
+          <p className="body-lg text-muted max-w-2xl mx-auto mb-10 dark:text-neutral-300">
             Explore structured, interactive learning paths for modern software engineering stacks, frameworks, and career tracks.
           </p>
 

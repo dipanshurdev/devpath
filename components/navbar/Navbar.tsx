@@ -120,7 +120,7 @@ const Navbar = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-64 glass-card rounded-[1.5rem] p-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="absolute right-0 mt-3 w-64 glass-card rounded-none p-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
                   <div className="p-4 border-b border-border/10">
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
                       Personal Account
