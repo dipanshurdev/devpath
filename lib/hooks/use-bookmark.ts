@@ -20,29 +20,30 @@ interface UseBookmarkOptions {
   initialCount?: number;
 }
 
-export function useBookmark({ roadmapId, initialBookmarked = false, initialCount = 0 }: UseBookmarkOptions) {
+export function useBookmark({ roadmapId, initialBookmarked, initialCount = 0 }: UseBookmarkOptions) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  const shouldFetchStatus = initialBookmarked === undefined && !!session?.user?.id;
 
   // Query to check if roadmap is bookmarked
   const { data: bookmarkStatus } = useQuery({
     queryKey: ["bookmark", roadmapId],
     queryFn: async () => {
       if (!session?.user?.id) return { isBookmarked: false, bookmarkCount: initialCount };
-      
+
       try {
-        const response = await axios.get(`/api/roadmaps/${roadmapId}`);
+        const response = await axios.get(`/api/roadmaps/${roadmapId}/status`);
         return {
-          isBookmarked: response.data.data.userStatus?.isBookmarked || false,
-          bookmarkCount: response.data.data._count?.bookmarks || initialCount,
+          isBookmarked: response.data.data.isBookmarked || false,
+          bookmarkCount: response.data.data.bookmarkCount || initialCount,
         };
       } catch (error) {
         console.error("Error fetching bookmark status:", error);
         return { isBookmarked: false, bookmarkCount: initialCount };
       }
     },
-    enabled: !!session?.user?.id,
-    initialData: { isBookmarked: initialBookmarked, bookmarkCount: initialCount },
+    enabled: shouldFetchStatus,
+    initialData: { isBookmarked: initialBookmarked ?? false, bookmarkCount: initialCount },
   });
 
   // Mutation to bookmark roadmap

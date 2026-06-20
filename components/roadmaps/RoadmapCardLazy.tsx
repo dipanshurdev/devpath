@@ -1,13 +1,10 @@
-import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import {  BookmarkIcon, Clock, Users, Heart } from 'lucide-react';
-import { CompactBookmarkButton } from '@/components/BookmarkButton';
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { BookmarkIcon, Clock, Users, Heart, Award, TrendingUp, Zap } from "lucide-react";
+import { CompactBookmarkButton } from "@/components/BookmarkButton";
 
 interface RoadmapCardLazyProps {
   roadmapId: string;
@@ -29,163 +26,152 @@ interface RoadmapCardLazyProps {
   className?: string;
 }
 
-// Memoized roadmap card component for better performance
-const RoadmapCardLazy = React.memo<RoadmapCardLazyProps>(({
-  roadmapId,
-  title,
-  description,
-  type,
-  difficulty,
-  estimatedTime,
-  viewCount = 0,
-  likeCount = 0,
-  bookmarkCount = 0,
-  isBookmarked = false,
-  isFeatured = false,
-  creator,
-  className = '',
-}) => {
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
-      case 'beginner':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'intermediate':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'advanced':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+const difficultyConfig = {
+  beginner: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  intermediate: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+  advanced: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
+  expert: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+} as const;
 
-  const getDifficultyBadgeColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
-      case 'beginner':
-        return 'bg-green-500 text-white';
-      case 'intermediate':
-        return 'bg-yellow-500 text-white';
-      case 'advanced':
-        return 'bg-red-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
+const typeIcons: Record<string, React.ElementType> = {
+  role: Users,
+  skill: Award,
+  topic: TrendingUp,
+};
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`group ${className} `}
-    >
-      <Card className="glass-card-hover w-full min-w-[350px]
-    h-[400px]">
-        <CardContent className="p-6 space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-2 flex-1">
-              <div className="flex items-center gap-2">
-                <Badge className={getDifficultyBadgeColor(difficulty)}>
+const fmtCount = (n: number) =>
+  n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+
+const RoadmapCardLazy = React.memo<RoadmapCardLazyProps>(
+  ({
+    roadmapId,
+    title,
+    description,
+    type,
+    difficulty,
+    estimatedTime,
+    viewCount = 0,
+    likeCount = 0,
+    bookmarkCount = 0,
+    isBookmarked = false,
+    isFeatured = false,
+    creator,
+    className = "",
+  }) => {
+    const badgeClass =
+      difficultyConfig[difficulty.toLowerCase() as keyof typeof difficultyConfig] ??
+      difficultyConfig.intermediate;
+
+    const TypeIcon = typeIcons[type.toLowerCase()] ?? TrendingUp;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className={`group ${className}`}
+      >
+        <div className="relative h-full flex flex-col bg-card border border-border rounded-xl overflow-hidden transition-all duration-200 hover:border-border/80 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.35)] min-w-[320px]">
+          {/* Featured top accent */}
+          {isFeatured && (
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-blue-400 to-primary" />
+          )}
+
+          <div className="flex flex-col flex-1 p-5">
+            {/* Badge row */}
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border ${badgeClass}`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
                   {difficulty}
-                </Badge>
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-border bg-muted/40 text-muted-foreground">
+                  <TypeIcon size={11} />
+                  {type}
+                </span>
                 {isFeatured && (
-                  <Badge className="ml-2 bg-amber-500 text-white">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <Zap size={10} className="fill-amber-500" />
                     Featured
-                  </Badge>
+                  </span>
                 )}
               </div>
-              
-              <h3 className="heading-4 text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                {title}
-              </h3>
-            </div>
-            
-            <div className="flex flex-col items-end gap-2">
               <CompactBookmarkButton
                 roadmapId={roadmapId}
                 initialBookmarked={isBookmarked}
                 initialCount={bookmarkCount}
               />
-              <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                <span>{type}</span>
-                <span>•</span>
+            </div>
+
+            {/* Title & description */}
+            <div className="flex-1 mb-4">
+              <h3 className="text-base font-semibold text-foreground leading-snug tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-150 line-clamp-2">
+                {title}
+              </h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">
+                {description}
+              </p>
+            </div>
+
+            {/* Stats row */}
+            <div className="flex items-center gap-4 py-3 border-t border-b border-border/60 mb-4 text-[12px] text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Clock size={12} className="shrink-0" />
                 <span>{estimatedTime}</span>
               </div>
+              <div className="flex items-center gap-1.5">
+                <Users size={12} className="shrink-0" />
+                <span>{fmtCount(viewCount)} views</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Heart size={12} className="shrink-0" />
+                <span>{fmtCount(likeCount)}</span>
+              </div>
+            </div>
+
+            {/* Creator & CTA */}
+            <div className="flex items-center justify-between gap-3">
+              {creator ? (
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-6 h-6 rounded-full overflow-hidden border border-border shrink-0">
+                    <Image
+                      src={
+                        creator.avatar ||
+                        `https://api.dicebear.com/7.x/initials/svg?seed=${creator.username}`
+                      }
+                      alt={creator.name}
+                      width={24}
+                      height={24}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${creator.username}`;
+                      }}
+                    />
+                  </div>
+                  <span className="text-[12px] text-muted-foreground truncate">
+                    {creator.name}
+                  </span>
+                </div>
+              ) : (
+                <span />
+              )}
+
+              <Link
+                href={`/roadmaps/${roadmapId}`}
+                className="shrink-0 px-3 py-1.5 rounded-md text-[12px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Start Learning
+              </Link>
             </div>
           </div>
+        </div>
+      </motion.div>
+    );
+  }
+);
 
-          {/* Description */}
-          <p className="body-sm text-muted dark:text-white/80 line-clamp-3 text-gray-800">
-            {description}
-          </p>
-
-          {/* Stats */}
-          <div className="flex items-center justify-between border-y border-border/40 py-4">
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5" />
-                <span>{viewCount || 0}</span>
-              </div>
-              <span>Views</span>
-            </div>
-            
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5 text-red-500" />
-                <span>{likeCount || 0}</span>
-              </div>
-              <span>Likes</span>
-            </div>
-            
-            <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <BookmarkIcon className="w-3.5 h-3.5 text-primary" />
-                <span>{bookmarkCount || 0}</span>
-              </div>
-              <span>Saves</span>
-            </div>
-          </div>
-
-          {/* Creator */}
-          {creator && (
-            <div className="flex items-center gap-3 pt-4 border-t border-border/40">
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-primary/80 p-0.5">
-                <Image
-                  src={creator.avatar || `https://api.dicebear.com/7.x?seed=${creator.username}`}
-                  alt={creator.name}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://api.dicebear.com/7.x?seed=${creator.username}`;
-                  }}
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{creator.name}</p>
-                <p className="text-xs text-muted-foreground">@{creator.username}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Time Estimate */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
-            <Clock className="w-4 h-4" />
-            <span>{estimatedTime}</span>
-          </div>
-
-          {/* CTA Button */}
-          <Button asChild className="premium-button w-full group">
-            <Link href={`/roadmaps/${roadmapId}`}>
-              Start Learning
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-});
-
-RoadmapCardLazy.displayName = 'RoadmapCardLazy';
+RoadmapCardLazy.displayName = "RoadmapCardLazy";
 
 export default RoadmapCardLazy;

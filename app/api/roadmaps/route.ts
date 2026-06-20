@@ -1,4 +1,6 @@
 import { NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 import { Difficulty, RoadmapType, RoadmapStatus, Prisma } from '@prisma/client';
@@ -42,9 +44,12 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   
   const cacheKey = cacheKeys.roadmapList(cacheKeyParams);
 
-  // Try to get from cache first
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
+  // Try to get cached list data first; userStatus is attached separately when present
   const cached = await cache.get<RoadmapListCache>(cacheKey);
-  if (cached) {
+  if (cached && !userId) {
     return createApiResponse({
       data: cached.data,
       pagination: cached.pagination,
@@ -99,7 +104,38 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     prisma.roadmap.count({ where }),
   ]);
 
-  const hasMore = skip + roadmaps.length < total;
+  let roadmapsWithStatus = roadmaps;
+
+  if (userId && roadmaps.length > 0) {
+    const roadmapIds = roadmaps.map((roadmap) => roadmap.id);
+    const [likes, bookmarks] = await Promise.all([
+      prisma.roadmapLike.findMany({
+        where: {
+          userId,
+          roadmapId: { in: roadmapIds },
+        },
+        select: { roadmapId: true },
+      }),
+      prisma.bookmark.findMany({
+        where: {
+          userId,
+          roadmapId: { in: roadmapIds },
+        },
+        select: { roadmapId: true },
+      }),
+    ]);
+
+    const likedRoadmapIds = new Set(likes.map((like) => like.roadmapId));
+    const bookmarkedRoadmapIds = new Set(bookmarks.map((bookmark) => bookmark.roadmapId));
+
+    roadmapsWithStatus = roadmaps.map((roadmap) => ({
+      ...roadmap,
+      isLiked: likedRoadmapIds.has(roadmap.id),
+      isBookmarked: bookmarkedRoadmapIds.has(roadmap.id),
+    }));
+  }
+
+  const hasMore = skip + roadmapsWithStatus.length < total;
   const pagination = {
     page,
     pageSize,
@@ -108,10 +144,12 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     totalPages: Math.ceil(total / pageSize),
   };
 
-  const responseData = { data: roadmaps, pagination };
+  const responseData = { data: roadmapsWithStatus, pagination };
 
-  // Cache the response for 60 seconds
-  await cache.set(cacheKey, responseData, { ttl: cacheTTL.MEDIUM });
+  // Cache the generic response for 60 seconds
+  if (!userId) {
+    await cache.set(cacheKey, { data: roadmaps, pagination }, { ttl: cacheTTL.MEDIUM });
+  }
 
   return createApiResponse({
     ...responseData,
