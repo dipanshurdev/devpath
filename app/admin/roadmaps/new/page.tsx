@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +27,9 @@ import { ArrowLeft, Save, Loader2 } from "lucide-react";
 
 export default function NewRoadmapPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const role = session?.user?.role;
+  const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     roadmapId: "",
@@ -42,16 +47,23 @@ export default function NewRoadmapPage() {
     color: "",
     coverImage: "",
     videoUrl: "",
-    status: "DRAFT",
     isOfficial: true,
     isFeatured: false,
-    isPublished: false,
     seoTitle: "",
     seoDescription: "",
     keywords: "",
     order: 0,
     priority: 0,
   });
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (!isAdmin) {
+      router.push("/");
+    }
+  }, [status, isAdmin, router]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -95,9 +107,11 @@ export default function NewRoadmapPage() {
     setLoading(true);
 
     try {
-      // Convert comma-separated strings to arrays
+      // Convert comma-separated strings to arrays. New roadmaps are always
+      // created as drafts; publishing happens via a separate action.
       const payload = {
         ...formData,
+        isPublished: false,
         prerequisites: formData.prerequisites
           ? formData.prerequisites.split(",").map((s) => s.trim())
           : [],
@@ -132,6 +146,10 @@ export default function NewRoadmapPage() {
       setLoading(false);
     }
   };
+
+  if (status === "loading" || status === "unauthenticated" || !isAdmin) {
+    return <Loader loading={true} />;
+  }
 
   return (
     <div className="container py-8 max-w-4xl">
@@ -395,24 +413,6 @@ export default function NewRoadmapPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value) => handleSelectChange("status", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="REVIEW">Review</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                    <SelectItem value="ARCHIVED">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="order">Display Order</Label>
                 <Input
                   id="order"
@@ -426,18 +426,6 @@ export default function NewRoadmapPage() {
             </div>
 
             <div className="flex gap-6">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="isPublished"
-                  name="isPublished"
-                  checked={formData.isPublished}
-                  onChange={handleChange}
-                  className="rounded"
-                />
-                <Label htmlFor="isPublished">Published</Label>
-              </div>
-
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
