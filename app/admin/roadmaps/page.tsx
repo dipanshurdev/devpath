@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,14 +50,28 @@ interface Roadmap {
 }
 
 export default function ManageRoadmapsPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const role = session?.user?.role;
+  const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
+    if (status === "loading") return;
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (!isAdmin) {
+      router.push("/");
+    }
+  }, [status, isAdmin, router]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
     fetchRoadmaps();
-  }, []);
+  }, [isAdmin]);
 
   const fetchRoadmaps = async () => {
     try {
@@ -158,6 +175,10 @@ export default function ManageRoadmapsPage() {
       });
     }
   };
+
+  if (status === "loading" || status === "unauthenticated" || !isAdmin) {
+    return <Loader loading={true} />;
+  }
 
   if (loading) {
     return (
