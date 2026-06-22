@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,9 +31,23 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const role = session?.user?.role;
+  const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
   const [stats, setStats] = useState<AdminStats | null>(null);
 
   useEffect(() => {
+    if (status === "loading") return;
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (!isAdmin) {
+      router.push("/");
+    }
+  }, [status, isAdmin, router]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
     fetch("/api/admin/stats")
       .then((res) => res.json())
       .then((json) => {
@@ -41,7 +58,11 @@ export default function AdminDashboard() {
       .catch(() => {
         // stats remain null; hardcoded fallback values will be shown
       });
-  }, []);
+  }, [isAdmin]);
+
+  if (status === "loading" || status === "unauthenticated" || !isAdmin) {
+    return <Loader loading={true} />;
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-10">
