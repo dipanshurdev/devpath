@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { requireAuth } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -13,10 +12,8 @@ export const POST = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
 ) => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw ApiError.unauthorized();
-  }
+  const { session, response } = await requireAuth();
+  if (response) return response;
 
   const userId = session.user.id;
 
@@ -75,10 +72,8 @@ export const DELETE = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
 ) => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw ApiError.unauthorized();
-  }
+  const { session, response } = await requireAuth();
+  if (response) return response;
 
   const userId = session.user.id;
 

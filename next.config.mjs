@@ -33,6 +33,12 @@ const nextConfig = {
         hostname: "ui-avatars.com",
         pathname: "/**",
       },
+      // Allow any HTTPS hostname for user-uploaded avatars
+      // Restrict this once you have a real storage provider configured
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
   async headers() {

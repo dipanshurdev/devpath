@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
+import crypto from 'crypto';
+import { z } from 'zod';
 
 // Logger interface - can be replaced with actual logger implementation
 interface Logger {
@@ -97,7 +99,7 @@ export class ApiError extends Error {
  * Generate request ID for tracing
  */
 function generateRequestId(): string {
-  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `req_${crypto.randomUUID()}`;
 }
 
 /**
@@ -205,6 +207,23 @@ export function withErrorHandler<T extends any[] = []>(
       // Add request ID to response headers if not already present
       response.headers.set('X-Request-ID', requestId);
       
+      // If it's a JSON response, parse the body and overwrite requestId to align headers & body
+      if (response.headers.get('content-type')?.includes('application/json')) {
+        try {
+          const body = await response.json();
+          if (body && typeof body === 'object') {
+            body.requestId = requestId;
+            const newResponse = NextResponse.json(body, {
+              status: response.status,
+              headers: response.headers,
+            });
+            return newResponse;
+          }
+        } catch (e) {
+          // If response body is not readable/parsed, just fallback
+        }
+      }
+
       return response;
 
     } catch (error: any) {
@@ -237,6 +256,19 @@ export function withErrorHandler<T extends any[] = []>(
           apiError.statusCode,
           apiError.code,
           apiError.details,
+          requestId
+        );
+        response.headers.set('X-Request-ID', requestId);
+        return response;
+      }
+
+      // Handle Zod validation errors
+      if (error instanceof z.ZodError || error.name === 'ZodError') {
+        const response = createErrorResponse(
+          'Validation failed',
+          400,
+          ERROR_CODES.VALIDATION_ERROR,
+          error.errors || error.issues,
           requestId
         );
         response.headers.set('X-Request-ID', requestId);

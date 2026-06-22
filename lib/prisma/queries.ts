@@ -6,7 +6,32 @@
  */
 
 import { prisma } from "./client";
-import { Prisma } from "@prisma/client";
+import { Prisma, RoadmapType } from "@prisma/client";
+
+const ROADMAP_TYPES: RoadmapType[] = [
+  "role",
+  "skill",
+  "project",
+  "language",
+  "tool",
+  "career",
+];
+
+function buildSearchWhere(query: string): Prisma.RoadmapWhereInput {
+  const orConditions: Prisma.RoadmapWhereInput[] = [
+    { title: { contains: query, mode: "insensitive" } },
+    { description: { contains: query, mode: "insensitive" } },
+    { category: { contains: query, mode: "insensitive" } },
+    { tags: { has: query } },
+  ];
+
+  const matchedType = ROADMAP_TYPES.find((t) => t === query.toLowerCase());
+  if (matchedType) {
+    orConditions.push({ type: matchedType });
+  }
+
+  return { isPublished: true, OR: orConditions };
+}
 
 // ============================================
 // USER QUERIES
@@ -695,7 +720,10 @@ export async function getNodesForRoadmap(roadmapId: string) {
 // ============================================
 
 /**
- * Search roadmaps
+ * Search roadmaps by query string.
+ *
+ * Matches across: title, description, category, type, and tags.
+ * Only returns published roadmaps.
  */
 export async function searchRoadmaps(
   query: string,
@@ -706,36 +734,44 @@ export async function searchRoadmaps(
 ) {
   const { skip = 0, take = 20 } = options || {};
 
-  return await prisma.roadmap.findMany({
-    where: {
-      OR: [
-        { title: { contains: query, mode: "insensitive" } },
-        { description: { contains: query, mode: "insensitive" } },
+  const where = buildSearchWhere(query);
+
+  const [roadmaps, total] = await Promise.all([
+    prisma.roadmap.findMany({
+      where,
+      include: {
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            nodes: true,
+            likes: true,
+            bookmarks: true,
+          },
+        },
+      },
+      skip,
+      take,
+      orderBy: [
+        { viewCount: "desc" },
+        { likeCount: "desc" },
+        { createdAt: "desc" },
       ],
-    },
-    include: {
-      creator: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          avatar: true,
-        },
-      },
-      _count: {
-        select: {
-          nodes: true,
-          likes: true,
-          bookmarks: true,
-        },
-      },
-    },
-    skip,
-    take,
-    orderBy: {
-      viewCount: "desc",
-    },
-  });
+    }),
+    prisma.roadmap.count({ where }),
+  ]);
+
+  return {
+    roadmaps,
+    total,
+    hasMore: skip + take < total,
+  };
 }
 
 // ============================================
@@ -831,10 +867,14 @@ export async function incrementRoadmapViews(roadmapId: string) {
 }
 
 /**
- * Get trending roadmaps
+ * Get trending roadmaps.
+ *
+ * Ordered by view count first, then like count, then bookmark count.
+ * Only returns published roadmaps.
  */
 export async function getTrendingRoadmaps(limit: number = 10) {
   return await prisma.roadmap.findMany({
+    where: { isPublished: true },
     take: limit,
     include: {
       creator: {
@@ -853,6 +893,10 @@ export async function getTrendingRoadmaps(limit: number = 10) {
         },
       },
     },
-    orderBy: [{ viewCount: "desc" }, { likes: { _count: "desc" } }],
+    orderBy: [
+      { viewCount: "desc" },
+      { likeCount: "desc" },
+      { bookmarkCount: "desc" },
+    ],
   });
 }

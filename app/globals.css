@@ -130,7 +130,7 @@
 
   /* Auth / marketing full-bleed backgrounds */
   .surface-auth {
-    @apply relative min-h-screen overflow-hidden bg-gradient-to-b from-muted/40 via-background to-background;
+    @apply relative min-h-screen overflow-hidden ;
   }
 
   .dark .surface-auth {

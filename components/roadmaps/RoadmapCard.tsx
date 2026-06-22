@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import {
-  Clock,
-  TrendingUp,
-  Users,
-  BookmarkIcon,
+import { 
+  Clock, 
+  TrendingUp, 
+  Users, 
+  BookmarkIcon, 
   Heart,
   ArrowRight,
   CheckCircle2,
   Award,
-  Loader2,
-  Zap,
+  Loader2
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useLikeRoadmap } from "@/lib/hooks/use-roadmaps";
@@ -43,29 +42,18 @@ interface RoadmapCardProps {
   };
 }
 
-const difficultyConfig = {
-  Beginner: {
-    badge: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-    dot: "bg-emerald-500",
-  },
-  Intermediate: {
-    badge: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
-    dot: "bg-blue-500",
-  },
-  Advanced: {
-    badge: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
-    dot: "bg-orange-500",
-  },
-  Expert: {
-    badge: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
-    dot: "bg-purple-500",
-  },
-} as const;
+const difficultyColors = {
+  Beginner: "from-green-500 to-emerald-600",
+  Intermediate: "from-blue-500 to-cyan-600",
+  Advanced: "from-orange-500 to-red-600",
+  Expert: "from-purple-500 to-pink-600",
+};
 
-const typeConfig: Record<string, { icon: React.ElementType; label: string }> = {
-  role: { icon: Users, label: "Role" },
-  skill: { icon: Award, label: "Skill" },
-  topic: { icon: TrendingUp, label: "Topic" },
+const difficultyBadgeColors = {
+  Beginner: "bg-green-500/20 text-green-400 border-green-500/30",
+  Intermediate: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  Advanced: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  Expert: "bg-purple-500/20 text-purple-400 border-purple-500/30",
 };
 
 export default function RoadmapCard({
@@ -85,17 +73,16 @@ export default function RoadmapCard({
   _count,
 }: RoadmapCardProps) {
   const { data: session } = useSession();
+  const badgeClass =
+    difficultyBadgeColors[difficulty as keyof typeof difficultyBadgeColors] ||
+    difficultyBadgeColors.Intermediate;
+  const nodeCount = _count?.nodes || 0;
 
-  const config =
-    difficultyConfig[difficulty as keyof typeof difficultyConfig] ??
-    difficultyConfig.Intermediate;
-  const typeInfo = typeConfig[type] ?? typeConfig.topic;
-  const TypeIcon = typeInfo.icon;
-  const nodeCount = _count?.nodes ?? 0;
-
+  // Like functionality
   const likeMutation = useLikeRoadmap();
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 
+  // Bookmark functionality
   const {
     isBookmarked,
     bookmarkCount: currentBookmarkCount,
@@ -112,15 +99,21 @@ export default function RoadmapCard({
       toast.error("Please login to like roadmaps");
       return;
     }
+    
     try {
       if (isLiked) {
+        // Unlike - use DELETE
         await axios.delete(`/api/roadmaps/${roadmapId}/like`);
         setIsLiked(false);
+        toast.success("Roadmap unliked");
       } else {
+        // Like - use POST
         await axios.post(`/api/roadmaps/${roadmapId}/like`);
         setIsLiked(true);
+        toast.success("Roadmap liked");
       }
-    } catch {
+    } catch (error) {
+      console.error('Error toggling like:', error);
       toast.error("Failed to update like status");
     }
   };
@@ -133,143 +126,150 @@ export default function RoadmapCard({
     toggleBookmark();
   };
 
-  const fmtCount = (n: number) =>
-    n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.98, y: 10 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="group h-full"
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative h-full"
     >
-      <div className="relative h-full flex flex-col bg-card border border-border/60 rounded-2xl overflow-hidden transition-all duration-300 hover:border-primary/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1">
+      {/* Dynamic Glow Layer */}
+      <div className="absolute -inset-[1px] bg-gradient-to-br from-primary/40 via-blue-500/20 to-emerald-500/40 rounded-[2.5rem] blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
 
-        {/* Featured indicator — gradient top accent bar */}
+      <div className="relative h-full glass-card !bg-card/40 hover:!bg-card/60 backdrop-blur-xl rounded-[2.5rem] border-white/5 overflow-hidden transition-all duration-500 flex flex-col p-8">
+        {/* Featured Badge Overlay */}
         {isFeatured && (
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary via-blue-500 to-purple-500" />
+          <div className="absolute top-0 right-10 z-20">
+            <div className="px-2 py-4 bg-primary text-white text-[9px] font-black uppercase tracking-tighter rounded-b-lg shadow-lg flex flex-col items-center gap-1">
+              <TrendingUp className="w-3 h-3" />
+            </div>
+          </div>
         )}
 
-        {/* Gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-        <div className="flex flex-col flex-1 p-6 relative z-10">
-          {/* Header row */}
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* Difficulty badge */}
-              <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border ${config.badge} backdrop-blur-sm`}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${config.dot} animate-pulse`} />
-                {difficulty}
-              </span>
-
-              {/* Type badge */}
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border border-border/60 bg-muted/40 text-muted-foreground backdrop-blur-sm">
-                <TypeIcon size={11} />
-                {typeInfo.label}
-              </span>
-
-              {isFeatured && (
-                <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold border border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 backdrop-blur-sm">
-                  <Zap size={10} className="fill-amber-500" />
-                  Featured
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Title & description */}
-          <div className="flex-1 mb-4">
-            <h3 className="text-lg font-bold text-foreground leading-snug tracking-tight mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-2">
-              {title}
-            </h3>
-            {description && (
-              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                {description}
-              </p>
+        {/* Top Badges */}
+        <div className="flex items-center justify-between mb-8">
+          <span
+            className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all duration-500 ${badgeClass}`}
+          >
+            {difficulty}
+          </span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+            {type === "role" ? (
+              <Users size={12} />
+            ) : type === "skill" ? (
+              <Award size={12} />
+            ) : (
+              <TrendingUp size={12} />
             )}
+            {type}
           </div>
+        </div>
 
-          {/* Metadata row */}
-          <div className="flex items-center gap-6 py-3 border-t border-b border-border/60 mb-4 text-[12px] text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Clock size={13} className="shrink-0 text-primary" />
-              <span className="font-medium">{estimatedTime || "Self-paced"}</span>
+        {/* Core Content */}
+        <div className="flex-1 space-y-4 mb-8">
+          <h3 className="text-3xl font-black text-foreground tracking-tighter leading-[1.1] group-hover:text-primary transition-colors duration-300">
+            {title}
+          </h3>
+          {description && (
+            <p className="text-base text-muted-foreground line-clamp-2 leading-relaxed font-medium opacity-70 group-hover:opacity-100 transition-opacity">
+              {description}
+            </p>
+          )}
+        </div>
+
+        {/* Enhanced Stats Board */}
+        <div className="grid grid-cols-2 gap-4 py-6 border-y border-white/5 mb-8">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock size={14} className="text-primary/60" />
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                Timeline
+              </span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 size={13} className="shrink-0 text-emerald-500" />
-              <span className="font-medium">{nodeCount} steps</span>
-            </div>
+            <p className="text-sm font-black text-foreground">
+              {estimatedTime || "Self-paced"}
+            </p>
           </div>
-
-          {/* Footer — actions */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {/* Like */}
-              <button
-                onClick={handleLike}
-                disabled={likeMutation.isPending}
-                title={session ? (isLiked ? "Unlike" : "Like") : "Login to like"}
-                className={`flex items-center gap-1.5 text-[12px] font-medium transition-all duration-200 disabled:opacity-40 hover:scale-105 ${
-                  isLiked
-                    ? "text-rose-500"
-                    : "text-muted-foreground hover:text-rose-500"
-                }`}
-              >
-                {likeMutation.isPending ? (
-                  <Loader2 size={13} className="animate-spin" />
-                ) : (
-                  <Heart
-                    size={13}
-                    className={isLiked ? "fill-rose-500" : ""}
-                  />
-                )}
-                <span className="font-semibold">{fmtCount(likeCount)}</span>
-              </button>
-
-              {/* Bookmark */}
-              <button
-                onClick={handleBookmark}
-                disabled={bookmarkLoading}
-                title={
-                  session
-                    ? isBookmarked
-                      ? "Remove bookmark"
-                      : "Bookmark"
-                    : "Login to bookmark"
-                }
-                className={`flex items-center gap-1.5 text-[12px] font-medium transition-all duration-200 disabled:opacity-40 hover:scale-105 ${
-                  isBookmarked
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                }`}
-              >
-                {bookmarkLoading ? (
-                  <Loader2 size={13} className="animate-spin" />
-                ) : (
-                  <BookmarkIcon
-                    size={13}
-                    className={isBookmarked ? "fill-primary" : ""}
-                  />
-                )}
-                <span className="font-semibold">{fmtCount(currentBookmarkCount)}</span>
-              </button>
+          <div className="space-y-1 pl-4 border-l border-white/5">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CheckCircle2 size={14} className="text-emerald-500/60" />
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                Checkpoints
+              </span>
             </div>
+            <p className="text-sm font-black text-foreground">
+              {nodeCount} Steps
+            </p>
+          </div>
+        </div>
 
-            <Link
-              href={`/roadmaps/${roadmapId}`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground text-[12px] font-semibold transition-all duration-300 group/link hover:shadow-lg hover:shadow-primary/25"
+        {/* Social Metrics & CTA */}
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleLike}
+              disabled={likeMutation.isPending}
+              className={`flex items-center gap-1.5 group/stat transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                isLiked 
+                  ? "text-rose-500" 
+                  : "text-muted-foreground hover:text-rose-500"
+              }`}
+              title={session ? (isLiked ? "Unlike this roadmap" : "Like this roadmap") : "Login to like"}
             >
-              Start
-              <ArrowRight
-                size={13}
-                className="transition-transform duration-300 group-hover/link:translate-x-1"
-              />
-            </Link>
+              {likeMutation.isPending ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Heart
+                  size={14}
+                  className={isLiked ? "fill-rose-500" : "group-hover/stat:fill-rose-500 transition-all"}
+                />
+              )}
+              <span className="text-xs font-bold text-foreground/80">
+                {likeCount > 999
+                  ? `${(likeCount / 1000).toFixed(1)}k`
+                  : likeCount}
+              </span>
+            </button>
+            <button
+              onClick={handleBookmark}
+              disabled={bookmarkLoading}
+              className={`flex items-center gap-1.5 group/stat transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                isBookmarked 
+                  ? "text-primary" 
+                  : "text-muted-foreground hover:text-primary"
+              }`}
+              title={session ? (isBookmarked ? "Remove bookmark" : "Bookmark this roadmap") : "Login to bookmark"}
+            >
+              {bookmarkLoading ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <BookmarkIcon
+                  size={14}
+                  className={isBookmarked ? "fill-primary" : ""}
+                />
+              )}
+              <span className="text-xs font-bold text-foreground/80">
+                {currentBookmarkCount > 999
+                  ? `${(currentBookmarkCount / 1000).toFixed(1)}k`
+                  : currentBookmarkCount}
+              </span>
+            </button>
           </div>
+
+          <Link
+            href={`/roadmaps/${roadmapId}`}
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary hover:text-white group/btn"
+          >
+            <span className="relative">
+              Start Path
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary group-hover/btn:w-full transition-all duration-300"></span>
+            </span>
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:translate-x-1">
+              <ArrowRight size={16} />
+            </div>
+          </Link>
         </div>
       </div>
     </motion.div>

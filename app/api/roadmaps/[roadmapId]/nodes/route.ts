@@ -1,158 +1,110 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
-import { NodeType, Difficulty } from '@prisma/client';
+import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { logger } from '@/lib/logger';
+import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
 
+const nodeCreateSchema = z.object({
+  nodeId: z.string().min(1, "nodeId is required").max(100),
+  title: z.string().min(1, "Title is required").max(200),
+  description: z.string().optional().nullable(),
+  content: z.string().optional().nullable(),
+  type: z.enum(["checkpoint", "milestone", "optional", "project", "quiz", "resource"] as const).default("checkpoint"),
+  category: z.string().optional().nullable(),
+  positionX: z.number().optional().nullable(),
+  positionY: z.number().optional().nullable(),
+  width: z.number().optional().nullable(),
+  height: z.number().optional().nullable(),
+  order: z.number().int().default(0),
+  level: z.number().int().default(1),
+  prerequisiteIds: z.array(z.string()).optional().default([]),
+  estimatedTime: z.string().optional().nullable(),
+  difficulty: z.enum(["Beginner", "Intermediate", "Advanced", "Expert"] as const).optional().nullable(),
+  isOptional: z.boolean().optional().default(false),
+  isLocked: z.boolean().optional().default(false),
+});
+
 // GET /api/roadmaps/[roadmapId]/nodes - Get all nodes for a roadmap
-export async function GET(
+export const GET = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
-) {
-  try {
-    const roadmap = await prisma.roadmap.findUnique({
-      where: { roadmapId: params.roadmapId },
-    });
+) => {
+  const roadmap = await prisma.roadmap.findUnique({
+    where: { roadmapId: params.roadmapId },
+  });
 
-    if (!roadmap) {
-      return NextResponse.json(
-        { success: false, error: 'Roadmap not found' },
-        { status: 404 }
-      );
-    }
+  if (!roadmap) {
+    throw ApiError.notFound('Roadmap not found');
+  }
 
-    const nodes = await prisma.node.findMany({
-      where: { roadmapId: roadmap.id },
-      include: {
-        resources: {
-          orderBy: { order: 'asc' },
-        },
-        _count: {
-          select: {
-            completedBy: true,
-          },
+  const nodes = await prisma.node.findMany({
+    where: { roadmapId: roadmap.id },
+    include: {
+      resources: {
+        orderBy: { order: 'asc' },
+      },
+      _count: {
+        select: {
+          completedBy: true,
         },
       },
-      orderBy: { order: 'asc' },
-    });
+    },
+    orderBy: { order: 'asc' },
+  });
 
-    return NextResponse.json({
-      success: true,
-      data: nodes,
-      count: nodes.length,
-    });
-  } catch (error: unknown) {
-    console.error('Error fetching nodes:', error);
-    const message = error instanceof Error ? error.message : 'Failed to fetch nodes';
-    return NextResponse.json(
-      { success: false, error: message },
-      { status: 500 }
-    );
-  }
-}
+  return createApiResponse(nodes);
+});
 
 // POST /api/roadmaps/[roadmapId]/nodes - Create new node (Admin only)
-export async function POST(
+export const POST = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
-) {
-  try {
-    const { response } = await requireAdmin();
-    if (response) return response;
+) => {
+  const { session, response } = await requireAdmin();
+  if (response) return response;
 
-    const body = await request.json();
+  logger.info({
+    route: `/api/roadmaps/${params.roadmapId}/nodes`,
+    method: 'POST',
+    message: 'Admin created roadmap node',
+    adminId: session.user.id,
+    adminRole: session.user.role,
+  });
 
-    const roadmap = await prisma.roadmap.findUnique({
-      where: { roadmapId: params.roadmapId },
-    });
+  const body = await request.json();
+  const validatedData = nodeCreateSchema.parse(body);
 
-    if (!roadmap) {
-      return NextResponse.json(
-        { success: false, error: 'Roadmap not found' },
-        { status: 404 }
-      );
-    }
+  const roadmap = await prisma.roadmap.findUnique({
+    where: { roadmapId: params.roadmapId },
+  });
 
-    const {
-      nodeId,
-      title,
-      description,
-      content,
-      type = 'checkpoint',
-      category,
-      positionX,
-      positionY,
-      width,
-      height,
-      order = 0,
-      level = 1,
-      prerequisiteIds = [],
-      estimatedTime,
-      difficulty,
-      isOptional = false,
-      isLocked = false,
-    } = body;
-
-    // Validate required fields
-    if (!nodeId || !title) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields (nodeId, title)' },
-        { status: 400 }
-      );
-    }
-
-    // Check if nodeId already exists
-    const existing = await prisma.node.findUnique({
-      where: { nodeId },
-    });
-
-    if (existing) {
-      return NextResponse.json(
-        { success: false, error: 'Node with this ID already exists' },
-        { status: 409 }
-      );
-    }
-
-    const node = await prisma.node.create({
-      data: {
-        nodeId,
-        title,
-        description,
-        content,
-        type: type as NodeType,
-        category,
-        positionX,
-        positionY,
-        width,
-        height,
-        order,
-        level,
-        prerequisiteIds,
-        estimatedTime,
-        difficulty: difficulty as Difficulty,
-        isOptional,
-        isLocked,
-        roadmapId: roadmap.id,
-      },
-      include: {
-        resources: true,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: node,
-      message: 'Node created successfully',
-    }, { status: 201 });
-  } catch (error: unknown) {
-    console.error('Error creating node:', error);
-    const message = error instanceof Error ? error.message : 'Failed to create node';
-    return NextResponse.json(
-      { success: false, error: message },
-      { status: 500 }
-    );
+  if (!roadmap) {
+    throw ApiError.notFound('Roadmap not found');
   }
-}
+
+  // Check if nodeId already exists
+  const existing = await prisma.node.findUnique({
+    where: { nodeId: validatedData.nodeId },
+  });
+
+  if (existing) {
+    throw ApiError.conflict('Node with this ID already exists');
+  }
+
+  const node = await prisma.node.create({
+    data: {
+      ...validatedData,
+      roadmapId: roadmap.id,
+    },
+    include: {
+      resources: true,
+    },
+  });
+
+  return createApiResponse(node, 'Node created successfully', 201);
+});

@@ -10,34 +10,73 @@
 import { getServerSession, type Session } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma/client";
+import crypto from "crypto";
 
 export type AuthResult =
   | { session: Session; response: null }
   | { session: null; response: NextResponse };
 
 /**
- * Returns the current session if the request is authenticated.
- * If not authenticated, returns a 401 NextResponse that the caller should
- * return immediately.
+ * Returns the current session if the request is authenticated AND the account
+ * is not admin-disabled.
+ *
+ * Admin disable: a SUPER_ADMIN or ADMIN sets `isDisabled = true` via
+ * `PATCH /api/admin/users/[userId]` with `{ disabled: true }`.  Because the
+ * JWT lives up to 30 days we cannot rely on the token alone — we re-check the
+ * DB on every request so a disable takes effect immediately on the next call.
+ *
+ * `isDisabled` is intentionally separate from `isPublic` (the user-facing
+ * profile-privacy toggle).  A user setting their profile to private does NOT
+ * affect their ability to use requireAuth-guarded routes.
  *
  * @example
  * ```ts
  * const { session, response } = await requireAuth();
  * if (response) return response;
- * // session is guaranteed non-null here
+ * // session is guaranteed non-null here, and user is not disabled
  * ```
  */
 export async function requireAuth(): Promise<AuthResult> {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return {
-      session: null,
-      response: NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      ),
-    };
+    const requestId = `req_${crypto.randomUUID()}`;
+    const response = NextResponse.json(
+      {
+        success: false,
+        error: "Unauthorized",
+        code: "UNAUTHORIZED",
+        timestamp: new Date().toISOString(),
+        requestId,
+      },
+      { status: 401 },
+    );
+    response.headers.set("X-Request-ID", requestId);
+    return { session: null, response };
+  }
+
+  // Re-check the DB to enforce immediate disable (JWT cannot be revoked).
+  // We select only `isDisabled` — profile privacy (`isPublic`) is irrelevant here.
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { isDisabled: true },
+  });
+
+  if (!dbUser || dbUser.isDisabled) {
+    const requestId = `req_${crypto.randomUUID()}`;
+    const response = NextResponse.json(
+      {
+        success: false,
+        error: "Account disabled",
+        code: "ACCOUNT_DISABLED",
+        timestamp: new Date().toISOString(),
+        requestId,
+      },
+      { status: 403 },
+    );
+    response.headers.set("X-Request-ID", requestId);
+    return { session: null, response };
   }
 
   return { session, response: null };
@@ -63,12 +102,21 @@ export async function requireAdmin(): Promise<AuthResult> {
   const role = session.user.role;
 
   if (role !== "ADMIN" && role !== "SUPER_ADMIN") {
+    const requestId = `req_${crypto.randomUUID()}`;
+    const response = NextResponse.json(
+      {
+        success: false,
+        error: "Forbidden",
+        code: "FORBIDDEN",
+        timestamp: new Date().toISOString(),
+        requestId,
+      },
+      { status: 403 },
+    );
+    response.headers.set("X-Request-ID", requestId);
     return {
       session: null,
-      response: NextResponse.json(
-        { success: false, error: "Forbidden" },
-        { status: 403 },
-      ),
+      response,
     };
   }
 

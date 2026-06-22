@@ -6,10 +6,40 @@ import { requireAdmin } from '@/lib/auth-utils';
 import { Difficulty, RoadmapType, RoadmapStatus, Prisma } from '@prisma/client';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { logger } from '@/lib/logger';
+import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
+
+const roadmapCreateSchema = z.object({
+  roadmapId: z.string().min(1, "Roadmap ID is required").max(100),
+  slug: z.string().min(1, "Slug is required").max(100),
+  title: z.string().min(1, "Title is required").max(100),
+  description: z.string().min(1, "Description is required"),
+  summary: z.string().optional().nullable(),
+  type: z.enum(["role", "skill", "project", "language", "tool", "career"] as const),
+  category: z.string().optional().nullable(),
+  difficulty: z.enum(["Beginner", "Intermediate", "Advanced", "Expert"] as const),
+  estimatedTime: z.string().min(1, "Estimated time is required"),
+  prerequisites: z.array(z.string()).optional().default([]),
+  tags: z.array(z.string()).optional().default([]),
+  icon: z.string().optional().nullable(),
+  color: z.string().optional().nullable(),
+  coverImage: z.string().optional().nullable(),
+  videoUrl: z.string().optional().nullable(),
+  status: z.enum(["DRAFT", "REVIEW", "PUBLISHED", "ARCHIVED"] as const).optional().default("DRAFT"),
+  isOfficial: z.boolean().optional().default(true),
+  isFeatured: z.boolean().optional().default(false),
+  isPublished: z.boolean().optional().default(false),
+  seoTitle: z.string().optional().nullable(),
+  seoDescription: z.string().optional().nullable(),
+  keywords: z.array(z.string()).optional().default([]),
+  order: z.number().optional().default(0),
+  priority: z.number().optional().default(0),
+  creatorId: z.string().optional().nullable(),
+});
 
 type RoadmapListCache = {
   data: Array<Record<string, unknown>>;
@@ -29,15 +59,25 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const difficulty = searchParams.get('difficulty') as Difficulty | null;
   const featured = searchParams.get('featured');
   const search = searchParams.get('search');
+  const all = searchParams.get('all');
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
   const pageSize = Math.min(Math.max(1, parseInt(searchParams.get('pageSize') || '20', 10) || 20), 100);
 
-  // Create cache key based on search parameters
+  // Admin-only: check if requesting all roadmaps (including drafts)
+  let isAdmin = false;
+  if (all === 'true') {
+    const { session, response } = await requireAdmin();
+    if (response) return response;
+    isAdmin = true;
+  }
+
+  // Create cache key based on search parameters (admin requests are never cached)
   const cacheKeyParams = new URLSearchParams({
     ...(type && { type }),
     ...(difficulty && { difficulty }),
     ...(featured && { featured }),
     ...(search && { search }),
+    ...(isAdmin && { all: 'true' }),
     page: page.toString(),
     pageSize: pageSize.toString(),
   }).toString();
@@ -48,7 +88,8 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const userId = session?.user?.id;
 
   // Try to get cached list data first; userStatus is attached separately when present
-  const cached = await cache.get<RoadmapListCache>(cacheKey);
+  // Admin requests (all=true) bypass cache
+  const cached = !isAdmin ? await cache.get<RoadmapListCache>(cacheKey) : null;
   if (cached && !userId) {
     return createApiResponse({
       data: cached.data,
@@ -57,9 +98,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     });
   }
 
-  const where: Prisma.RoadmapWhereInput = {
-    isPublished: true,
-  };
+  const where: Prisma.RoadmapWhereInput = isAdmin ? {} : { isPublished: true };
 
   if (type) where.type = type;
   if (difficulty) where.difficulty = difficulty;
@@ -146,8 +185,8 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
   const responseData = { data: roadmapsWithStatus, pagination };
 
-  // Cache the generic response for 60 seconds
-  if (!userId) {
+  // Cache the generic response for 60 seconds (admin requests never cached)
+  if (!userId && !isAdmin) {
     await cache.set(cacheKey, { data: roadmaps, pagination }, { ttl: cacheTTL.MEDIUM });
   }
 
@@ -159,43 +198,21 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
 // POST /api/roadmaps - Create new roadmap (Admin only)
 export const POST = withErrorHandler(async (request: NextRequest) => {
-  const { response } = await requireAdmin();
+  const { session, response } = await requireAdmin();
   if (response) return response;
 
+  logger.info({
+    route: "/api/roadmaps",
+    method: "POST",
+    message: "Admin created roadmap",
+    adminId: session.user.id,
+    adminRole: session.user.role,
+  });
+
   const body = await request.json();
+  const validatedData = roadmapCreateSchema.parse(body);
 
-  const {
-    roadmapId,
-    slug,
-    title,
-    description,
-    summary,
-    type,
-    category,
-    difficulty,
-    estimatedTime,
-    prerequisites = [],
-    tags = [],
-    icon,
-    color,
-    coverImage,
-    videoUrl,
-    status = 'DRAFT',
-    isOfficial = true,
-    isFeatured = false,
-    isPublished = false,
-    seoTitle,
-    seoDescription,
-    keywords = [],
-    order = 0,
-    priority = 0,
-    creatorId,
-  } = body;
-
-  // Validate required fields
-  if (!roadmapId || !slug || !title || !description || !type || !difficulty || !estimatedTime) {
-    throw ApiError.badRequest('Missing required fields: roadmapId, slug, title, description, type, difficulty, estimatedTime');
-  }
+  const { roadmapId, slug } = validatedData;
 
   // Check if roadmapId or slug already exists
   const existing = await prisma.roadmap.findFirst({
@@ -209,33 +226,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   }
 
   const roadmap = await prisma.roadmap.create({
-    data: {
-      roadmapId,
-      slug,
-      title,
-      description,
-      summary,
-      type: type as RoadmapType,
-      category,
-      difficulty: difficulty as Difficulty,
-      estimatedTime,
-      prerequisites,
-      tags,
-      icon,
-      color,
-      coverImage,
-      videoUrl,
-      status: status as RoadmapStatus,
-      isOfficial,
-      isFeatured,
-      isPublished,
-      seoTitle,
-      seoDescription,
-      keywords,
-      order,
-      priority,
-      creatorId,
-    },
+    data: validatedData,
     include: {
       creator: {
         select: {

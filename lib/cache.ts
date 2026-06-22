@@ -347,6 +347,8 @@ export const cacheKeys = {
   userProgress: (userId: string, roadmapId: string) => `progress:${userId}:${roadmapId}`,
   dashboard: (userId: string) => `dashboard:${userId}`,
   weeklyActivity: (userId: string) => `activity:weekly:${userId}`,
+  search: (params: string = '') => `search:${params}`,
+  trending: (limit: number = 10) => `trending:${limit}`,
 } as const;
 
 // Default TTL values (in seconds)

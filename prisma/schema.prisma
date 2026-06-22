@@ -38,6 +38,7 @@ model User {
   // Preferences
   emailVerified DateTime?
   isPublic      Boolean   @default(true)
+  isDisabled    Boolean   @default(false)
   newsletter    Boolean   @default(false)
   
   // Stats

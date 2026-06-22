@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,10 +24,41 @@ import {
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { useToast } from "@/components/use-toast";
 
-export default function NewRoadmapPage() {
+interface RoadmapData {
+  id: string;
+  roadmapId: string;
+  slug: string;
+  title: string;
+  description: string;
+  summary: string | null;
+  type: string;
+  category: string | null;
+  difficulty: string;
+  estimatedTime: string;
+  prerequisites: string[];
+  tags: string[];
+  icon: string | null;
+  color: string | null;
+  coverImage: string | null;
+  videoUrl: string | null;
+  status: string;
+  isOfficial: boolean;
+  isFeatured: boolean;
+  isPublished: boolean;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  keywords: string[];
+  order: number;
+  priority: number;
+}
+
+export default function EditRoadmapPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const params = useParams();
+  const roadmapId = params.id as string;
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     roadmapId: "",
     slug: "",
@@ -54,6 +85,66 @@ export default function NewRoadmapPage() {
     order: 0,
     priority: 0,
   });
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchRoadmap();
+  }, [roadmapId]);
+
+  const fetchRoadmap = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/roadmaps/${roadmapId}`);
+      const data = await response.json();
+
+      if (data.success) {
+        const roadmap = data.data as RoadmapData;
+        setFormData({
+          roadmapId: roadmap.roadmapId,
+          slug: roadmap.slug,
+          title: roadmap.title,
+          description: roadmap.description,
+          summary: roadmap.summary || "",
+          type: roadmap.type,
+          category: roadmap.category || "",
+          difficulty: roadmap.difficulty,
+          estimatedTime: roadmap.estimatedTime,
+          prerequisites: roadmap.prerequisites.join(", "),
+          tags: roadmap.tags.join(", "),
+          icon: roadmap.icon || "",
+          color: roadmap.color || "",
+          coverImage: roadmap.coverImage || "",
+          videoUrl: roadmap.videoUrl || "",
+          status: roadmap.status,
+          isOfficial: roadmap.isOfficial,
+          isFeatured: roadmap.isFeatured,
+          isPublished: roadmap.isPublished,
+          seoTitle: roadmap.seoTitle || "",
+          seoDescription: roadmap.seoDescription || "",
+          keywords: roadmap.keywords.join(", "),
+          order: roadmap.order,
+          priority: roadmap.priority,
+        });
+      } else {
+        setError(data.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error,
+        });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      setError(message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -68,24 +159,6 @@ export default function NewRoadmapPage() {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-
-    // Auto-generate slug from title
-    if (name === "title" && !formData.slug) {
-      const slug = value
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-      setFormData((prev) => ({ ...prev, slug }));
-    }
-
-    // Auto-generate roadmapId from title
-    if (name === "title" && !formData.roadmapId) {
-      const roadmapId = value
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "_")
-        .replace(/^_|_$/g, "");
-      setFormData((prev) => ({ ...prev, roadmapId }));
-    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -94,7 +167,7 @@ export default function NewRoadmapPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
 
     try {
       // Convert comma-separated strings to arrays
@@ -111,8 +184,8 @@ export default function NewRoadmapPage() {
           : [],
       };
 
-      const response = await fetch("/api/roadmaps", {
-        method: "POST",
+      const response = await fetch(`/api/roadmaps/${roadmapId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -124,9 +197,9 @@ export default function NewRoadmapPage() {
       if (data.success) {
         toast({
           title: "Success",
-          description: "Roadmap created successfully!",
+          description: "Roadmap updated successfully!",
         });
-        router.push(`/admin/roadmaps/${data.data.roadmapId}/edit`);
+        router.push("/admin/roadmaps");
       } else {
         toast({
           variant: "destructive",
@@ -142,9 +215,38 @@ export default function NewRoadmapPage() {
         description: message,
       });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="container py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading roadmap...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Error</h2>
+            <p className="text-muted-foreground">{error}</p>
+            <Button asChild className="mt-4">
+              <Link href="/admin/roadmaps">Back to Roadmaps</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8 max-w-4xl">
@@ -157,10 +259,10 @@ export default function NewRoadmapPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tighter">
-            Create New Roadmap
+            Edit Roadmap
           </h1>
           <p className="text-muted-foreground">
-            Add a new learning roadmap to the platform
+            Update learning roadmap details
           </p>
         </div>
       </div>
@@ -184,9 +286,10 @@ export default function NewRoadmapPage() {
                   onChange={handleChange}
                   placeholder="e.g., frontend, backend"
                   required
+                  disabled
                 />
                 <p className="text-xs text-muted-foreground">
-                  Unique identifier (lowercase, underscores)
+                  Unique identifier (cannot be changed)
                 </p>
               </div>
 
@@ -525,18 +628,18 @@ export default function NewRoadmapPage() {
         <div className="flex gap-4">
           <Button
             type="submit"
-            disabled={loading}
+            disabled={saving}
             className="gradient-bg hover:opacity-90 transition-opacity"
           >
-            {loading ? (
+            {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                Saving...
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Create Roadmap
+                Save Changes
               </>
             )}
           </Button>

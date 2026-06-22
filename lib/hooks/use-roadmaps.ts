@@ -107,7 +107,7 @@ export function useDeleteRoadmap() {
   return useMutation({
     mutationFn: async (roadmapId: string) => {
       const { data } = await axios.delete(`/api/roadmaps/${roadmapId}`);
-      return data;
+      return data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roadmaps"] });

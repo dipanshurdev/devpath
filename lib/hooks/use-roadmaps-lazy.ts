@@ -86,16 +86,21 @@ export function useRoadmapsLazy(filters: RoadmapFilters = {}) {
       return axios.get(`/api/roadmaps?${params.toString()}`);
     },
     getNextPageParam: (lastPage: any) => {
-      if (!lastPage || !lastPage.pagination) return 1;
-      return lastPage.pagination.page + 1;
+      const pagination = lastPage?.data?.data?.pagination;
+      if (!pagination || !pagination.hasMore) return undefined;
+      return pagination.page + 1;
     },
     initialPageParam: 1,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Memoized filtered data
+  // Memoized filtered data — each page is a raw AxiosResponse;
+  // the Roadmap[] lives at page.data.data.data
   const filteredData = useMemo(() => {
-    return infiniteData?.pages?.flat() || [];
+    if (!infiniteData?.pages) return [];
+    return infiniteData.pages.flatMap(
+      (page: any) => page?.data?.data?.data ?? [],
+    );
   }, [infiniteData]);
 
   // Combine data from both queries

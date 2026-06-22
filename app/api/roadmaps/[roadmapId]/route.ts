@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth-utils';
 import { cache, cacheKeys, cacheTTL } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { logger } from '@/lib/logger';
+import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -14,6 +16,36 @@ type CachedRoadmap = {
   id: string;
   [key: string]: unknown;
 };
+
+/**
+ * General-purpose roadmap update schema.
+ * Publish / unpublish transitions are intentionally excluded here;
+ * use PATCH /api/roadmaps/[roadmapId]/publish for those.
+ */
+const roadmapUpdateSchema = z.object({
+  title: z.string().min(1, "Title is required").optional(),
+  slug: z.string().min(1, "Slug is required").optional(),
+  description: z.string().min(1, "Description is required").optional(),
+  summary: z.string().optional().nullable(),
+  type: z.enum(["role", "skill", "project", "language", "tool", "career"] as const).optional(),
+  category: z.string().optional().nullable(),
+  difficulty: z.enum(["Beginner", "Intermediate", "Advanced", "Expert"] as const).optional(),
+  estimatedTime: z.string().min(1, "Estimated time is required").optional(),
+  prerequisites: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
+  icon: z.string().optional().nullable(),
+  color: z.string().optional().nullable(),
+  coverImage: z.string().optional().nullable(),
+  videoUrl: z.string().optional().nullable(),
+  isOfficial: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
+  seoTitle: z.string().optional().nullable(),
+  seoDescription: z.string().optional().nullable(),
+  keywords: z.array(z.string()).optional(),
+  order: z.number().optional(),
+  priority: z.number().optional(),
+  creatorId: z.string().optional().nullable(),
+});
 
 // GET /api/roadmaps/[roadmapId] - Get single roadmap
 export const GET = withErrorHandler(async (
@@ -94,12 +126,14 @@ export const GET = withErrorHandler(async (
     };
   }
 
-  // Increment view count (don't cache this part)
-  if (roadmap) {
+  // Increment view count (only increment when fromCache is false)
+  if (roadmap && !cached) {
     await prisma.roadmap.update({
       where: { id: roadmap.id },
       data: { viewCount: { increment: 1 } },
     });
+    // Increment on the local object so the response contains the updated value
+    roadmap.viewCount = (roadmap.viewCount as number || 0) + 1;
   }
 
   return createApiResponse({
@@ -114,10 +148,19 @@ export const PUT = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
 ) => {
-  const { response } = await requireAdmin();
+  const { session, response } = await requireAdmin();
   if (response) return response;
 
+  logger.info({
+    route: `/api/roadmaps/${params.roadmapId}`,
+    method: 'PUT',
+    message: 'Admin updated roadmap',
+    adminId: session.user.id,
+    adminRole: session.user.role,
+  });
+
   const body = await request.json();
+  const validatedData = roadmapUpdateSchema.parse(body);
 
   const roadmap = await prisma.roadmap.findUnique({
     where: { roadmapId: params.roadmapId },
@@ -127,19 +170,12 @@ export const PUT = withErrorHandler(async (
     throw ApiError.notFound('Roadmap not found');
   }
 
-  // Set publishedAt when isPublished transitions to true
-  const dataToUpdate: Record<string, unknown> = {
-    ...body,
-    updatedAt: new Date(),
-  };
-
-  if (body.isPublished === true && !roadmap.publishedAt) {
-    dataToUpdate.publishedAt = new Date();
-  }
-
   const updated = await prisma.roadmap.update({
     where: { roadmapId: params.roadmapId },
-    data: dataToUpdate,
+    data: {
+      ...validatedData,
+      updatedAt: new Date(),
+    },
     include: {
       creator: {
         select: {
@@ -152,6 +188,12 @@ export const PUT = withErrorHandler(async (
     },
   });
 
+  // Invalidate caches so stale metadata is not served
+  await Promise.all([
+    cache.invalidate(cacheKeys.roadmap(params.roadmapId)),
+    cache.invalidate(cacheKeys.roadmapList()),
+  ]);
+
   return createApiResponse(updated, 'Roadmap updated successfully');
 });
 
@@ -160,8 +202,16 @@ export const DELETE = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { roadmapId: string } }
 ) => {
-  const { response } = await requireAdmin();
+  const { session, response } = await requireAdmin();
   if (response) return response;
+
+  logger.info({
+    route: `/api/roadmaps/${params.roadmapId}`,
+    method: 'DELETE',
+    message: 'Admin deleted roadmap',
+    adminId: session.user.id,
+    adminRole: session.user.role,
+  });
 
   const roadmap = await prisma.roadmap.findUnique({
     where: { roadmapId: params.roadmapId },
@@ -175,6 +225,12 @@ export const DELETE = withErrorHandler(async (
   await prisma.roadmap.delete({
     where: { roadmapId: params.roadmapId },
   });
+
+  // Invalidate caches
+  await Promise.all([
+    cache.invalidate(cacheKeys.roadmap(params.roadmapId)),
+    cache.invalidate(cacheKeys.roadmapList()),
+  ]);
 
   return createApiResponse(null, 'Roadmap deleted successfully');
 });

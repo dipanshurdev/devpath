@@ -62,7 +62,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
 
   return (
     <div className="surface-auth flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md border-border/60 shadow-xl dark:border-border/50 dark:shadow-2xl dark:shadow-black/40">
+      <Card className="w-full max-w-md border-border/60 shadow-xl dark:border-border/50 dark:shadow-2xl dark:shadow-black/40 bg-glass-card">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold tracking-tight">
             Welcome back

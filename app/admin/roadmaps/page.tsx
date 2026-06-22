@@ -19,7 +19,9 @@ import {
   GitBranch,
   Heart,
   Bookmark,
+  Power,
 } from "lucide-react";
+import { useToast } from "@/components/use-toast";
 
 interface Roadmap {
   id: string;
@@ -48,6 +50,7 @@ export default function ManageRoadmapsPage() {
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchRoadmaps();
@@ -56,17 +59,27 @@ export default function ManageRoadmapsPage() {
   const fetchRoadmaps = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/roadmaps");
+      const response = await fetch("/api/roadmaps?all=true");
       const data = await response.json();
 
       if (data.success) {
         setRoadmaps(data.data);
       } else {
         setError(data.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error,
+        });
       }
 } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred';
       setError(message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -85,14 +98,64 @@ export default function ManageRoadmapsPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert("Roadmap deleted successfully!");
+        toast({
+          title: "Success",
+          description: "Roadmap deleted successfully!",
+        });
         fetchRoadmaps();
       } else {
-        alert(`Error: ${data.error}`);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error,
+        });
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred';
-      alert(`Error: ${message}`);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message,
+      });
+    }
+  };
+
+  const handlePublishToggle = async (roadmapId: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/roadmaps/${roadmapId}/publish`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: currentStatus ? "unpublish" : "publish",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: currentStatus
+            ? "Roadmap unpublished successfully!"
+            : "Roadmap published successfully!",
+        });
+        fetchRoadmaps();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error || "Failed to update publish status",
+        });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message,
+      });
     }
   };
 
@@ -211,6 +274,14 @@ export default function ManageRoadmapsPage() {
                       <Link href={`/roadmaps/${roadmap.roadmapId}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePublishToggle(roadmap.roadmapId, roadmap.isPublished)}
+                      className={roadmap.isPublished ? "text-amber-600 hover:text-amber-700" : "text-green-600 hover:text-green-700"}
+                    >
+                      <Power className="h-4 w-4" />
                     </Button>
                     <Button asChild variant="outline" size="sm">
                       <Link href={`/admin/roadmaps/${roadmap.roadmapId}/edit`}>

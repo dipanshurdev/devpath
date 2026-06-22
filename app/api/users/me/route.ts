@@ -1,59 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth-utils';
 import { prisma } from '@/lib/prisma/client';
-import { withErrorHandler, ApiError, createApiResponse, validateRequestBody } from '@/lib/api-handler';
+import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { cache, cacheKeys } from '@/lib/cache';
+import { z } from 'zod';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
-import { cache, cacheKeys } from '@/lib/cache';
 
-// Type for profile update data
-interface ProfileUpdateData {
-  name?: string;
-  bio?: string;
-  github?: string;
-  linkedin?: string;
-  twitter?: string;
-  website?: string;
-  location?: string;
-  company?: string;
-  isPublic?: boolean;
-  newsletter?: boolean;
-}
+const userUpdateSchema = z.object({
+  name: z.string().min(1, "Name must be at least 1 character").optional(),
+  bio: z.string().optional().nullable(),
+  github: z.string().optional().nullable(),
+  linkedin: z.string().optional().nullable(),
+  twitter: z.string().optional().nullable(),
+  website: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  company: z.string().optional().nullable(),
+  isPublic: z.boolean().optional(),
+  newsletter: z.boolean().optional(),
+});
 
 /**
  * PATCH /api/users/me - Update current user's profile
  */
 export const PATCH = withErrorHandler(async (request: NextRequest) => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw ApiError.unauthorized();
-  }
+  const { session, response } = await requireAuth();
+  if (response) return response;
 
   const body = await request.json();
+  const validatedData = userUpdateSchema.parse(body);
   const userId = session.user.id;
 
-  // Validate request body
-  const { isValid, missingFields } = validateRequestBody<ProfileUpdateData>(body, []);
-  if (!isValid) {
-    throw ApiError.badRequest(`Missing required fields: ${missingFields.join(', ')}`);
-  }
-
-  // Check username uniqueness if being updated
-  if (body.username && body.username !== session.user.username) {
-    const existingUser = await prisma.user.findUnique({
-      where: { username: body.username as string },
-      select: { id: true },
-    });
-
-    if (existingUser) {
-      throw ApiError.conflict('Username already taken');
-    }
-  }
-
-  // Filter out undefined fields and prepare update data
+  // Filter out undefined fields and prepare update data (using validatedData to avoid raw body spread)
   const updateData: any = {};
   const allowedFields = [
     'name', 'bio', 'github', 'linkedin', 'twitter', 
@@ -61,8 +41,8 @@ export const PATCH = withErrorHandler(async (request: NextRequest) => {
   ];
 
   for (const field of allowedFields) {
-    if (body[field] !== undefined) {
-      updateData[field] = body[field];
+    if ((validatedData as any)[field] !== undefined) {
+      updateData[field] = (validatedData as any)[field];
     }
   }
 
@@ -97,7 +77,9 @@ export const PATCH = withErrorHandler(async (request: NextRequest) => {
   });
 
   // Invalidate user profile cache
-  await cache.invalidate(cacheKeys.userProfile(updatedUser.username));
+  if (updatedUser.username) {
+    await cache.invalidate(cacheKeys.userProfile(updatedUser.username));
+  }
 
   return createApiResponse(updatedUser, 'Profile updated successfully');
 });
@@ -106,13 +88,11 @@ export const PATCH = withErrorHandler(async (request: NextRequest) => {
  * GET /api/users/me - Get current user's profile
  */
 export const GET = withErrorHandler(async (request: NextRequest) => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw ApiError.unauthorized();
-  }
+  const { session, response } = await requireAuth();
+  if (response) return response;
 
   const userId = session.user.id;
-  const cacheKey = cacheKeys.userProfile(session.user.username || '');
+  const cacheKey = cacheKeys.userProfile(session.user.username || session.user.id);
 
   // Try to get from cache first
   const cached = await cache.get<any>(cacheKey);

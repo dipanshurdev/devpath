@@ -29,6 +29,7 @@ interface AdminStats {
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/stats")
@@ -36,10 +37,12 @@ export default function AdminDashboard() {
       .then((json) => {
         if (json.success) {
           setStats(json.data as AdminStats);
+        } else {
+          setStatsError(json.error ?? "Failed to load stats");
         }
       })
       .catch(() => {
-        // stats remain null; hardcoded fallback values will be shown
+        setStatsError("Could not reach the server. Please refresh the page.");
       });
   }, []);
 
@@ -70,6 +73,11 @@ export default function AdminDashboard() {
 
       {/* Modern Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {statsError && (
+          <div className="col-span-full rounded-2xl border border-destructive/30 bg-destructive/5 px-6 py-4 text-sm font-medium text-destructive">
+            {statsError}
+          </div>
+        )}
         {[
           { label: "Roadmaps", value: stats?.roadmapCount ?? "—", sub: "5 Live, 2 Draft", icon: FileText, color: "text-primary", bg: "bg-primary/5" },
           { label: "Nodes", value: stats?.nodeCount ?? "—", sub: "Checkpoints", icon: GitBranch, color: "text-amber-500", bg: "bg-amber-500/5" },

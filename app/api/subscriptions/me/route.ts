@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma/client';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { requireAuth } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -12,10 +11,8 @@ export const revalidate = 0;
  * GET /api/subscriptions/me - Get current user's subscription
  */
 export const GET = withErrorHandler(async (_request: NextRequest) => {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    throw ApiError.unauthorized();
-  }
+  const { session, response } = await requireAuth();
+  if (response) return response;
 
   const userId = session.user.id;
 
