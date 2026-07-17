@@ -17,33 +17,39 @@ interface BookmarkResponse {
 interface UseBookmarkOptions {
   roadmapId: string;
   initialBookmarked?: boolean;
+  initialLiked?: boolean;
   initialCount?: number;
 }
 
-export function useBookmark({ roadmapId, initialBookmarked, initialCount = 0 }: UseBookmarkOptions) {
+export function useBookmark({ roadmapId, initialBookmarked, initialLiked, initialCount = 0 }: UseBookmarkOptions) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
-  const shouldFetchStatus = initialBookmarked === undefined && !!session?.user?.id;
+  const shouldFetchStatus = (initialBookmarked === undefined || initialLiked === undefined) && !!session?.user?.id;
 
-  // Query to check if roadmap is bookmarked
+  // Query to check if roadmap is bookmarked and liked (from status API)
   const { data: bookmarkStatus } = useQuery({
     queryKey: ["bookmark", roadmapId],
     queryFn: async () => {
-      if (!session?.user?.id) return { isBookmarked: false, bookmarkCount: initialCount };
+      if (!session?.user?.id) return { isBookmarked: false, isLiked: false, bookmarkCount: initialCount };
 
       try {
         const response = await axios.get(`/api/roadmaps/${roadmapId}/status`);
         return {
-          isBookmarked: response.data.data.isBookmarked || false,
-          bookmarkCount: response.data.data.bookmarkCount || initialCount,
+          isBookmarked: response.data.data.isBookmarked ?? false,
+          isLiked: response.data.data.isLiked ?? false,
+          bookmarkCount: response.data.data.bookmarkCount ?? initialCount,
         };
       } catch (error) {
         console.error("Error fetching bookmark status:", error);
-        return { isBookmarked: false, bookmarkCount: initialCount };
+        return { isBookmarked: false, isLiked: false, bookmarkCount: initialCount };
       }
     },
     enabled: shouldFetchStatus,
-    initialData: { isBookmarked: initialBookmarked ?? false, bookmarkCount: initialCount },
+    initialData: { 
+      isBookmarked: initialBookmarked ?? false, 
+      isLiked: initialLiked ?? false,
+      bookmarkCount: initialCount 
+    },
   });
 
   // Mutation to bookmark roadmap
@@ -144,6 +150,7 @@ export function useBookmark({ roadmapId, initialBookmarked, initialCount = 0 }: 
 
   return {
     isBookmarked: bookmarkStatus?.isBookmarked || false,
+    isLiked: bookmarkStatus?.isLiked || false,
     bookmarkCount: bookmarkStatus?.bookmarkCount || 0,
     isLoading: bookmarkMutation.isPending || unbookmarkMutation.isPending,
     toggleBookmark,

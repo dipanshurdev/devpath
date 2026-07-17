@@ -14,7 +14,7 @@ const Layout = ({ children }: Props) => {
     <>
       <section className="relative flex min-h-screen w-full flex-col overflow-x-hidden antialiased">
         <Navbar />
-        <main className="flex-1">
+        <main className="flex-1 ">
           {children}
         </main>
         {/* <Footer /> */}

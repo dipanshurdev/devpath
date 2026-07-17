@@ -5,22 +5,19 @@ interface SearchBarProps {
   setSearchTerm: (term: string) => void;
 }
 
-export default function SearchBar({
-  searchTerm,
-  setSearchTerm,
-}: SearchBarProps) {
+export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
   return (
-    <div className="relative max-w-md mx-auto">
+    <div className="relative">
+      <Search
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+        size={15}
+      />
       <input
         type="text"
-        placeholder="Search for roadmaps..."
+        placeholder="Search roadmaps…"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full px-4 py-2 pl-10 text-primaryWhite bg-darkLight border-none  rounded-2xl bg-transparent focus:outline-primaryBlue dark:focus:outline-none focus:outline  focus:ring-opacity-50"
-      />
-      <Search
-        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-        size={20}
+        className="w-full h-10 pl-10 pr-4 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
       />
     </div>
   );

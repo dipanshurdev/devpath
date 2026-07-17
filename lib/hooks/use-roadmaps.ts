@@ -182,3 +182,31 @@ export function useDashboard() {
     },
   });
 }
+
+// Search roadmaps via /api/search
+export function useSearchRoadmaps(query: string, page = 1) {
+  return useQuery({
+    queryKey: ["roadmaps-search", query, page],
+    queryFn: async () => {
+      if (!query.trim()) return { roadmaps: [], pagination: null };
+      const params = new URLSearchParams({ q: query, page: page.toString() });
+      const { data } = await axios.get(`/api/search?${params.toString()}`);
+      return {
+        roadmaps: data.data.roadmaps as Roadmap[],
+        pagination: data.data.pagination,
+      };
+    },
+    enabled: query.trim().length > 0,
+  });
+}
+
+// Trending roadmaps
+export function useTrendingRoadmaps(limit = 6) {
+  return useQuery({
+    queryKey: ["roadmaps-trending", limit],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/trending?limit=${limit}`);
+      return data.data.roadmaps as Roadmap[];
+    },
+  });
+}
