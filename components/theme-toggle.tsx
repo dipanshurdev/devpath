@@ -21,7 +21,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="outline" size="icon" aria-label="Toggle theme" className="border-border/60">
+      <Button variant="outline" size="icon" aria-label="Toggle theme" className="border-border/60 rounded-full">
         <BsLaptop className="h-5 w-5 opacity-60" />
         <span className="sr-only">Toggle theme</span>
       </Button>
@@ -35,7 +35,7 @@ export function ThemeToggle() {
           variant="outline" 
           size="icon" 
           aria-label="Theme options"
-          className="border-border/60 bg-background/80 shadow-sm transition-all hover:scale-105 hover:border-primary/30 dark:bg-card/50"
+          className="border-border/60 rounded-full bg-background/80 shadow-sm transition-all hover:scale-105 hover:border-primary/30 dark:bg-card/50"
         >
           <div className="relative flex h-5 w-5 items-center justify-center">
             {resolvedTheme === "dark" ? (

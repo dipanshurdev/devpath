@@ -29,7 +29,7 @@ const RoadmapFlow = dynamic(
           <Skeleton className="h-8 w-48 mx-auto" />
           <div className="grid grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
+              <Skeleton key={i} className="h-24 rounded-none" />
             ))}
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function RoadmapPage() {
           </p>
           <button
             onClick={() => router.push("/roadmaps")}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
+            className="px-6 py-3 bg-blue-600 text-white rounded-none hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Roadmaps
@@ -128,7 +128,7 @@ export default function RoadmapPage() {
           </p>
           <button
             onClick={() => router.push("/roadmaps")}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
+            className="px-6 py-3 bg-blue-600 text-white rounded-none hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Roadmaps
@@ -165,8 +165,8 @@ export default function RoadmapPage() {
     <div className="min-h-screen bg-background selection:bg-primary/20">
       {/* Decorative Background Glows */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] bg-blue-500/5 blur-[100px] rounded-full" />
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-none animate-pulse" />
+        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] bg-blue-500/5 blur-[100px] rounded-none" />
       </div>
 
       {/* Header Section */}
@@ -174,7 +174,7 @@ export default function RoadmapPage() {
         <div className="container mx-auto px-4 relative z-10 max-w-7xl">
           <Link
             href="/roadmaps"
-            className="group inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all mb-12 bg-card/40 px-5 py-2.5 rounded-xl border border-border/40 backdrop-blur-md"
+            className="group inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all mb-12 bg-card/40 px-5 py-2.5 rounded-none border border-border/40 backdrop-blur-md"
           >
             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
             Catalog
@@ -188,11 +188,11 @@ export default function RoadmapPage() {
               className="lg:col-span-8 space-y-8"
             >
               <div className="flex flex-wrap items-center gap-3">
-                <span className="px-4 py-1.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest shadow-sm">
+                <span className="px-4 py-1.5 rounded-none bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest shadow-sm">
                   {roadmap.type}
                 </span>
                 <span
-                  className={`px-4 py-1.5 rounded-xl border text-[10px] font-black uppercase tracking-widest shadow-sm ${
+                  className={`px-4 py-1.5 rounded-none border text-[10px] font-black uppercase tracking-widest shadow-sm ${
                     roadmap.difficulty === "Beginner"
                       ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
                       : roadmap.difficulty === "Intermediate"
@@ -215,7 +215,7 @@ export default function RoadmapPage() {
 
               <div className="flex flex-wrap gap-8 pt-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner">
+                  <div className="w-12 h-12 rounded-none bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner">
                     <Clock size={20} />
                   </div>
                   <div>
@@ -228,7 +228,7 @@ export default function RoadmapPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 shadow-inner">
+                  <div className="w-12 h-12 rounded-none bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 shadow-inner">
                     <Award size={20} />
                   </div>
                   <div>
@@ -250,7 +250,7 @@ export default function RoadmapPage() {
               className="lg:col-span-4 lg:mb-4"
             >
               <div className="glass-card p-8 border-border/40 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-none -translate-y-1/2 translate-x-1/2" />
                 
                 <div className="relative z-10 space-y-6">
                   <div className="flex justify-between items-end">
@@ -262,18 +262,18 @@ export default function RoadmapPage() {
                         {progress}<span className="text-primary text-2xl">%</span>
                       </div>
                     </div>
-                    <div className="bg-primary/10 p-3 rounded-2xl text-primary animate-pulse">
+                    <div className="bg-primary/10 p-3 rounded-none text-primary animate-pulse">
                        <TrendingUp size={24} />
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="w-full bg-secondary rounded-2xl h-4 relative overflow-hidden p-0.5 border border-border/20 shadow-inner">
+                    <div className="w-full bg-secondary rounded-none h-4 relative overflow-hidden p-0.5 border border-border/20 shadow-inner">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ duration: 1.5, ease: "circOut" }}
-                        className="h-full bg-gradient-to-r from-primary via-blue-400 to-primary rounded-[10px] relative"
+                        className="h-full bg-gradient-to-r from-primary via-blue-400 to-primary rounded-none relative"
                       >
                          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.3)_50%,transparent_100%)] bg-[length:200%_100%] animate-[dash_2s_linear_infinite]" />
                       </motion.div>
@@ -294,7 +294,7 @@ export default function RoadmapPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Roadmap Flow - 2 columns */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-border/50 bg-card/40 backdrop-blur-sm p-6 shadow-lg">
+            <div className="rounded-none border border-border/50 bg-card/40 backdrop-blur-sm p-6 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-foreground tracking-tight">
                   Learning Path
@@ -312,7 +312,7 @@ export default function RoadmapPage() {
                   />
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-16 rounded-xl bg-muted/30 border border-dashed border-border">
+                <div className="flex flex-col items-center justify-center py-16 rounded-none bg-muted/30 border border-dashed border-border">
                   <p className="text-muted-foreground font-medium">
                     No checkpoints yet
                   </p>
@@ -326,7 +326,7 @@ export default function RoadmapPage() {
 
           {/* Node Details Panel - 1 column */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-lg overflow-hidden min-h-[320px]">
+            <div className="sticky top-24 rounded-none border border-border/50 bg-card/60 backdrop-blur-sm shadow-lg overflow-hidden min-h-[320px]">
               {selectedNode ? (
                 <NodeDetails
                   node={selectedNode}
@@ -339,7 +339,7 @@ export default function RoadmapPage() {
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center p-10 text-center min-h-[320px]">
-                  <div className="w-14 h-14 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
+                  <div className="w-14 h-14 rounded-none bg-muted/50 flex items-center justify-center mb-4">
                     <svg
                       className="w-7 h-7 text-muted-foreground"
                       fill="none"

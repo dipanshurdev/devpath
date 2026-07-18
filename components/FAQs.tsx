@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
 
 const faqs = [
   {
@@ -13,7 +13,7 @@ const faqs = [
   {
     question: "Is DevPath designed only for senior developers?",
     answer:
-      "No. Our curricula start from foundational fundamentals and branch into advanced specialties. Whether you are learning core frontend architecture or senior system design, the paths adjust dynamically to your starting tier.",
+      "No. Our curricula start from foundational fundamentals and branch into advanced specialties. Whether you are learning core frontend architecture or senior system design, the paths adjust to your starting tier.",
   },
   {
     question: "Are the study resources curated from premium courses?",
@@ -23,62 +23,78 @@ const faqs = [
   {
     question: "How frequently are the roadmaps updated?",
     answer:
-      "Our curriculum engine updates paths regularly to match current production frameworks and standard practices, ensuring you are not study-pathing deprecated libraries.",
+      "Our curriculum is updated regularly to match current production frameworks and standard practices, ensuring you are not following deprecated libraries.",
   },
 ];
 
-const FAQ = () => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+export default function FAQ() {
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-background border-b border-border/40 relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-4">INQUIRIES</h2>
-          <p className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Frequently asked <span className="text-gradient">questions.</span>
+    <section className="border-b border-border/60 dark:border-zinc-800 bg-background">
+      <div className="container-xl py-16">
+        {/* Header */}
+        <div className="flex items-baseline gap-6 mb-10 pb-6 border-b border-border/60 dark:border-zinc-800">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            FAQ
           </p>
+          <h2 className="text-lg font-semibold text-foreground dark:text-white">
+            Common questions
+          </h2>
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          {faqs.map((faq, index) => (
-            <div key={index} className="mb-3">
-              <button
-                className={`
-                  flex justify-between items-center w-full p-5 text-base font-bold text-left transition-all duration-200
-                  ${activeIndex === index ? "glass-card text-neutral-900 dark:text-white rounded-t-xl" : "glass-card-hover bg-card/45 hover:bg-card/90 rounded-xl text-foreground"}
-                  border border-border/60 dark:border-zinc-800/80
-                `}
-                onClick={() =>
-                  setActiveIndex(activeIndex === index ? null : index)
-                }
-              >
-                <span>{faq.question}</span>
-                <div className={`p-1 rounded-full transition-all duration-200 ${activeIndex === index ? "bg-neutral-950 dark:bg-white text-white dark:text-neutral-950 rotate-180" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200"}`}>
-                  <ChevronDown className="w-4 h-4" />
-                </div>
-              </button>
-              <AnimatePresence>
-                {activeIndex === index && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="overflow-hidden glass-card rounded-b-xl border-t-0 border-border/60 dark:border-zinc-800/80"
+        {/* Two-column layout on desktop — questions left, answers right */}
+        <div className="max-w-3xl">
+          <div className="border border-border/60 dark:border-zinc-800 divide-y divide-border/60 dark:divide-zinc-800">
+            {faqs.map((faq, i) => (
+              <div key={i}>
+                <button
+                  className="w-full flex items-start justify-between gap-6 px-6 py-5 text-left hover:bg-neutral-50 dark:hover:bg-zinc-900/40 transition-colors group"
+                  onClick={() => setOpen(open === i ? null : i)}
+                  aria-expanded={open === i}
+                >
+                  <span
+                    className={`text-sm font-semibold leading-snug transition-colors ${
+                      open === i
+                        ? "text-foreground dark:text-white"
+                        : "text-foreground/80 dark:text-neutral-300 group-hover:text-foreground dark:group-hover:text-white"
+                    }`}
                   >
-                    <div className="p-5 text-sm text-muted-foreground leading-relaxed font-normal">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                    {faq.question}
+                  </span>
+                  {/* Plus → rotates to × */}
+                  <span
+                    className={`shrink-0 mt-0.5 flex items-center justify-center w-5 h-5 border transition-all duration-200 ${
+                      open === i
+                        ? "border-foreground dark:border-white bg-foreground dark:bg-white text-background dark:text-neutral-950 rotate-45"
+                        : "border-border/60 dark:border-zinc-700 text-muted-foreground"
+                    }`}
+                  >
+                    <Plus className="w-3 h-3" />
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      key="answer"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-6 pb-5 text-sm text-muted-foreground leading-relaxed border-t border-border/60 dark:border-zinc-800 pt-4">
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default FAQ;
+}

@@ -13,9 +13,14 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+    const role = session?.user?.role;
+
   const router = useRouter();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
+
 
   const handleLogout = async () => {
     try {
@@ -38,7 +43,7 @@ const Navbar = () => {
             className="flex items-center hover:opacity-80 transition-opacity"
           >
             <div className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/25 group-hover:rotate-6 transition-transform">
+              <div className="w-10 h-10 bg-primary flex rounded-full items-center justify-center shadow-lg shadow-primary/25 group-hover:rotate-6 transition-transform">
                 <PiPath className="text-primary-foreground w-6 h-6" />
               </div>
               <span className="text-2xl font-black tracking-tighter text-foreground">DevPath</span>
@@ -95,7 +100,7 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2.5 p-1.5 pr-4 rounded-full bg-secondary/50 border border-border group hover:border-primary/40 transition-all"
+                className="flex items-center gap-2.5 p-1.5 pr-4 rounded-sm bg-secondary/50 border border-border group hover:border-primary/40 transition-all"
               >
                 {session.user?.avatar ? (
                   <Image
@@ -144,6 +149,23 @@ const Navbar = () => {
                     >
                       Settings
                     </Link>
+                    <Link
+                      href={`/profile/${session.user?.username}`}
+                      className="flex items-center px-4 py-2 text-sm font-medium rounded-xl hover:bg-primary/10 hover:text-primary transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    {isAdmin ? (
+
+                      <Link
+                      href="/admin"
+                      className="flex items-center px-4 py-2 text-sm font-medium rounded-xl hover:bg-primary/10 hover:text-primary transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                      >
+                      Control Center
+                    </Link>
+                    ):null}
                     <div className="h-px bg-border/40 my-2 mx-2" />
                     <button
                       onClick={handleLogout}

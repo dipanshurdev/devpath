@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Avatar,
@@ -16,8 +17,10 @@ import {
   Award,
   Star,
   Clock,
+  Lock,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 // Static achievements — no achievement endpoint yet
 const achievements = [
@@ -69,10 +72,12 @@ export default function ProfilePage({
 }: {
   params: { accountId: string };
 }) {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("progress");
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   useEffect(() => {
     if (!params.accountId) return;
@@ -81,10 +86,16 @@ export default function ProfilePage({
       try {
         setLoading(true);
         setError(null);
+        setIsPrivate(false);
         const res = await fetch(`/api/users/${params.accountId}`);
         const json = await res.json();
         if (!json.success) {
-          setError(json.error ?? "Failed to load profile");
+          // Check if it's a privacy error
+          if (json.code === "FORBIDDEN" || json.error?.includes("private")) {
+            setIsPrivate(true);
+          } else {
+            setError(json.error ?? "Failed to load profile");
+          }
           return;
         }
         setProfile(json.data as ProfileData);
@@ -106,6 +117,22 @@ export default function ProfilePage({
     );
   }
 
+  if (isPrivate) {
+    return (
+      <div className="max-w-7xl mx-auto py-20 text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary mb-6">
+          <Lock className="w-10 h-10 text-muted-foreground" />
+        </div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">
+          This profile is private
+        </h2>
+        <p className="text-muted-foreground">
+          The user has set their profile to private.
+        </p>
+      </div>
+    );
+  }
+
   if (error || !profile) {
     return (
       <div className="max-w-7xl mx-auto py-20 text-center text-destructive font-bold">
@@ -118,9 +145,14 @@ export default function ProfilePage({
     month: "long",
     year: "numeric",
   });
+  const sessionUser = session?.user as
+    | { id?: string; username?: string | null }
+    | undefined;
+  const isProfileOwner =
+    sessionUser?.username === params.accountId || sessionUser?.id === profile.id;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 py-10">
+    <div className="max-w-7xl mx-auto space-y-12 py-10 my-10">
       {/* Header Profile Section */}
       <div className="relative glass-card !bg-primary/5 p-8 md:p-12 border-border/40 overflow-hidden">
         {/* Abstract Background Elements */}
@@ -139,9 +171,15 @@ export default function ProfilePage({
                 {profile.name.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <button className="absolute bottom-4 right-4 p-3 bg-primary text-white rounded-2xl shadow-xl hover:scale-110 transition-transform">
-              <Edit className="w-5 h-5" />
-            </button>
+            {isProfileOwner && (
+              <Link
+                href="/settings"
+                className="absolute bottom-4 right-4 p-3 bg-primary text-white rounded-2xl shadow-xl hover:scale-110 transition-transform"
+                aria-label="Edit profile"
+              >
+                <Edit className="w-5 h-5" />
+              </Link>
+            )}
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
@@ -169,15 +207,32 @@ export default function ProfilePage({
               {profile.bio ?? "No bio yet."}
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-              <Button className="premium-button px-8 py-6 rounded-2xl">
-                Follow
-              </Button>
-              <Button
-                variant="outline"
-                className="px-8 py-6 rounded-2xl border-border/60 font-bold hover:bg-card"
-              >
-                Message
-              </Button>
+              {isProfileOwner ? (
+                <Button asChild className="premium-button px-8 py-6 rounded-2xl">
+                  <Link href="/settings">Edit profile</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button className="premium-button px-8 py-6 rounded-2xl"  onClick={() => toast.info(
+            
+             'Coming soon! This feature is under development.'
+          )}>
+                    Follow
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="px-8 py-6 rounded-2xl border-border/60 font-bold hover:bg-card"
+                    onClick={() => toast.info(
+            
+             'Coming soon! This feature is under development.'
+          )}
+
+                    
+                  >
+                    Message
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 

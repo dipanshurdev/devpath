@@ -22,12 +22,31 @@ import {
   BarChart3,
   Settings,
 } from "lucide-react";
+import { useToast } from "@/components/use-toast";
 
 interface AdminStats {
   roadmapCount: number;
+  publishedRoadmapCount: number;
   nodeCount: number;
   resourceCount: number;
   userCount: number;
+  commentCount: number;
+  activeUsers: {
+    last7Days: number;
+    last30Days: number;
+  };
+  subscriptions: { tier: string; status: string; count: number }[];
+  timeSeries: {
+    signups: {
+      last7Days: { total: number; daily: { date: string; count: number }[] };
+      last30Days: { total: number; daily: { date: string; count: number }[] };
+    };
+    roadmapCompletions: {
+      last7Days: { total: number; daily: { date: string; count: number }[] };
+      last30Days: { total: number; daily: { date: string; count: number }[] };
+    };
+  };
+  generatedAt: string;
 }
 
 export default function AdminDashboard() {
@@ -37,6 +56,7 @@ export default function AdminDashboard() {
   const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (status === "loading") return;
@@ -56,12 +76,22 @@ export default function AdminDashboard() {
           setStats(json.data as AdminStats);
         } else {
           setStatsError(json.error ?? "Failed to load stats");
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: json.error,
+          });
         }
       })
-      .catch(() => {
+      .catch((err) => {
         setStatsError("Could not reach the server. Please refresh the page.");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: err instanceof Error ? err.message : "Failed to load stats",
+        });
       });
-  }, [isAdmin]);
+  }, [isAdmin, toast]);
 
   if (status === "loading" || status === "unauthenticated" || !isAdmin) {
     return <Loader loading={true} />;
@@ -93,7 +123,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Modern Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
         {statsError && (
           <div className="col-span-full rounded-2xl border border-destructive/30 bg-destructive/5 px-6 py-4 text-sm font-medium text-destructive">
             {statsError}
@@ -101,9 +131,13 @@ export default function AdminDashboard() {
         )}
         {[
           { label: "Roadmaps", value: stats?.roadmapCount ?? "—", sub: "5 Live, 2 Draft", icon: FileText, color: "text-primary", bg: "bg-primary/5" },
+          { label: "Published", value: stats?.publishedRoadmapCount ?? "—", sub: "Live", icon: FileText, color: "text-green-500", bg: "bg-green-500/5" },
           { label: "Nodes", value: stats?.nodeCount ?? "—", sub: "Checkpoints", icon: GitBranch, color: "text-amber-500", bg: "bg-amber-500/5" },
-          { label: "Resources", value: stats?.resourceCount ?? "—", sub: "Learning Materials", icon: BookOpen, color: "text-green-500", bg: "bg-green-500/5" },
+          { label: "Resources", value: stats?.resourceCount ?? "—", sub: "Learning Materials", icon: BookOpen, color: "text-emerald-500", bg: "bg-emerald-500/5" },
           { label: "Users", value: stats?.userCount ?? "—", sub: "Total Learner Base", icon: Users, color: "text-blue-500", bg: "bg-blue-500/5" },
+          { label: "Comments", value: stats?.commentCount ?? "—", sub: "Total", icon: Users, color: "text-purple-500", bg: "bg-purple-500/5" },
+          { label: "Active (7d)", value: stats?.activeUsers?.last7Days ?? "—", sub: "Users active", icon: Users, color: "text-sky-500", bg: "bg-sky-500/5" },
+          { label: "Active (30d)", value: stats?.activeUsers?.last30Days ?? "—", sub: "Users active", icon: Users, color: "text-indigo-500", bg: "bg-indigo-500/5" },
         ].map((stat, i) => (
           <Card key={i} className="glass-card p-6 border-white/5 relative overflow-hidden group hover:bg-card/60 transition-all">
             <div className={`absolute -right-4 -top-4 w-24 h-24 ${stat.bg} blur-2xl rounded-full opacity-60 group-hover:opacity-100 transition-opacity`} />
@@ -126,6 +160,49 @@ export default function AdminDashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Time Series Charts */}
+      {stats?.timeSeries && (
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="glass-card">
+            <CardHeader>
+              <CardTitle>Signups (Last 7 Days)</CardTitle>
+              <CardDescription>
+                Total: {stats.timeSeries.signups.last7Days.total}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {stats.timeSeries.signups.last7Days.daily.map((day) => (
+                  <div key={day.date} className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">{day.date}</span>
+                    <span className="font-medium">{day.count}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card">
+            <CardHeader>
+              <CardTitle>Roadmap Completions (Last 7 Days)</CardTitle>
+              <CardDescription>
+                Total: {stats.timeSeries.roadmapCompletions.last7Days.total}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {stats.timeSeries.roadmapCompletions.last7Days.daily.map((day) => (
+                  <div key={day.date} className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">{day.date}</span>
+                    <span className="font-medium">{day.count}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">

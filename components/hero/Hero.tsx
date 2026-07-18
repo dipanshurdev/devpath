@@ -65,7 +65,7 @@ const Hero = () => {
               </Link>
               <Link
                 href="/roadmaps"
-                className="px-8 py-4 rounded-xl border border-border bg-card/50 backdrop-blur-sm font-semibold hover:bg-card/90 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 text-sm"
+                className="px-8 py-4 rounded-none border border-border bg-card/50 backdrop-blur-sm font-semibold hover:bg-card/90 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 text-sm"
               >
                 Explore Roadmaps
               </Link>
@@ -97,7 +97,7 @@ const Hero = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative z-20 glass-card p-2 border border-border/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+            <div className="relative z-20  p-2 border border-border/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <HeroRoadmap />
             </div>
           </motion.div>

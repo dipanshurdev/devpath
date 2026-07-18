@@ -59,25 +59,15 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const difficulty = searchParams.get('difficulty') as Difficulty | null;
   const featured = searchParams.get('featured');
   const search = searchParams.get('search');
-  const all = searchParams.get('all');
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
   const pageSize = Math.min(Math.max(1, parseInt(searchParams.get('pageSize') || '20', 10) || 20), 100);
 
-  // Admin-only: check if requesting all roadmaps (including drafts)
-  let isAdmin = false;
-  if (all === 'true') {
-    const { session, response } = await requireAdmin();
-    if (response) return response;
-    isAdmin = true;
-  }
-
-  // Create cache key based on search parameters (admin requests are never cached)
+  // Create cache key based on search parameters
   const cacheKeyParams = new URLSearchParams({
     ...(type && { type }),
     ...(difficulty && { difficulty }),
     ...(featured && { featured }),
     ...(search && { search }),
-    ...(isAdmin && { all: 'true' }),
     page: page.toString(),
     pageSize: pageSize.toString(),
   }).toString();
@@ -88,8 +78,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const userId = session?.user?.id;
 
   // Try to get cached list data first; userStatus is attached separately when present
-  // Admin requests (all=true) bypass cache
-  const cached = !isAdmin ? await cache.get<RoadmapListCache>(cacheKey) : null;
+  const cached = await cache.get<RoadmapListCache>(cacheKey);
   if (cached && !userId) {
     return createApiResponse({
       data: cached.data,
@@ -98,7 +87,9 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     });
   }
 
-  const where: Prisma.RoadmapWhereInput = isAdmin ? {} : { isPublished: true };
+  const where: Prisma.RoadmapWhereInput = {
+    isPublished: true,
+  };
 
   if (type) where.type = type;
   if (difficulty) where.difficulty = difficulty;
@@ -185,8 +176,8 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
   const responseData = { data: roadmapsWithStatus, pagination };
 
-  // Cache the generic response for 60 seconds (admin requests never cached)
-  if (!userId && !isAdmin) {
+  // Cache the generic response for 60 seconds
+  if (!userId) {
     await cache.set(cacheKey, { data: roadmaps, pagination }, { ttl: cacheTTL.MEDIUM });
   }
 

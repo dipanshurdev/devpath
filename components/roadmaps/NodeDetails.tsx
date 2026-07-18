@@ -2,17 +2,13 @@
 
 import { motion } from "framer-motion";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import {
   Book,
   ChevronDown,
   ChevronUp,
   Code,
+  MessageCircle,
+  Send,
+  Trash2,
   FileVideo,
   Folder,
   Gamepad,
@@ -21,10 +17,14 @@ import {
   Circle,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import { useEffect, useState } from "react";
-import { Progress } from "../ui/progress";
 import { useSession } from "next-auth/react";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
 
 const getResourceIcon = (type: string) => {
   switch (type?.toLowerCase()) {
@@ -48,14 +48,13 @@ export default function NodeDetails({
   node,
   isCompleted,
   onComplete,
-  roadmapId,
+  roadmapId: _roadmapId,
 }: {
   node: any;
   isCompleted: boolean;
   onComplete: () => void;
   roadmapId: string;
 }) {
-  const { data: session } = useSession();
   const [checkedResourceIds, setCheckedResourceIds] = useState<string[]>([]);
   const [expandedResources, setExpandedResources] = useState<Set<number>>(
     new Set(),
@@ -195,7 +194,6 @@ export default function NodeDetails({
               <ResourceCard
                 key={resource.id || index}
                 resource={resource}
-                index={index}
                 isExpanded={expandedResources.has(index)}
                 checked={checkedResourceIds.includes(resource.id)}
                 onToggleExpand={() => toggleResourceExpansion(index)}
@@ -211,21 +209,443 @@ export default function NodeDetails({
             </p>
           </div>
         )}
+
+        <NodeComments nodeId={(node.nodeId as string) ?? (node.id as string)} />
       </div>
     </motion.div>
   );
 }
 
+type CommentAuthor = {
+  id: string;
+  name: string | null;
+  username: string | null;
+  avatar: string | null;
+};
+
+type NodeReply = {
+  id: string;
+  content: string;
+  userId: string;
+  createdAt: string;
+  isOwner: boolean;
+  user: CommentAuthor;
+};
+
+type NodeComment = {
+  id: string;
+  content: string;
+  userId: string;
+  createdAt: string;
+  isOwner: boolean;
+  user: CommentAuthor;
+  replies: NodeReply[];
+};
+
+const rateLimitMessage = "You're posting too fast — please wait a moment";
+
+function getAuthorName(author: CommentAuthor) {
+  return author.name || author.username || "DevPath user";
+}
+
+function getInitials(author: CommentAuthor) {
+  return getAuthorName(author).slice(0, 2).toUpperCase();
+}
+
+function formatCommentDate(value: string) {
+  return new Date(value).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function isRateLimitError(status: number, data: { code?: string }) {
+  return status === 429 || data.code === "RATE_LIMIT";
+}
+
+function NodeComments({ nodeId }: { nodeId: string }) {
+  const { data: session, status } = useSession();
+  const [comments, setComments] = useState<NodeComment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState("");
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
+    new Set(),
+  );
+  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [replySubmittingId, setReplySubmittingId] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadComments() {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`/api/nodes/${nodeId}/comments`);
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          setError(data.error ?? "Failed to load comments");
+          return;
+        }
+
+        if (!cancelled) {
+          setComments(data.data.comments ?? []);
+        }
+      } catch {
+        if (!cancelled) {
+          setError("Failed to load comments");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadComments();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [nodeId]);
+
+  async function handlePostComment() {
+    if (!newComment.trim()) return;
+
+    try {
+      setSubmitting(true);
+      setError(null);
+      const response = await fetch(`/api/nodes/${nodeId}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: newComment }),
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(
+          isRateLimitError(response.status, data)
+            ? rateLimitMessage
+            : data.error ?? "Failed to post comment",
+        );
+        return;
+      }
+
+      setComments((current) => [data.data, ...current]);
+      setNewComment("");
+    } catch {
+      setError("Failed to post comment");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handlePostReply(commentId: string) {
+    const content = replyDrafts[commentId]?.trim();
+    if (!content) return;
+
+    try {
+      setReplySubmittingId(commentId);
+      setError(null);
+      const response = await fetch(`/api/comments/${commentId}/replies`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(
+          isRateLimitError(response.status, data)
+            ? rateLimitMessage
+            : data.error ?? "Failed to post reply",
+        );
+        return;
+      }
+
+      setComments((current) =>
+        current.map((comment) =>
+          comment.id === commentId
+            ? { ...comment, replies: [...comment.replies, data.data] }
+            : comment,
+        ),
+      );
+      setReplyDrafts((current) => ({ ...current, [commentId]: "" }));
+      setExpandedReplies((current) => new Set(current).add(commentId));
+      setActiveReplyId(null);
+    } catch {
+      setError("Failed to post reply");
+    } finally {
+      setReplySubmittingId(null);
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    const response = await fetch(`/api/comments/${commentId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      setComments((current) =>
+        current.filter((comment) => comment.id !== commentId),
+      );
+      return;
+    }
+
+    const data = await response.json();
+    setError(data.error ?? "Failed to delete comment");
+  }
+
+  async function handleDeleteReply(commentId: string, replyId: string) {
+    const response = await fetch(`/api/replies/${replyId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      setComments((current) =>
+        current.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                replies: comment.replies.filter((reply) => reply.id !== replyId),
+              }
+            : comment,
+        ),
+      );
+      return;
+    }
+
+    const data = await response.json();
+    setError(data.error ?? "Failed to delete reply");
+  }
+
+  function toggleReplies(commentId: string) {
+    setExpandedReplies((current) => {
+      const next = new Set(current);
+      if (next.has(commentId)) {
+        next.delete(commentId);
+      } else {
+        next.add(commentId);
+      }
+      return next;
+    });
+  }
+
+  return (
+    <div className="mt-10 border-t border-border/40 pt-8">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-bold text-foreground">Comments</h3>
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
+          <MessageCircle className="w-4 h-4" />
+          {comments.length}
+        </span>
+      </div>
+
+      {status === "unauthenticated" ? (
+        <p className="text-sm font-medium text-muted-foreground rounded-lg border border-dashed border-border bg-card/10 p-4">
+          Sign in to comment.
+        </p>
+      ) : (
+        <div className="space-y-3 mb-6">
+          <Textarea
+            value={newComment}
+            onChange={(event) => setNewComment(event.target.value)}
+            placeholder="Add a comment"
+            maxLength={5000}
+            disabled={status !== "authenticated" || submitting}
+          />
+          <Button
+            onClick={handlePostComment}
+            disabled={!newComment.trim() || submitting}
+            className="premium-button rounded-xl font-bold"
+          >
+            <Send className="w-4 h-4 mr-2" />
+            Post comment
+          </Button>
+        </div>
+      )}
+
+      {error && (
+        <p className="mb-4 text-sm font-bold text-destructive">{error}</p>
+      )}
+
+      {loading ? (
+        <p className="text-sm font-medium text-muted-foreground">
+          Loading comments...
+        </p>
+      ) : comments.length === 0 ? (
+        <p className="text-sm font-medium text-muted-foreground">
+          No comments yet.
+        </p>
+      ) : (
+        <div className="space-y-5">
+          {comments.map((comment) => {
+            const repliesExpanded = expandedReplies.has(comment.id);
+
+            return (
+              <div
+                key={comment.id}
+                className="rounded-lg border border-border/60 bg-card/40 p-4"
+              >
+                <div className="flex items-start gap-3">
+                  <Avatar className="h-9 w-9 border border-primary/20">
+                    <AvatarImage
+                      src={comment.user.avatar || "/placeholder.svg"}
+                      alt={getAuthorName(comment.user)}
+                    />
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                      {getInitials(comment.user)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-black text-foreground">
+                          {getAuthorName(comment.user)}
+                        </p>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          {formatCommentDate(comment.createdAt)}
+                        </p>
+                      </div>
+                      {comment.isOwner && (
+                        <button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="text-muted-foreground hover:text-destructive transition-colors"
+                          aria-label="Delete comment"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                    <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                      {comment.content}
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-4">
+                      <button
+                        onClick={() => toggleReplies(comment.id)}
+                        className="text-xs font-bold text-primary hover:underline"
+                      >
+                        {repliesExpanded ? "Hide" : "Show"}{" "}
+                        {comment.replies.length}{" "}
+                        {comment.replies.length === 1 ? "reply" : "replies"}
+                      </button>
+                      {session && (
+                        <button
+                          onClick={() => setActiveReplyId(comment.id)}
+                          className="text-xs font-bold text-primary hover:underline"
+                        >
+                          Reply
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {repliesExpanded && comment.replies.length > 0 && (
+                  <div className="mt-4 space-y-3 border-l border-border/50 pl-4">
+                    {comment.replies.map((reply) => (
+                      <div key={reply.id} className="flex items-start gap-3">
+                        <Avatar className="h-8 w-8 border border-primary/20">
+                          <AvatarImage
+                            src={reply.user.avatar || "/placeholder.svg"}
+                            alt={getAuthorName(reply.user)}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
+                            {getInitials(reply.user)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-black text-foreground">
+                                {getAuthorName(reply.user)}
+                              </p>
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                {formatCommentDate(reply.createdAt)}
+                              </p>
+                            </div>
+                            {reply.isOwner && (
+                              <button
+                                onClick={() =>
+                                  handleDeleteReply(comment.id, reply.id)
+                                }
+                                className="text-muted-foreground hover:text-destructive transition-colors"
+                                aria-label="Delete reply"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                            {reply.content}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeReplyId === comment.id && (
+                  <div className="mt-4 space-y-3 pl-12">
+                    <Textarea
+                      value={replyDrafts[comment.id] ?? ""}
+                      onChange={(event) =>
+                        setReplyDrafts((current) => ({
+                          ...current,
+                          [comment.id]: event.target.value,
+                        }))
+                      }
+                      placeholder="Write a reply"
+                      maxLength={5000}
+                      disabled={replySubmittingId === comment.id}
+                    />
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => handlePostReply(comment.id)}
+                        disabled={
+                          !replyDrafts[comment.id]?.trim() ||
+                          replySubmittingId === comment.id
+                        }
+                        className="premium-button rounded-xl font-bold"
+                      >
+                        Reply
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setActiveReplyId(null)}
+                        className="rounded-xl font-bold"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ResourceCard({
   resource,
-  index,
   isExpanded,
   checked,
   onToggleExpand,
   onCheckToggle,
 }: {
   resource: any;
-  index: number;
   isExpanded: boolean;
   checked: boolean;
   onToggleExpand: () => void;

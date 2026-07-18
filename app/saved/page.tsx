@@ -4,11 +4,9 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Bookmark, Search, Sparkles, ArrowRight, BookOpen } from "lucide-react";
+import { Bookmark, Search, BookOpen, ArrowRight, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import RoadmapCardLazy from "@/components/roadmaps/RoadmapCardLazy";
 import { useSavedRoadmaps } from "@/lib/hooks/use-bookmark";
@@ -41,51 +39,41 @@ export default function SavedRoadmapsPage() {
   const [filterType, setFilterType] = React.useState("all");
 
   const { data: savedRoadmaps = [], isLoading, error } = useSavedRoadmaps();
-  console.log(savedRoadmaps);
-  
 
-  // Redirect if not authenticated
   React.useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login?callbackUrl=/saved");
-    }
+    if (status === "unauthenticated") router.push("/login?callbackUrl=/saved");
   }, [status, router]);
 
-  // Filter saved roadmaps
   const filteredRoadmaps = React.useMemo(() => {
     if (!savedRoadmaps) return [];
-    
-    return (savedRoadmaps as SavedRoadmap[]).filter((roadmap: SavedRoadmap) => {
-      const matchesSearch = !searchTerm || 
+    return (savedRoadmaps as SavedRoadmap[]).filter((roadmap) => {
+      const matchesSearch =
+        !searchTerm ||
         roadmap.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         roadmap.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesFilter = filterType === "all" || roadmap.type === filterType;
-      
+      const matchesFilter =
+        filterType === "all" || roadmap.type === filterType;
       return matchesSearch && matchesFilter;
     });
   }, [savedRoadmaps, searchTerm, filterType]);
 
-  // Get unique types for filter
   const uniqueTypes = React.useMemo(() => {
     if (!savedRoadmaps) return [];
-    const types = (savedRoadmaps as SavedRoadmap[]).map((r: SavedRoadmap) => r.type);
+    const types = (savedRoadmaps as SavedRoadmap[]).map((r) => r.type);
     return Array.from(new Set(types));
   }, [savedRoadmaps]);
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="space-y-6">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-12 w-full max-w-md" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-64 w-full" />
-              ))}
-            </div>
-          </div>
+      <div className="container-xl py-10 space-y-8">
+        <div className="pb-6 border-b border-border/60 dark:border-zinc-800 space-y-2">
+          <Skeleton className="h-3 w-16 rounded-none" />
+          <Skeleton className="h-8 w-48 rounded-none" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} className="h-56 rounded-none" />
+          ))}
         </div>
       </div>
     );
@@ -93,194 +81,146 @@ export default function SavedRoadmapsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-6 text-center">
-            <Bookmark className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Error Loading Saved Roadmaps</h2>
-            <p className="text-muted-foreground mb-4">
-              We couldn&apos;t load your saved roadmaps. Please try again.
-            </p>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="container-xl py-20 flex flex-col items-center gap-4 text-center">
+        <Bookmark className="w-8 h-8 text-muted-foreground/40" />
+        <p className="text-sm text-muted-foreground">
+          Could not load your saved roadmaps.
+        </p>
+        <Button
+          size="sm"
+          className="premium-button px-6"
+          onClick={() => window.location.reload()}
+        >
+          Try again
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 my-10">
-      <div className="container section">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mb-12"
-        >
-          {/* Decorative background elements */}
-          <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
-          
-          <div className="relative">
-            <motion.div 
-              className="flex items-center gap-4 mb-6"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
-                <div className="relative bg-gradient-to-br from-primary to-primary/80 p-4 rounded-2xl shadow-2xl">
-                  <Bookmark className="w-8 h-8 text-white" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-5xl font-black text-foreground tracking-tight mb-2">
-                  Your Collection
-                </h1>
-                <div className="flex items-center gap-3">
-                  <Badge variant="secondary" className="text-sm px-4 py-1.5 bg-primary/10 text-primary border-primary/20">
-                    <Sparkles className="w-3 h-3 mr-1.5" />
-                    {savedRoadmaps.length} saved
-                  </Badge>
-                  <span className="text-muted-foreground text-sm">
-                    Curated learning paths
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.p 
-              className="text-xl text-muted-foreground max-w-2xl leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Your personal library of roadmaps, carefully saved for your learning journey. 
-              Explore, track progress, and build your expertise.
-            </motion.p>
-
-            {/* Search and Filters */}
-            <motion.div 
-              className="mt-8 flex flex-col sm:flex-row gap-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="relative flex-1 max-w-xl group">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <Input
-                    placeholder="Search your collection..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-12 h-12 text-base bg-card/50 border-white/10 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={filterType === "all" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilterType("all")}
-                  className="h-12 px-6 font-medium"
-                >
-                  All
-                </Button>
-                {uniqueTypes.map((type: string) => (
-                  <Button
-                    key={type}
-                    variant={filterType === type ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setFilterType(type)}
-                    className="h-12 px-6 font-medium"
-                  >
-                    {type}
-                  </Button>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Content */}
-        {isLoading ? (
-          <motion.div 
-            className="card-grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <Skeleton className="h-80 w-full rounded-3xl bg-card/50" />
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : filteredRoadmaps.length === 0 ? (
+    <div className="w-full min-h-screen bg-background pb-20">
+      {/* Page header */}
+      <div className="border-b border-border/60 dark:border-zinc-800 bg-background pt-24 pb-10">
+        <div className="container-xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center py-20"
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative inline-block mb-8">
-              <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full" />
-              <div className="relative bg-gradient-to-br from-card to-card/50 border border-white/10 rounded-3xl p-12">
-                <BookOpen className="w-20 h-20 text-muted-foreground mx-auto mb-6" />
-                <h2 className="text-3xl font-black text-foreground mb-4">
-                  {savedRoadmaps.length === 0 
-                    ? "Start Your Collection" 
-                    : "No Matches Found"
-                  }
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
-                  {savedRoadmaps.length === 0
-                    ? "Your learning journey begins here. Explore roadmaps and save the ones that spark your curiosity."
-                    : "Try adjusting your search terms or filters to discover roadmaps in your collection."
-                  }
-                </p>
-                {savedRoadmaps.length === 0 && (
-                  <Button 
-                    asChild 
-                    size="lg"
-                    className="h-14 px-8 text-base font-medium group"
-                  >
-                    <a href="/roadmaps" className="flex items-center gap-2">
-                      Explore Roadmaps
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  </Button>
-                )}
-              </div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+              Library
+            </p>
+            <div className="flex items-baseline gap-4">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground dark:text-white">
+                Saved Roadmaps
+              </h1>
+              {savedRoadmaps.length > 0 && (
+                <span className="text-sm font-semibold text-muted-foreground tabular-nums">
+                  {savedRoadmaps.length}
+                </span>
+              )}
             </div>
           </motion.div>
+
+          {/* Toolbar */}
+          {savedRoadmaps.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="mt-6 flex flex-col sm:flex-row gap-3"
+            >
+              {/* Search */}
+              <div className="relative flex-1 max-w-sm border border-border/80 dark:border-zinc-700 bg-card focus-within:border-primary/60 transition-colors">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                <Input
+                  placeholder="Search saved…"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 h-9 rounded-none border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+
+              {/* Type filters */}
+              {uniqueTypes.length > 0 && (
+                <div className="flex items-center gap-0 border border-border/60 dark:border-zinc-800">
+                  <span className="px-3 flex items-center border-r border-border/60 dark:border-zinc-800 self-stretch">
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
+                  </span>
+                  <button
+                    onClick={() => setFilterType("all")}
+                    className={`px-4 h-9 text-xs font-semibold uppercase tracking-wider transition-colors border-r border-border/60 dark:border-zinc-800 ${
+                      filterType === "all"
+                        ? "bg-foreground text-background dark:bg-white dark:text-neutral-950"
+                        : "text-muted-foreground hover:text-foreground dark:hover:text-white bg-card"
+                    }`}
+                  >
+                    All
+                  </button>
+                  {uniqueTypes.map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => setFilterType(type)}
+                      className={`px-4 h-9 text-xs font-semibold capitalize tracking-wider transition-colors border-r last:border-r-0 border-border/60 dark:border-zinc-800 ${
+                        filterType === type
+                          ? "bg-foreground text-background dark:bg-white dark:text-neutral-950"
+                          : "text-muted-foreground hover:text-foreground dark:hover:text-white bg-card"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="container-xl pt-8">
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
+            {[...Array(8)].map((_, i) => (
+              <Skeleton key={i} className="h-56 rounded-none" />
+            ))}
+          </div>
+        ) : filteredRoadmaps.length === 0 ? (
+          <div className="border border-dashed border-border/60 dark:border-zinc-700 py-24 flex flex-col items-center gap-4 text-center">
+            <BookOpen className="w-8 h-8 text-muted-foreground/30" />
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-foreground dark:text-white">
+                {savedRoadmaps.length === 0
+                  ? "Your library is empty"
+                  : "No matches found"}
+              </p>
+              <p className="text-xs text-muted-foreground max-w-xs">
+                {savedRoadmaps.length === 0
+                  ? "Browse roadmaps and save the ones you want to follow."
+                  : "Try a different search term or filter."}
+              </p>
+            </div>
+            {savedRoadmaps.length === 0 && (
+              <Button
+                asChild
+                size="sm"
+                className="premium-button mt-2 px-6 py-2.5 text-xs group"
+              >
+                <a href="/roadmaps" className="flex items-center gap-2">
+                  Explore Roadmaps
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </a>
+              </Button>
+            )}
+          </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ staggerChildren: 0.08 }}
-            className="card-grid"
-          >
-            {filteredRoadmaps.map((roadmap: SavedRoadmap, index: number) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
+            {filteredRoadmaps.map((roadmap, index) => (
               <motion.div
                 key={roadmap.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  delay: index * 0.08,
-                  duration: 0.5,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.04, duration: 0.3 }}
               >
                 <RoadmapCardLazy
                   roadmapId={roadmap.roadmapId}
@@ -298,7 +238,7 @@ export default function SavedRoadmapsPage() {
                 />
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

@@ -24,28 +24,11 @@ export function BookmarkButton({
   showCount = true,
   className,
 }: BookmarkButtonProps) {
-  const {
-    isBookmarked,
-    bookmarkCount,
-    isLoading,
-    toggleBookmark,
-  } = useBookmark({
+  const { isBookmarked, bookmarkCount, isLoading, toggleBookmark } = useBookmark({
     roadmapId,
     initialBookmarked,
     initialCount,
   });
-
-  const sizeClasses = {
-    sm: "h-8 w-8 px-2 text-xs",
-    default: "h-10 w-10 px-3 text-sm",
-    lg: "h-12 w-12 px-4 text-base",
-  };
-
-  const iconSizes = {
-    sm: "w-3 h-3",
-    default: "w-4 h-4",
-    lg: "w-5 h-5",
-  };
 
   return (
     <Button
@@ -54,29 +37,25 @@ export function BookmarkButton({
       onClick={toggleBookmark}
       disabled={isLoading}
       className={cn(
-        "group transition-all duration-200 hover:scale-105",
-        isBookmarked && "text-primary border-primary bg-primary/10 hover:bg-primary/20",
-        sizeClasses[size],
+        "rounded-none transition-colors",
+        isBookmarked && "text-primary border-primary/40 bg-primary/5 hover:bg-primary/10",
         className
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         {isBookmarked ? (
-          <Bookmark className={cn("fill-current", iconSizes[size])} />
+          <Bookmark className="w-4 h-4 fill-current" />
         ) : (
-          <BookmarkIcon className={iconSizes[size]} />
+          <BookmarkIcon className="w-4 h-4" />
         )}
-        {showCount && (
-          <span className="font-medium">
-            {bookmarkCount > 0 ? bookmarkCount : ""}
-          </span>
+        {showCount && bookmarkCount > 0 && (
+          <span className="text-xs font-medium tabular-nums">{bookmarkCount}</span>
         )}
       </div>
     </Button>
   );
 }
 
-// Compact version for cards
 export function CompactBookmarkButton({
   roadmapId,
   initialBookmarked = false,
@@ -88,12 +67,7 @@ export function CompactBookmarkButton({
   initialCount?: number;
   className?: string;
 }) {
-  const {
-    isBookmarked,
-    bookmarkCount,
-    isLoading,
-    toggleBookmark,
-  } = useBookmark({
+  const { isBookmarked, bookmarkCount, isLoading, toggleBookmark } = useBookmark({
     roadmapId,
     initialBookmarked,
     initialCount,
@@ -104,25 +78,23 @@ export function CompactBookmarkButton({
       onClick={toggleBookmark}
       disabled={isLoading}
       className={cn(
-        "flex items-center gap-1.5 p-2 rounded-lg transition-all duration-200 hover:bg-secondary/80 group",
-        isBookmarked && "text-primary",
-        isLoading && "opacity-50 cursor-not-allowed",
+        "flex items-center gap-1 text-[11px] font-medium transition-colors disabled:opacity-40",
+        isBookmarked ? "text-primary" : "text-muted-foreground hover:text-primary",
         className
       )}
     >
       {isBookmarked ? (
-        <Bookmark className="w-4 h-4 fill-current" />
+        <Bookmark className="w-3.5 h-3.5 fill-current" />
       ) : (
-        <BookmarkIcon className="w-4 h-4" />
+        <BookmarkIcon className="w-3.5 h-3.5" />
       )}
-      <span className="text-xs font-medium">
-        {bookmarkCount > 0 ? bookmarkCount : ""}
-      </span>
+      {bookmarkCount > 0 && (
+        <span className="tabular-nums">{bookmarkCount}</span>
+      )}
     </button>
   );
 }
 
-// Icon-only version for minimal UI
 export function BookmarkIconButton({
   roadmapId,
   initialBookmarked = false,
@@ -132,11 +104,7 @@ export function BookmarkIconButton({
   initialBookmarked?: boolean;
   className?: string;
 }) {
-  const {
-    isBookmarked,
-    isLoading,
-    toggleBookmark,
-  } = useBookmark({
+  const { isBookmarked, isLoading, toggleBookmark } = useBookmark({
     roadmapId,
     initialBookmarked,
   });
@@ -146,17 +114,16 @@ export function BookmarkIconButton({
       onClick={toggleBookmark}
       disabled={isLoading}
       className={cn(
-        "p-2 rounded-lg transition-all duration-200 hover:bg-secondary/80 group",
-        isBookmarked && "text-primary",
-        isLoading && "opacity-50 cursor-not-allowed",
+        "transition-colors disabled:opacity-40",
+        isBookmarked ? "text-primary" : "text-muted-foreground hover:text-primary",
         className
       )}
-      title={isBookmarked ? "Remove bookmark" : "Bookmark roadmap"}
+      title={isBookmarked ? "Remove bookmark" : "Bookmark"}
     >
       {isBookmarked ? (
-        <Bookmark className="w-5 h-5 fill-current" />
+        <Bookmark className="w-4 h-4 fill-current" />
       ) : (
-        <BookmarkIcon className="w-5 h-5" />
+        <BookmarkIcon className="w-4 h-4" />
       )}
     </button>
   );
