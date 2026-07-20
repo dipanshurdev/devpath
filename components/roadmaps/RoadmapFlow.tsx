@@ -117,7 +117,7 @@ export default function RoadmapFlow({
   );
 
   return (
-    <div className="h-full w-full min-h-[720px] rounded-2xl overflow-hidden border border-border/50 bg-gradient-to-b from-card/50 to-background shadow-inner">
+    <div className="h-full w-full min-h-[720px] rounded-none overflow-hidden border border-border/60 dark:border-zinc-800 bg-card">
       <ReactFlow
         nodes={flowNodes}
         edges={edges}

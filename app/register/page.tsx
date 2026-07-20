@@ -190,7 +190,7 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
             </div>
@@ -218,7 +218,7 @@ export default function RegisterPage() {
               <Github className="mr-2 h-4 w-4" />
               GitHub
             </Button>
-          </div>
+          </div> */}
         </CardContent>
         <CardFooter>
           <p className="text-sm text-center text-muted-foreground w-full">

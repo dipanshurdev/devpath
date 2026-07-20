@@ -92,26 +92,23 @@ export default function NodeDetails({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col h-full overflow-hidden glass-card !bg-background/40"
+      className="flex flex-col h-full overflow-hidden bg-card border border-border/60 dark:border-zinc-800"
     >
       {/* Header */}
-      <div className="p-8 border-b border-border/40 bg-card/20 relative">
+      <div className="p-8 border-b border-border/60 dark:border-zinc-800">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between gap-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-secondary text-muted-foreground text-[10px] font-bold uppercase tracking-widest border border-border/60 dark:border-zinc-700">
               Checkpoint
             </div>
             
             <Button
               onClick={onComplete}
-              className={`rounded-xl px-6 font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-lg ${
+              variant={isCompleted ? "default" : "outline"}
+              className={`rounded-none h-9 px-6 font-bold text-xs uppercase tracking-widest ${
                 isCompleted
-                  ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/20"
-                  : "premium-button"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : ""
               }`}
             >
               {isCompleted ? (
@@ -128,26 +125,26 @@ export default function NodeDetails({
             </Button>
           </div>
 
-          <h2 className="text-3xl font-black text-foreground tracking-tight leading-tight">
+          <h2 className="text-2xl font-bold text-foreground dark:text-white tracking-tight leading-tight">
             {node.title}
           </h2>
         </div>
 
         {node.description && (
           <div className="mt-4">
-            <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {!expanded && node.description.length > 200
                 ? `${node.description.slice(0, 200)}...`
                 : node.description}
             </p>
             {node.description.length > 200 && (
               <button
-                className="mt-4 text-primary text-xs font-bold hover:underline transition-all flex items-center gap-1.5"
+                className="mt-4 text-primary text-xs font-semibold hover:underline transition-colors flex items-center gap-1.5"
                 onClick={() => setExpanded(!expanded)}
               >
                 {expanded ? (
                   <>
-                    Show less details <ChevronUp className="w-4 h-4" />
+                    Show less <ChevronUp className="w-4 h-4" />
                   </>
                 ) : (
                   <>
@@ -161,29 +158,29 @@ export default function NodeDetails({
       </div>
 
       {/* Resources & Progress */}
-      <div className="flex-1 overflow-y-auto p-8 scrollbar bg-card/10">
+      <div className="flex-1 overflow-y-auto p-8 scrollbar">
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
               Progress
             </h3>
             <span className="text-xs font-bold text-primary">
               {Math.round(completionPercentage)}% Complete
             </span>
           </div>
-          <div className="relative w-full h-3 bg-secondary rounded-full overflow-hidden p-0.5">
+          <div className="relative w-full h-2 bg-secondary rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${completionPercentage}%` }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-primary to-blue-400 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+              className="h-full bg-primary rounded-full"
             />
           </div>
         </div>
 
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-bold text-foreground">Resources</h3>
-          <span className="text-xs font-bold text-muted-foreground bg-secondary px-2 py-1 rounded-lg">
+          <h3 className="text-base font-bold text-foreground dark:text-white">Resources</h3>
+          <span className="text-xs font-bold text-muted-foreground bg-secondary px-2 py-1 rounded-none border border-border/60 dark:border-zinc-700">
             {checkedResourceIds.length} of {node.resources?.length || 0}
           </span>
         </div>
@@ -202,9 +199,9 @@ export default function NodeDetails({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 rounded-xl border border-dashed border-border bg-card/10">
+          <div className="text-center py-16 rounded-none border border-dashed border-border/60 dark:border-zinc-800 bg-card/50">
             <Book className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-            <p className="text-sm font-bold text-muted-foreground">
+            <p className="text-sm font-semibold text-muted-foreground">
               No specialized resources yet.
             </p>
           </div>
@@ -440,9 +437,9 @@ function NodeComments({ nodeId }: { nodeId: string }) {
   }
 
   return (
-    <div className="mt-10 border-t border-border/40 pt-8">
+    <div className="mt-10 border-t border-border/60 dark:border-zinc-800 pt-8">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-bold text-foreground">Comments</h3>
+        <h3 className="text-base font-bold text-foreground dark:text-white">Comments</h3>
         <span className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
           <MessageCircle className="w-4 h-4" />
           {comments.length}
@@ -450,7 +447,7 @@ function NodeComments({ nodeId }: { nodeId: string }) {
       </div>
 
       {status === "unauthenticated" ? (
-        <p className="text-sm font-medium text-muted-foreground rounded-lg border border-dashed border-border bg-card/10 p-4">
+        <p className="text-sm font-medium text-muted-foreground rounded-none border border-dashed border-border/60 dark:border-zinc-800 bg-card/50 p-4">
           Sign in to comment.
         </p>
       ) : (
@@ -465,7 +462,8 @@ function NodeComments({ nodeId }: { nodeId: string }) {
           <Button
             onClick={handlePostComment}
             disabled={!newComment.trim() || submitting}
-            className="premium-button rounded-xl font-bold"
+            variant="outline"
+            className="rounded-none h-9 font-bold text-xs uppercase tracking-wider"
           >
             <Send className="w-4 h-4 mr-2" />
             Post comment
@@ -493,25 +491,25 @@ function NodeComments({ nodeId }: { nodeId: string }) {
             return (
               <div
                 key={comment.id}
-                className="rounded-lg border border-border/60 bg-card/40 p-4"
+                className="rounded-none border border-border/60 dark:border-zinc-800 bg-card/50 p-4"
               >
                 <div className="flex items-start gap-3">
-                  <Avatar className="h-9 w-9 border border-primary/20">
+                  <Avatar className="h-9 w-9 border border-border/60 dark:border-zinc-700">
                     <AvatarImage
                       src={comment.user.avatar || "/placeholder.svg"}
                       alt={getAuthorName(comment.user)}
                     />
-                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                    <AvatarFallback className="bg-secondary text-muted-foreground text-xs font-bold">
                       {getInitials(comment.user)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-black text-foreground">
+                        <p className="text-sm font-bold text-foreground dark:text-white">
                           {getAuthorName(comment.user)}
                         </p>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                           {formatCommentDate(comment.createdAt)}
                         </p>
                       </div>
@@ -531,7 +529,7 @@ function NodeComments({ nodeId }: { nodeId: string }) {
                     <div className="mt-4 flex flex-wrap items-center gap-4">
                       <button
                         onClick={() => toggleReplies(comment.id)}
-                        className="text-xs font-bold text-primary hover:underline"
+                        className="text-xs font-semibold text-primary hover:underline"
                       >
                         {repliesExpanded ? "Hide" : "Show"}{" "}
                         {comment.replies.length}{" "}
@@ -540,7 +538,7 @@ function NodeComments({ nodeId }: { nodeId: string }) {
                       {session && (
                         <button
                           onClick={() => setActiveReplyId(comment.id)}
-                          className="text-xs font-bold text-primary hover:underline"
+                          className="text-xs font-semibold text-primary hover:underline"
                         >
                           Reply
                         </button>
@@ -550,25 +548,25 @@ function NodeComments({ nodeId }: { nodeId: string }) {
                 </div>
 
                 {repliesExpanded && comment.replies.length > 0 && (
-                  <div className="mt-4 space-y-3 border-l border-border/50 pl-4">
+                  <div className="mt-4 space-y-3 border-l border-border/60 dark:border-zinc-700 pl-4">
                     {comment.replies.map((reply) => (
                       <div key={reply.id} className="flex items-start gap-3">
-                        <Avatar className="h-8 w-8 border border-primary/20">
+                        <Avatar className="h-8 w-8 border border-border/60 dark:border-zinc-700">
                           <AvatarImage
                             src={reply.user.avatar || "/placeholder.svg"}
                             alt={getAuthorName(reply.user)}
                           />
-                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
+                          <AvatarFallback className="bg-secondary text-muted-foreground text-[10px] font-bold">
                             {getInitials(reply.user)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <p className="text-sm font-black text-foreground">
+                              <p className="text-sm font-bold text-foreground dark:text-white">
                                 {getAuthorName(reply.user)}
                               </p>
-                              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                                 {formatCommentDate(reply.createdAt)}
                               </p>
                             </div>
@@ -614,7 +612,8 @@ function NodeComments({ nodeId }: { nodeId: string }) {
                           !replyDrafts[comment.id]?.trim() ||
                           replySubmittingId === comment.id
                         }
-                        className="premium-button rounded-xl font-bold"
+                        variant="outline"
+                        className="rounded-none h-9 font-bold text-xs uppercase tracking-wider"
                       >
                         Reply
                       </Button>
@@ -622,7 +621,7 @@ function NodeComments({ nodeId }: { nodeId: string }) {
                         type="button"
                         variant="ghost"
                         onClick={() => setActiveReplyId(null)}
-                        className="rounded-xl font-bold"
+                        className="rounded-none font-bold text-xs uppercase tracking-wider"
                       >
                         Cancel
                       </Button>
@@ -659,16 +658,16 @@ function ResourceCard({
 
   return (
     <div
-      className={`group relative p-6 rounded-lg border transition-all duration-200 ${
+      className={`group relative p-6 rounded-none border transition-all duration-200 ${
         checked
-          ? "bg-primary border-primary shadow-md shadow-primary/5"
-          : "bg-card border-border/60 hover:border-neutral-350 hover:bg-card/70 dark:border-zinc-800/80"
+          ? "bg-primary border-primary"
+          : "bg-card border-border/60 dark:border-zinc-800 hover:border-primary/40"
       }`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-4">
           <div
-            className={`p-3 rounded-xl transition-colors duration-300 ${
+            className={`p-3 rounded-none transition-colors duration-300 ${
               checked ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
             }`}
           >
@@ -700,9 +699,9 @@ function ResourceCard({
         
         <button
           onClick={onCheckToggle}
-          className={`flex-shrink-0 w-8 h-8 rounded-full border-2 transition-all duration-500 flex items-center justify-center ${
+          className={`flex-shrink-0 w-8 h-8 rounded-none border-2 transition-all duration-300 flex items-center justify-center ${
             checked
-              ? "bg-white border-white text-primary rotate-0"
+              ? "bg-white border-white text-primary"
               : "border-border/60 hover:border-primary text-transparent"
           }`}
         >

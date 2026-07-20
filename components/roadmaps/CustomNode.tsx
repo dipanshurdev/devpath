@@ -47,22 +47,21 @@ function CustomNode({ data }: { data: CustomNodeData }) {
       
       <div
         className={`
-          relative flex flex-col w-[280px] rounded-[1.5rem] border transition-all duration-500 cursor-pointer
-          backdrop-blur-sm
+          relative flex flex-col w-[280px] rounded-none border transition-all duration-300 cursor-pointer
           ${
             isCompleted
-              ? "bg-primary border-primary/50 shadow-[0_10px_30px_-10px_rgba(var(--primary),0.5)] text-primary-foreground"
-              : "bg-card/80 border-border/50 hover:border-primary/40 text-foreground shadow-xl hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1"
+              ? "bg-primary border-primary text-primary-foreground"
+              : "bg-card border-border/60 dark:border-zinc-800 hover:border-primary/40 text-foreground"
           }
         `}
       >
         {/* Step Indicator Badge */}
-        <div className="absolute -top-3 -left-3">
+        <div className="absolute -top-2 -left-2">
            <div className={`
-             flex items-center justify-center w-8 h-8 rounded-full border-2 font-bold text-xs shadow-lg
+             flex items-center justify-center w-7 h-7 rounded-none border-2 font-bold text-[10px]
              ${isCompleted ? "bg-white text-primary border-primary" : "bg-primary text-white border-white"}
            `}>
-             {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : stepNum}
+             {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5" /> : stepNum}
            </div>
         </div>
 
@@ -70,14 +69,14 @@ function CustomNode({ data }: { data: CustomNodeData }) {
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {category && (
               <span className={`
-                px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border
-                ${isCompleted ? "bg-white/20 border-white/30 text-white" : "bg-secondary text-muted-foreground border-border"}
+                px-2 py-0.5 rounded-none text-[9px] font-bold uppercase tracking-wider border
+                ${isCompleted ? "bg-white/20 border-white/30 text-white" : "bg-secondary text-muted-foreground border-border/60 dark:border-zinc-700"}
               `}>
                 {category}
               </span>
             )}
             {difficulty && (
-              <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border ${difficultyClass}`}>
+              <span className={`px-2 py-0.5 rounded-none text-[9px] font-bold uppercase tracking-wider border ${difficultyClass}`}>
                 {difficulty}
               </span>
             )}
@@ -109,7 +108,7 @@ function CustomNode({ data }: { data: CustomNodeData }) {
             </div>
             
             <div className={`
-              w-6 h-6 rounded-full flex items-center justify-center transition-transform group-hover:translate-x-1
+              w-6 h-6 rounded-none flex items-center justify-center transition-transform group-hover:translate-x-0.5
               ${isCompleted ? "bg-white/20 text-white" : "bg-primary/10 text-primary"}
             `}>
               <BsArrowRight className="w-3.5 h-3.5" />
@@ -119,7 +118,7 @@ function CustomNode({ data }: { data: CustomNodeData }) {
         
         {/* Progress bar at the bottom for completed nodes */}
         {isCompleted && (
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 rounded-b-full overflow-hidden">
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 rounded-none overflow-hidden">
             <div className="h-full bg-white w-full" />
           </div>
         )}

@@ -67,28 +67,28 @@ export default function RoadmapInfo({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 mb-8 w-full border border-gray-700/50 shadow-2xl"
+      className="bg-card border border-border/60 dark:border-zinc-800 rounded-none p-8 mb-8 w-full"
     >
       {/* Header */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between items-start gap-6 mb-6">
         <div className="flex-1">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground dark:text-white mb-4 leading-tight">
             {roadmap?.title}
           </h1>
-          <div className="flex flex-wrap gap-3 mt-4">
+          <div className="flex flex-wrap items-center gap-3">
             {roadmap?.difficulty && (
-              <span className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full text-sm font-semibold border border-blue-500/30">
+              <span className="px-3 py-1.5 bg-secondary text-muted-foreground text-xs font-semibold uppercase tracking-wider border border-border/60 dark:border-zinc-700">
                 {roadmap.difficulty}
               </span>
             )}
             {roadmap?.type && (
-              <span className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-full text-sm font-semibold border border-purple-500/30">
+              <span className="px-3 py-1.5 bg-secondary text-muted-foreground text-xs font-semibold uppercase tracking-wider border border-border/60 dark:border-zinc-700">
                 {roadmap.type}
               </span>
             )}
             {roadmap?.estimatedTime && (
-              <span className="px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-semibold border border-green-500/30 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+              <span className="px-3 py-1.5 bg-secondary text-muted-foreground text-xs font-semibold uppercase tracking-wider border border-border/60 dark:border-zinc-700 flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5" />
                 {roadmap.estimatedTime}
               </span>
             )}
@@ -96,11 +96,11 @@ export default function RoadmapInfo({
         </div>
         <Button
           onClick={shareRoadmap}
-          variant="default"
-          size="lg"
-          className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg"
+          variant="outline"
+          size="sm"
+          className="rounded-none h-9 text-xs font-semibold uppercase tracking-wider"
         >
-          <Share2 className="w-4 h-4 mr-2" />
+          <Share2 className="w-3.5 h-3.5 mr-2" />
           Share
         </Button>
       </div>
@@ -111,90 +111,76 @@ export default function RoadmapInfo({
           initial={false}
           animate={{ height: isExpanded ? "auto" : "auto" }}
           transition={{ duration: 0.3 }}
-          className="mb-6"
+          className="mb-6 pb-6 border-b border-border/60 dark:border-zinc-800"
         >
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {displayDescription}
           </p>
           {shouldShowToggle && (
-            <Button
-              variant="ghost"
-              className="mt-3 text-sm font-medium text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+            <button
+              className="mt-3 text-xs font-semibold text-primary hover:underline transition-colors flex items-center gap-1.5"
               onClick={toggleExpand}
             >
               {isExpanded ? (
-                <span className="flex items-center gap-2">
-                  Show Less <ChevronUp className="w-4 h-4" />
-                </span>
+                <>
+                  Show less <ChevronUp className="w-4 h-4" />
+                </>
               ) : (
-                <span className="flex items-center gap-2">
-                  Show More <ChevronDown className="w-4 h-4" />
-                </span>
+                <>
+                  Read full overview <ChevronDown className="w-4 h-4" />
+                </>
               )}
-            </Button>
+            </button>
           )}
         </motion.div>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-500/20 rounded-lg">
-              <Target className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">Total Steps</p>
-              <p className="text-2xl font-bold text-white">{totalNodes}</p>
-            </div>
-          </div>
+      {/* Stats Row */}
+      <div className="flex items-center gap-8 mb-6">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Total Steps
+          </span>
+          <span className="text-sm font-bold text-foreground dark:text-white">
+            {totalNodes}
+          </span>
         </div>
 
-        <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-500/20 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-green-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">Completed</p>
-              <p className="text-2xl font-bold text-white">{completedNodes}</p>
-            </div>
-          </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Completed
+          </span>
+          <span className="text-sm font-bold text-foreground dark:text-white">
+            {completedNodes}
+          </span>
         </div>
 
-        <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-500/20 rounded-lg">
-              <Clock className="w-5 h-5 text-purple-400" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-400">Progress</p>
-              <p className="text-2xl font-bold text-white">{Math.round(progress)}%</p>
-            </div>
-          </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Progress
+          </span>
+          <span className="text-sm font-bold text-primary">
+            {Math.round(progress)}%
+          </span>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <p className="text-sm font-medium text-gray-400">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Your Learning Progress
-          </p>
-          <p className="text-sm font-bold text-white">
+          </span>
+          <span className="text-xs font-bold text-foreground dark:text-white">
             {completedNodes} / {totalNodes} steps
-          </p>
+          </span>
         </div>
-        <div className="relative">
-          <Progress 
-            value={progress} 
-            className="h-3 bg-gray-700/50"
-          />
+        <div className="relative w-full h-2 bg-secondary rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute top-0 left-0 h-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+            className="h-full bg-primary rounded-full"
           />
         </div>
       </div>
