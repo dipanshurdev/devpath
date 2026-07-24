@@ -49,14 +49,14 @@ export const Stats = ({
     e.stopPropagation();
     
     if (!session) {
-      toast.error("Please login to like roadmaps");
+      toast.error("🤗You liked it? Then Login to show it to the world!🙂");
       return;
     }
 
     setIsLoading(true);
     try {
       // TODO: Implement like API call
-      toast.success(isLiked ? "Unliked!" : "Liked!");
+      toast.success(isLiked ? "Unliked!☹️" : "Liked!🙂👍");
       setIsLiked(!isLiked);
     } catch (error) {
       toast.error("Failed to like roadmap");
@@ -69,14 +69,14 @@ export const Stats = ({
     e.stopPropagation();
 
     if (!session) {
-      toast.error("Please login to save roadmaps");
+      toast.error("HI Buddy🙂, Please login to save roadmaps");
       return;
     }
 
     setIsLoading(true);
     try {
       // TODO: Implement save API call
-      toast.success(isSaved ? "Removed from saved!" : "Saved!");
+      toast.success(isSaved ? "Removed from saved! 😕" : "Saved! 🙌");
       setIsSaved(!isSaved);
     } catch (error) {
       toast.error("Failed to save roadmap");

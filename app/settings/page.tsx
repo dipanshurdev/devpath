@@ -128,8 +128,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <div className="glass-card p-8 md:p-10 border-border/40">
+    <div className="max-w-4xl  mx-auto py-10 px-4">
+      <div className=" p-8 mt-10 md:p-10 border-border/40">
         <div className="mb-8">
           <h1 className="text-3xl font-black text-foreground tracking-tight">
             Profile settings
@@ -140,7 +140,7 @@ export default function SettingsPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="flex items-center gap-5 rounded-xl border border-border/50 bg-card/40 p-5">
+          <div className="flex items-center gap-5 rounded-xl border border-border/50 bg-card/40 p-5 bg-card">
             <Avatar className="h-20 w-20 border-2 border-primary/20">
               <AvatarImage src={avatar || "/placeholder.svg"} alt={form.name} />
               <AvatarFallback className="bg-primary/10 text-primary text-xl font-black">
@@ -156,7 +156,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               <Label htmlFor="name">Display name</Label>
               <Input
                 id="name"
@@ -167,6 +167,7 @@ export default function SettingsPage() {
                     name: event.target.value,
                   }))
                 }
+                className="bg-card"
                 required
               />
             </div>
@@ -197,10 +198,12 @@ export default function SettingsPage() {
                 setForm((current) => ({ ...current, bio: event.target.value }))
               }
               rows={5}
+
+                  className="bg-card"
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-border/50 bg-card/40 p-5">
+          <div className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-5">
             <div>
               <Label htmlFor="isPublic">Public profile</Label>
               <p className="text-sm font-medium text-muted-foreground mt-1">

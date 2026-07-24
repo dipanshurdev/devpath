@@ -60,7 +60,7 @@ export default function RoadmapPage() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      toast.error("Please login to view roadmaps");
+      toast.error("Hi Buddy! You need to login to access this roadmap🙂.");
       router.push("/login");
     }
   }, [status, router]);

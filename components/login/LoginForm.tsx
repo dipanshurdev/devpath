@@ -38,15 +38,15 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
 
       if (result?.error) {
         setError("Invalid email or password");
-        toast.error("Invalid credentials");
+        toast.error("Invalid credentials 😮");
       } else {
-        toast.success("Welcome back!");
+        toast.success("Welcome back! 🥳🥂");
         router.push(callbackUrl);
         router.refresh();
       }
     } catch (error) {
       setError("Something went wrong");
-      toast.error("Failed to sign in");
+      toast.error("Failed to sign in 🥲");
     } finally {
       setLoading(false);
     }

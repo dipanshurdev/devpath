@@ -43,7 +43,7 @@ const Navbar = () => {
             className="flex items-center hover:opacity-80 transition-opacity"
           >
             <div className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-primary flex rounded-full items-center justify-center shadow-lg shadow-primary/25 group-hover:rotate-6 transition-transform">
+              <div className="w-10 h-10 bg-primary flex rounded-full items-center justify-center  group-hover:rotate-6 transition-transform">
                 <PiPath className="text-primary-foreground w-6 h-6" />
               </div>
               <span className="text-2xl font-black tracking-tighter text-foreground">DevPath</span>

@@ -46,7 +46,7 @@ export default function RoadmapInfo({
           text: roadmap?.description,
           url: window.location.href,
         });
-        toast.success("Shared successfully!");
+        toast.success("Shared successfully! 🙌🙌");
       } catch (error) {
         console.error(error);
       }

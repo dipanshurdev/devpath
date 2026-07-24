@@ -92,7 +92,7 @@ export default function RoadmapCard({
         queryClient.setQueryData(["bookmark", roadmapId], (old: any) => ({ ...old, isLiked: true }));
       }
     } catch {
-      toast.error("Failed to update like");
+      toast.error("Failed to update like 🥲");
     }
   };
 

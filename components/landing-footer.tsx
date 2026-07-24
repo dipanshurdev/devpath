@@ -28,7 +28,7 @@ export default function LandingFooter() {
           {/* Brand column */}
           <div className="bg-background lg:col-span-2 px-0 py-10 pr-10">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
-              <div className="w-8 h-8 bg-neutral-950 dark:bg-white flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 bg-neutral-950 dark:bg-white flex items-center rounded-full justify-center shrink-0">
                 <PiPath className="text-white dark:text-neutral-950 w-4.5 h-4.5" />
               </div>
               <span className="text-base font-bold tracking-tight text-foreground dark:text-white group-hover:text-primary transition-colors">

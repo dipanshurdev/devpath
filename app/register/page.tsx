@@ -61,7 +61,7 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.success("Account created successfully!");
+      toast.success("WELCOME, Account created successfully!🙌");
 
       // Auto sign in after registration
       const signInResult = await signIn("credentials", {
@@ -78,7 +78,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       setError("Something went wrong");
-      toast.error("Failed to create account");
+      toast.error("Failed to create account🥲");
     } finally {
       setLoading(false);
     }
