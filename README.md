@@ -1,6 +1,6 @@
-# DevPath 🗺️
+# DevNavigates 🗺️
 
-**DevPath** is a modern SaaS learning platform where developers can explore curated roadmaps, track their progress, and master new skills. Built with Next.js 14 App Router, MongoDB, Prisma, and NextAuth.
+**DevNavigates** is a modern SaaS learning platform where developers can explore curated roadmaps, track their progress, and master new skills. Built with Next.js 14 App Router, MongoDB, Prisma, and NextAuth.
 
 ---
 
@@ -25,7 +25,7 @@
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/dipanshurdev/devpath.git
+git clone https://github.com/dipanshurdev/DevNavigates.git
 npm install
 ```
 
