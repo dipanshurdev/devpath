@@ -6,6 +6,8 @@ const AUTH_PREFIXES = [
   "/dashboard",
   "/profile",
   "/saved",
+  "/achievements",
+  "/settings",
   "/pricing/dashboard",
   "/admin",
 ] as const;
@@ -54,6 +56,10 @@ export const config = {
     "/admin/:path*",
     "/saved",
     "/saved/:path*",
+    "/achievements",
+    "/achievements/:path*",
+    "/settings",
+    "/settings/:path*",
     "/pricing/dashboard/:path*",
   ],
 };

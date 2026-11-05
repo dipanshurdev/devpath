@@ -98,7 +98,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 py-10">
+    <div className="max-w-7xl mx-auto space-y-12 py-10 mt-12">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest mb-2">

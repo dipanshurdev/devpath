@@ -195,7 +195,8 @@
 //------------------------------------------------
 
 import React, { useCallback, useEffect } from "react";
-import ReactFlow, {
+import { ReactFlow } from "@xyflow/react";
+import {
   Node,
   Edge,
   useNodesState,
@@ -205,14 +206,14 @@ import ReactFlow, {
   EdgeTypes,
   NodeTypes,
   MarkerType,
-} from "reactflow";
-import "reactflow/dist/style.css";
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
 import RoadmapNode from "./RoadmapNode";
 import AnimatedEdge from "./AnimatedEdge";
 
 const nodeTypes: NodeTypes = {
-  roadmap: RoadmapNode,
+  roadmap: RoadmapNode as any,
 };
 
 const edgeTypes: EdgeTypes = {

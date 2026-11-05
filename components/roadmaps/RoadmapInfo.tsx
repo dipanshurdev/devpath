@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Share2, Clock, Target, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { Progress } from "../ui/progress";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 interface RoadmapInfoProps {
   roadmap: {

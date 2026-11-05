@@ -11,7 +11,7 @@ import {
   useToggleNodeProgress,
 } from "@/lib/hooks/use-roadmaps";
 import Loader from "@/components/Loader";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import NodeDetails from "@/components/roadmaps/NodeDetails";
 import { ArrowLeft, Award, Clock, TrendingUp } from "lucide-react";

@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { config, type SubscriptionTier } from "@/lib/config";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // ── Data ──────────────────────────────────────────────────────────────────
 
@@ -86,6 +88,38 @@ const faq = [
 
 export default function PricingPage() {
   const [yearly, setYearly] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+
+  const handleSubscribe = async (planId: string) => {
+    if (planId === "FREE") {
+      router.push("/register");
+      return;
+    }
+    if (!session) {
+      router.push(`/login?callbackUrl=/pricing`);
+      return;
+    }
+    setCheckoutLoading(planId);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier: planId, yearly }),
+      });
+      const data = await res.json();
+      if (data.data?.url) {
+        window.location.href = data.data.url;
+      } else {
+        alert("Checkout failed. Please try again.");
+      }
+    } catch {
+      alert("Network error. Please try again.");
+    } finally {
+      setCheckoutLoading(null);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-background pb-20">
@@ -221,9 +255,14 @@ export default function PricingPage() {
                       : "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-700 dark:hover:bg-neutral-100 transition-colors"
                   }`}
                   variant="ghost"
-                  onClick={() => console.log(`Subscribe: ${plan.id}`)}
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={checkoutLoading === plan.id}
                 >
-                  {plan.id === "FREE" ? "Get started free" : "Subscribe"}
+                  {checkoutLoading === plan.id
+                    ? "Processing..."
+                    : plan.id === "FREE"
+                    ? "Get started free"
+                    : "Subscribe"}
                   {plan.id !== "FREE" && (
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
                   )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { type EdgeProps, getSmoothStepPath, Position } from "reactflow";
+import { type EdgeProps, getSmoothStepPath, Position } from "@xyflow/react";
 
 function CustomEdge({
   id,

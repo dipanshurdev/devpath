@@ -143,6 +143,20 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                     <Link
+                      href="/achievements"
+                      className="flex items-center px-4 py-2 text-sm font-medium rounded-xl hover:bg-primary/10 hover:text-primary transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Achievements
+                    </Link>
+                    <Link
+                      href="/pricing/dashboard"
+                      className="flex items-center px-4 py-2 text-sm font-medium rounded-xl hover:bg-primary/10 hover:text-primary transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Plan & Billing
+                    </Link>
+                    <Link
                       href="/settings"
                       className="flex items-center px-4 py-2 text-sm font-medium rounded-xl hover:bg-primary/10 hover:text-primary transition-colors"
                       onClick={() => setDropdownOpen(false)}
@@ -272,6 +286,20 @@ const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Dashboard
+                  </Link>
+                  <Link
+                    href="/achievements"
+                    className="text-lg font-bold text-foreground hover:text-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Achievements
+                  </Link>
+                  <Link
+                    href="/pricing/dashboard"
+                    className="text-lg font-bold text-foreground hover:text-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Plan & Billing
                   </Link>
                   <Link
                     href="/saved"

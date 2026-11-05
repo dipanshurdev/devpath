@@ -7,6 +7,7 @@ import {
   createActivity,
 } from "@/lib/prisma/queries";
 import { withErrorHandler, ApiError, createApiResponse } from "@/lib/api-handler";
+import { checkAndAwardAchievements } from "@/lib/achievements";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -147,9 +148,13 @@ export const POST = withErrorHandler(async (
     }
   }
 
+  // Check and award any newly unlocked achievements (non-blocking)
+  const newAchievements = completed ? await checkAndAwardAchievements(session.user.id) : [];
+
   return createApiResponse({ 
     completedNodeIds,
     pointsEarned: completed ? 10 : 0,
     isRoadmapCompleted: completedNodeIds.length === allNodes.length,
+    newAchievements,
   });
 });

@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -11,14 +14,28 @@ import {
   Zap,
   Target,
   Users,
-  ArrowRight,
   CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Rarity = "COMMON" | "RARE" | "EPIC" | "LEGENDARY";
+
+interface ApiAchievement {
+  id: string;
+  key: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  points: number;
+  rarity: Rarity;
+  requirement: string;
+  unlocked: boolean;
+  unlockedAt: string | null;
+}
 
 interface Achievement {
   key: string;
@@ -29,93 +46,27 @@ interface Achievement {
   points: number;
   rarity: Rarity;
   unlocked: boolean;
+  unlockedAt: string | null;
 }
 
-// ─── Static placeholder data ──────────────────────────────────────────────────
-// These will be replaced with real API data once the achievements backend is live.
+interface AchievementStats {
+  total: number;
+  unlocked: number;
+  totalPoints: number;
+}
 
-const ACHIEVEMENTS: Achievement[] = [
-  {
-    key: "first_step",
-    name: "First Step",
-    description: "Complete your first roadmap node.",
-    icon: CheckCircle2,
-    category: "Progress",
-    points: 10,
-    rarity: "COMMON",
-    unlocked: false,
-  },
-  {
-    key: "on_fire",
-    name: "On Fire",
-    description: "Maintain a 7-day learning streak.",
-    icon: Flame,
-    category: "Streak",
-    points: 50,
-    rarity: "RARE",
-    unlocked: false,
-  },
-  {
-    key: "bookworm",
-    name: "Bookworm",
-    description: "Save 10 roadmaps to your library.",
-    icon: BookOpen,
-    category: "Library",
-    points: 20,
-    rarity: "COMMON",
-    unlocked: false,
-  },
-  {
-    key: "rising_star",
-    name: "Rising Star",
-    description: "Earn 100 total points.",
-    icon: Star,
-    category: "Points",
-    points: 30,
-    rarity: "RARE",
-    unlocked: false,
-  },
-  {
-    key: "speed_runner",
-    name: "Speed Runner",
-    description: "Complete a roadmap in under 30 days.",
-    icon: Zap,
-    category: "Progress",
-    points: 75,
-    rarity: "EPIC",
-    unlocked: false,
-  },
-  {
-    key: "sharpshooter",
-    name: "Sharpshooter",
-    description: "Complete 5 roadmaps back-to-back.",
-    icon: Target,
-    category: "Progress",
-    points: 100,
-    rarity: "EPIC",
-    unlocked: false,
-  },
-  {
-    key: "social_learner",
-    name: "Social Learner",
-    description: "Like 20 roadmaps shared by the community.",
-    icon: Users,
-    category: "Community",
-    points: 25,
-    rarity: "COMMON",
-    unlocked: false,
-  },
-  {
-    key: "legend",
-    name: "Legend",
-    description: "Complete every official roadmap.",
-    icon: Trophy,
-    category: "Progress",
-    points: 500,
-    rarity: "LEGENDARY",
-    unlocked: false,
-  },
-];
+// ─── Icon map ─────────────────────────────────────────────────────────────────
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Trophy,
+  Flame,
+  BookOpen,
+  Star,
+  Zap,
+  Target,
+  Users,
+  CheckCircle2,
+};
 
 // ─── Rarity config ─────────────────────────────────────────────────────────────
 
@@ -149,10 +100,82 @@ const RARITY_CONFIG: Record<
   },
 };
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
+function SkeletonCard() {
+  return (
+    <div className="bg-card p-5 flex flex-col gap-4 animate-pulse">
+      <div className="flex items-start justify-between">
+        <div className="w-10 h-10 bg-muted rounded" />
+        <div className="w-16 h-4 bg-muted rounded" />
+      </div>
+      <div className="space-y-2">
+        <div className="w-3/4 h-3 bg-muted rounded" />
+        <div className="w-full h-3 bg-muted rounded" />
+        <div className="w-2/3 h-3 bg-muted rounded" />
+      </div>
+      <div className="w-16 h-3 bg-muted rounded mt-auto" />
+    </div>
+  );
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AchievementsPage() {
-  const categories = Array.from(new Set(ACHIEVEMENTS.map((a) => a.category)));
+  const { status } = useSession();
+  const router = useRouter();
+
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [stats, setStats] = useState<AchievementStats>({ total: 0, unlocked: 0, totalPoints: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
+    async function loadAchievements() {
+      try {
+        const res = await fetch("/api/achievements");
+        if (!res.ok) throw new Error("Failed to fetch achievements");
+        const json = await res.json();
+        const data = json.data ?? json;
+
+        const mapped: Achievement[] = (data.achievements as ApiAchievement[]).map((a) => ({
+          key: a.key,
+          name: a.name,
+          description: a.description,
+          icon: ICON_MAP[a.icon] ?? Trophy,
+          category: a.category,
+          points: a.points,
+          rarity: a.rarity,
+          unlocked: a.unlocked,
+          unlockedAt: a.unlockedAt,
+        }));
+
+        setAchievements(mapped);
+        setStats(data.stats);
+      } catch (err) {
+        console.error("Failed to load achievements:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadAchievements();
+  }, [status]);
+
+  const categories = Array.from(new Set(achievements.map((a) => a.category)));
+
+  // Rarest unlocked achievement
+  const RARITY_ORDER: Rarity[] = ["LEGENDARY", "EPIC", "RARE", "COMMON"];
+  const rarestUnlocked = RARITY_ORDER.find((r) =>
+    achievements.some((a) => a.unlocked && a.rarity === r)
+  );
 
   return (
     <div className="container-xl py-10 mt-20 space-y-10">
@@ -170,22 +193,46 @@ export default function AchievementsPage() {
           </p>
         </div>
 
-        {/* Coming-soon pill */}
-        <div className="flex items-center gap-2 border border-amber-300/60 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 self-start sm:self-auto">
-          <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-widest">
-            Coming Soon
-          </span>
-        </div>
+        {/* Stats pill */}
+        {!loading && (
+          <div className="flex items-center gap-2 border border-primary/30 dark:border-primary/20 bg-primary/5 dark:bg-primary/10 px-4 py-2 self-start sm:self-auto">
+            <Trophy className="w-3.5 h-3.5 text-primary shrink-0" />
+            <span className="text-xs font-semibold text-primary uppercase tracking-widest">
+              {stats.unlocked} / {stats.total} Achievements &bull; {stats.totalPoints} pts earned
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Stat bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 border border-border/60 dark:border-zinc-800 divide-x divide-y lg:divide-y-0 divide-border/60 dark:divide-zinc-800">
         {[
-          { label: "Unlocked", value: "0 / 8", icon: Trophy, accent: "text-amber-500" },
-          { label: "Points Earned", value: "0", icon: Star, accent: "text-primary" },
-          { label: "Categories", value: categories.length, icon: Target, accent: "text-violet-500" },
-          { label: "Rarest", value: "—", icon: Flame, accent: "text-rose-500" },
+          {
+            label: "Unlocked",
+            value: loading ? "—" : `${stats.unlocked} / ${stats.total}`,
+            icon: Trophy,
+            accent: "text-amber-500",
+          },
+          {
+            label: "Points Earned",
+            value: loading ? "—" : stats.totalPoints.toLocaleString(),
+            icon: Star,
+            accent: "text-primary",
+          },
+          {
+            label: "Categories",
+            value: loading ? "—" : categories.length,
+            icon: Target,
+            accent: "text-violet-500",
+          },
+          {
+            label: "Rarest",
+            value: loading ? "—" : rarestUnlocked
+              ? RARITY_CONFIG[rarestUnlocked].label
+              : "—",
+            icon: Flame,
+            accent: "text-rose-500",
+          },
         ].map((s, i) => (
           <div key={i} className="px-5 py-5 bg-card flex flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -201,62 +248,64 @@ export default function AchievementsPage() {
         ))}
       </div>
 
-      {/* "Feature in progress" notice */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="border border-dashed border-primary/30 dark:border-primary/20 bg-primary/5 dark:bg-primary/10 px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
-        <div className="flex items-start gap-3">
-          <Lock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold text-foreground dark:text-white">
-              Achievement tracking is being built
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed max-w-md">
-              Your progress will be tracked automatically once this feature
-              ships. The badges below are a preview of what you&apos;ll be able
-              to unlock.
-            </p>
-          </div>
-        </div>
-        <Button
-          asChild
-          className="premium-button px-5 py-2.5 text-xs shrink-0 group"
-        >
-          <Link href="/roadmaps" className="flex items-center gap-2">
-            Keep learning
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </Button>
-      </motion.div>
-
       {/* Achievement grid — grouped by category */}
-      {categories.map((cat, ci) => {
-        const items = ACHIEVEMENTS.filter((a) => a.category === cat);
-        return (
-          <div key={cat} className="space-y-4">
-            {/* Category heading */}
-            <div className="flex items-center gap-3">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                {cat}
-              </p>
-              <div className="flex-1 h-px bg-border/60 dark:bg-zinc-800" />
+      {loading ? (
+        // Skeleton state
+        <div className="space-y-8">
+          {["Progress", "Streak", "Points"].map((cat) => (
+            <div key={cat} className="space-y-4">
+              <div className="flex items-center gap-3">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  {cat}
+                </p>
+                <div className="flex-1 h-px bg-border/60 dark:bg-zinc-800" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))}
+              </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        categories.map((cat, ci) => {
+          const items = achievements.filter((a) => a.category === cat);
+          return (
+            <div key={cat} className="space-y-4">
+              {/* Category heading */}
+              <div className="flex items-center gap-3">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  {cat}
+                </p>
+                <div className="flex-1 h-px bg-border/60 dark:bg-zinc-800" />
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
-              {items.map((achievement, i) => (
-                <AchievementCard
-                  key={achievement.key}
-                  achievement={achievement}
-                  index={ci * 10 + i}
-                />
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px border border-border/60 dark:border-zinc-800 bg-border/60 dark:bg-zinc-800">
+                {items.map((achievement, i) => (
+                  <AchievementCard
+                    key={achievement.key}
+                    achievement={achievement}
+                    index={ci * 10 + i}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      )}
+
+      {/* Keep learning CTA */}
+      {!loading && (
+        <div className="flex justify-center pt-4">
+          <Button asChild className="premium-button px-5 py-2.5 text-xs group">
+            <Link href="/roadmaps" className="flex items-center gap-2">
+              Keep learning
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -270,7 +319,7 @@ function AchievementCard({
   achievement: Achievement;
   index: number;
 }) {
-  const { icon: Icon, name, description, rarity, points, unlocked } = achievement;
+  const { icon: Icon, name, description, rarity, points, unlocked, unlockedAt } = achievement;
   const cfg = RARITY_CONFIG[rarity];
 
   return (
@@ -310,6 +359,11 @@ function AchievementCard({
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">
           {description}
         </p>
+        {unlocked && unlockedAt && (
+          <p className="text-[10px] text-muted-foreground/60 mt-1">
+            Unlocked {new Date(unlockedAt).toLocaleDateString()}
+          </p>
+        )}
       </div>
 
       {/* Points */}

@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { Bookmark, Heart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { BsBookmarkFill, BsHeartFill } from "react-icons/bs";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 type StatsProps = {
   inConstruction?: boolean;

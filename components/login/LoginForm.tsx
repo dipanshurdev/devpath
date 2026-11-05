@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from "@/components/ui/card";
-import { Github, Mail, Loader2, AlertCircle } from "lucide-react";
-import toast from "react-hot-toast";
+import { Github, Mail, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 interface LoginFormProps {
   callbackUrl: string;
@@ -18,6 +18,7 @@ interface LoginFormProps {
 export default function LoginForm({ callbackUrl }: LoginFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,21 +94,40 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
+
+
+           {/* TODO: implement mailings */}     
                 {/* <Link
                   href="/forgot-password"
-                  className="text-sm text-primary hover:underline"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Forgot password?
                 </Link> */}
               </div>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                placeholder="••••••••"
-                disabled={loading}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  disabled={loading}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <Button

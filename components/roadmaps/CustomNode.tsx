@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Handle, Position } from "reactflow";
+import { Handle, Position } from "@xyflow/react";
 import { CheckCircle2, FileText } from "lucide-react";
 import { BsArrowRight } from "react-icons/bs";
 

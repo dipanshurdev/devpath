@@ -8,6 +8,7 @@ const nav = {
   product: [
     { label: "Roadmaps", href: "/roadmaps" },
     { label: "Dashboard", href: "/dashboard" },
+    { label: "Achievements", href: "/achievements" },
     { label: "Pricing", href: "/pricing" },
     { label: "Saved", href: "/saved" },
   ],

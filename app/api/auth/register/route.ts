@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma/client";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { withErrorHandler, ApiError, createApiResponse } from "@/lib/api-handler";
+import { sendWelcomeEmail } from "@/lib/email";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address").max(254),
@@ -73,6 +74,11 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
 
     return newUser;
   });
+
+  // Send welcome email (non-blocking)
+  sendWelcomeEmail(user.email, user.name).catch((err) =>
+    console.error("[register] Failed to send welcome email:", err)
+  );
 
   return createApiResponse(
     {

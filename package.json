@@ -17,6 +17,7 @@
     "db:seed:clean": "tsx scripts/seed-sample-data.ts --clean",
     "db:reset": "npx prisma db push --force-reset && npm run db:seed",
     "db:import": "tsx scripts/import-roadmaps-from-file.ts",
+    "db:seed:achievements": "tsx scripts/seed-achievements.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -80,6 +81,7 @@
     "reactflow": "^11.11.4",
     "recharts": "^2.15.3",
     "sonner": "^2.0.7",
+    "stripe": "^23.1.0",
     "swr": "^2.3.0",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",

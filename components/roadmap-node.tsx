@@ -1,7 +1,7 @@
 "use client"
 
 import { memo } from "react"
-import { Handle, Position } from "reactflow"
+import { Handle, Position } from "@xyflow/react"
 import { CheckCircle, Circle, BookOpen } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import type { NodeData } from "@/lib/roadmap-data"

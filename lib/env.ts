@@ -41,6 +41,13 @@ const envSchema = z.object({
   NEXT_PUBLIC_GA_ID: z.string().optional(),
   /** Canonical site URL for metadata and absolute links (e.g. https://devpath.com) */
   NEXT_PUBLIC_APP_URL: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().optional(),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  STRIPE_PRO_PRICE_ID: z.string().optional(),
+  STRIPE_TEAM_PRICE_ID: z.string().optional(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 });
 
 const source = envSourceForParse();

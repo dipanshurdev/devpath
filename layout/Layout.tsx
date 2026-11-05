@@ -1,9 +1,7 @@
 // import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import { ThemeToggle } from "@/components/theme-toggle";
 import React from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 
 type Props = {
   children: React.ReactNode;
@@ -14,21 +12,10 @@ const Layout = ({ children }: Props) => {
     <>
       <section className="relative flex min-h-screen w-full flex-col overflow-x-hidden antialiased">
         <Navbar />
-        <main className="flex-1 ">
-          {children}
-        </main>
+        <main className="flex-1 ">{children}</main>
         {/* <Footer /> */}
       </section>
-      <ToastContainer
-        autoClose={2000}
-        position="bottom-right"
-        theme="dark"
-        hideProgressBar
-        // closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <Toaster position="bottom-right" richColors />
     </>
   );
 };

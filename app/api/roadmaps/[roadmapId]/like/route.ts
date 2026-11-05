@@ -3,6 +3,7 @@ import { requireAuth } from '@/lib/auth-utils';
 import { prisma } from '@/lib/prisma/client';
 import { cache, cacheKeys } from '@/lib/cache';
 import { withErrorHandler, ApiError, createApiResponse } from '@/lib/api-handler';
+import { checkAndAwardAchievements } from '@/lib/achievements';
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -68,8 +69,11 @@ export const POST = withErrorHandler(async (
     cache.invalidate(cacheKeys.roadmapList()),
   ]);
 
+  // Check and award any newly unlocked achievements (non-blocking)
+  const newAchievements = await checkAndAwardAchievements(userId);
+
   return createApiResponse(
-    { isLiked: true, likeCount: (currentRoadmap?.likeCount || 0) + 1 },
+    { isLiked: true, likeCount: (currentRoadmap?.likeCount || 0) + 1, newAchievements },
     'Roadmap liked successfully'
   );
 });
